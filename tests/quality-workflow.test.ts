@@ -64,9 +64,15 @@ function getStep(name: string): WorkflowStep {
 }
 
 describe("quality workflow", () => {
-  it("runs for every pull request and pushes only to main", () => {
+  it("runs for every pull request, generated release dispatch, and pushes only to main", () => {
     expect(workflow.on).toEqual({
       pull_request: null,
+      workflow_dispatch: {
+        inputs: {
+          base_sha: { required: true, type: "string" },
+          head_sha: { required: true, type: "string" },
+        },
+      },
       push: { branches: ["main"] },
     });
   });
@@ -125,13 +131,13 @@ describe("quality workflow", () => {
         name: "Run plugin documentation gate",
         uses: undefined,
         run: 'npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"',
-        if: "github.event_name == 'pull_request'",
+        if: "github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
       },
       {
         name: "Validate plugin change routing",
         uses: undefined,
         run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"',
-        if: "github.event_name == 'pull_request'",
+        if: "github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
       },
       {
         name: "Validate direct-push routing",
@@ -166,23 +172,27 @@ describe("quality workflow", () => {
     expect(qualityStep).not.toHaveProperty("if");
   });
 
-  it("runs the documentation gate only with quoted pull request SHAs", () => {
+  it("runs documentation validation with quoted PR or dispatched SHAs", () => {
     expect(getStep("Run plugin documentation gate")).toMatchObject({
-      if: "github.event_name == 'pull_request'",
+      if: "github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
       env: {
-        BASE_SHA: "${{ github.event.pull_request.base.sha }}",
-        HEAD_SHA: "${{ github.event.pull_request.head.sha }}",
+        BASE_SHA:
+          "${{ github.event.pull_request.base.sha || inputs.base_sha }}",
+        HEAD_SHA:
+          "${{ github.event.pull_request.head.sha || inputs.head_sha }}",
       },
       run: 'npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"',
     });
   });
 
-  it("enforces path-based plugin routing with the same pull request SHAs", () => {
+  it("enforces path-based plugin routing with the same PR or dispatched SHAs", () => {
     expect(getStep("Validate plugin change routing")).toMatchObject({
-      if: "github.event_name == 'pull_request'",
+      if: "github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
       env: {
-        BASE_SHA: "${{ github.event.pull_request.base.sha }}",
-        HEAD_SHA: "${{ github.event.pull_request.head.sha }}",
+        BASE_SHA:
+          "${{ github.event.pull_request.base.sha || inputs.base_sha }}",
+        HEAD_SHA:
+          "${{ github.event.pull_request.head.sha || inputs.head_sha }}",
       },
       run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"',
     });

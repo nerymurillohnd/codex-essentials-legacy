@@ -9,9 +9,11 @@ permissions:
   pull-requests: write
 
 jobs:
-  release:
+  validate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -27,6 +29,21 @@ jobs:
         run: HUSKY=0 npm ci
       - name: Validate release contract
         run: npm run validate:release-contract
+
+  release:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - name: Run Release Please
         id: release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
@@ -36,6 +53,20 @@ jobs:
           target-branch: main
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+      - name: Run quality for generated release pull requests
+        if: steps.release.outputs.prs_created == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_PRS: ${{ steps.release.outputs.prs }}
+        run: |
+          set -euo pipefail
+          for number in $(node -e 'for (const pr of JSON.parse(process.env.RELEASE_PRS)) console.log(pr.number)'); do
+            pr=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/$number")
+            branch=$(node -p 'JSON.parse(process.argv[1]).head.ref' "$pr")
+            base=$(node -p 'JSON.parse(process.argv[1]).base.sha' "$pr")
+            head=$(node -p 'JSON.parse(process.argv[1]).head.sha' "$pr")
+            gh workflow run quality.yml --ref "$branch" -f base_sha="$base" -f head_sha="$head"
+          done
       - name: Verify releases contain no uploaded assets
         if: steps.release.outputs.releases_created == 'true'
         env:

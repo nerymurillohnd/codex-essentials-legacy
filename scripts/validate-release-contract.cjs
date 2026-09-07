@@ -14,7 +14,7 @@ const SEMVER =
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/u;
 const TAG = /^plugin\/([a-z0-9][a-z0-9-]*)\/v(.+)$/u;
 const FORBIDDEN =
-  /\b(?:npm\s+publish|gh\s+release\s+upload|upload-artifact|upload-release-asset|softprops\/action-gh-release|git\s+archive|sha(?:256|512)sum)\b/iu;
+  /\b(?:npm\s+publish|gh\s+release\s+upload|gh\s+api[^\n]*release-assets|upload-(?:artifact|release-asset)|(?:softprops|actions)\/(?:action-gh-release|upload-release-asset)|git\s+archive|sha(?:256|512)sum)\b/iu;
 
 function parseTag(tag) {
   const match = TAG.exec(tag);
@@ -149,6 +149,11 @@ function validateRepository(root) {
       !SEMVER.test(state[componentPath])
     ) {
       throw new Error(`${componentPath} release state must be SemVer`);
+    }
+    if (state[componentPath] !== plugin.manifest.version) {
+      throw new Error(
+        `${componentPath} release state must match manifest version`,
+      );
     }
   }
   const workflow = fs.readFileSync(

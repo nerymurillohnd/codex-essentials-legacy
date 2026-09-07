@@ -149,6 +149,13 @@ describe("release contract", () => {
         return "release state must be SemVer";
       },
       (directory: string) => {
+        const file = join(directory, ".release-please-manifest.json");
+        const json = JSON.parse(readFileSync(file, "utf8"));
+        json["plugins/doc-keeper"] = "0.1.1";
+        writeFileSync(file, JSON.stringify(json));
+        return "release state must match manifest version";
+      },
+      (directory: string) => {
         const file = join(directory, "plugins/doc-keeper/CHANGELOG.md");
         writeFileSync(file, "# Changelog\n");
         return "must contain an Unreleased section";
@@ -215,10 +222,16 @@ describe("release contract", () => {
       ["-C", directory, "rev-parse", "HEAD"],
       { encoding: "utf8" },
     ).stdout.trim();
-    writeFileSync(
-      join(directory, "plugins/doc-keeper/README.md"),
-      "# changed again\n",
+    const skill = join(
+      directory,
+      "plugins/doc-keeper/skills/doc-keeper/SKILL.md",
     );
+    writeFileSync(skill, `${readFileSync(skill, "utf8")}\n`);
+    commit(directory, "docs(doc-keeper): clarify skill copy");
+    expect(() =>
+      contract.validateChangeRouting(directory, releaseBase, "HEAD", false),
+    ).toThrow("releasable Conventional Commit");
+    writeFileSync(skill, `${readFileSync(skill, "utf8")}\n`);
     commit(directory, "fix(doc-keeper): correct copy");
     contract.validateChangeRouting(directory, releaseBase, "HEAD", false);
     const cleanDirectory = fixture();
