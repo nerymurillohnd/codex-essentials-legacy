@@ -14,6 +14,18 @@ the current follow-up in [pending-debt.md](pending-debt.md).
   and `npm audit --json` (zero vulnerabilities). The install-scripts policy
   continued to block undeclared `simple-git-hooks` postinstall execution.
 
+- 2026-09-07 — Reconciled the current direct-documentation routing policy with
+  repository guidance. The current policy in the root `AGENTS.md` and
+  [ADR-0015](../decisions/adr-0015-plugin-versioning-without-artifacts.md)
+  requires pull requests for product, package, catalog, script, test, schema,
+  security, permission, refactor, compatibility, release-control, and policy
+  changes, while limiting direct pushes to non-policy plans, audits, and
+  maintenance records under `docs/`. Verified live at revision `e558763`: the
+  `main` branch still rejects force pushes and deletion, enforces
+  administrators, and requires conversation resolution, with no global required
+  pull-request review or status-check rules. The remaining optional security
+  control decision stays tracked in [pending-debt.md](pending-debt.md).
+
 - 2026-08-31 — Reorganized repository tooling into its established boundaries:
   moved the agent schema to `schemas/`, moved reusable validators, generators,
   quality helpers, and Project bootstrap code to `scripts/`, moved their tests
