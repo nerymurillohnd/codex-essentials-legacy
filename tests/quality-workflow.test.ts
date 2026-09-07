@@ -127,6 +127,12 @@ describe("quality workflow", () => {
         run: 'npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"',
         if: "github.event_name == 'pull_request'",
       },
+      {
+        name: "Validate plugin change routing",
+        uses: undefined,
+        run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+        if: "github.event_name == 'pull_request'",
+      },
     ]);
   });
 
@@ -162,6 +168,17 @@ describe("quality workflow", () => {
         HEAD_SHA: "${{ github.event.pull_request.head.sha }}",
       },
       run: 'npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+    });
+  });
+
+  it("enforces path-based plugin routing with the same pull request SHAs", () => {
+    expect(getStep("Validate plugin change routing")).toMatchObject({
+      if: "github.event_name == 'pull_request'",
+      env: {
+        BASE_SHA: "${{ github.event.pull_request.base.sha }}",
+        HEAD_SHA: "${{ github.event.pull_request.head.sha }}",
+      },
+      run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"',
     });
   });
 

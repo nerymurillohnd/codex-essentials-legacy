@@ -43,3 +43,10 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"
+
+      - name: Validate plugin change routing
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"

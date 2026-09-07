@@ -74,11 +74,11 @@ Project documentation is maintained under `docs/`. Read [documentation rules](do
 
 - `plugins/<plugin-id>/.codex-plugin/plugin.json` owns plugin identity, version, metadata, and components.
 - `.agents/plugins/marketplace.json` is generated from validated manifests; do not hand-edit it.
-- Plugins are self-contained. Distribution is the public repository and `main` catalog: no automated releases, tags, archives, or release credentials.
+- Plugins are self-contained. Distribution is the public repository and `main` catalog. Release Please may create immutable plugin tags and GitHub Release records using `GITHUB_TOKEN`, but must never publish packages or upload distribution archives, checksums, or other release assets.
 
 ## Working Rules
 
-- Use pull requests for product, package, catalog, script, test, schema, security, permission, refactor, and compatibility changes.
+- Use pull requests for product, package, catalog, script, test, schema, security, permission, refactor, compatibility, release-control, and policy changes. Direct pushes are limited to non-policy plans, audits, and maintenance records under `docs/`.
 - Product changes update the affected README, `CHANGELOG.md`, and manifest; include validation evidence.
 - Run applicable checks, report skips and risks, and keep docs synchronized.
 - Follow the global `AGENTS.md` policy for credentials.

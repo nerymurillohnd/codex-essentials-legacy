@@ -21,13 +21,14 @@
     "test:watch": "vitest --passWithNoTests",
     "validate:plugins": "node scripts/validate-plugins.cjs",
     "validate:github-labels": "node scripts/validate-github-labels.cjs",
+    "validate:release-contract": "node scripts/validate-release-contract.cjs",
     "generate:marketplace": "node scripts/generate-marketplace.cjs",
     "validate:marketplace": "node scripts/validate-marketplace.cjs",
     "documentation:gate": "node scripts/documentation-gate.cjs",
     "marketplace:check": "npm run validate:plugins && npm run validate:marketplace",
     "marketplace:build": "npm run validate:plugins && npm run generate:marketplace && npm run validate:marketplace",
     "project:bootstrap": "node scripts/project-bootstrap.cjs",
-    "check": "npm run format:check && npm run lint -- --max-warnings=0 && npm run lint:markdown && npm run typecheck && npm run typecheck:scripts && npx tsc6 --noEmit && npm run test && npm run validate:github-labels && npm run marketplace:check"
+    "check": "npm run format:check && npm run lint -- --max-warnings=0 && npm run lint:markdown && npm run typecheck && npm run typecheck:scripts && npx tsc6 --noEmit && npm run test && npm run validate:github-labels && npm run validate:release-contract && npm run marketplace:check"
   },
   "keywords": [],
   "author": "Nery Samuel Murillo",
