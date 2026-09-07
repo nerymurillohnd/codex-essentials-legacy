@@ -77,13 +77,12 @@ npm run documentation:gate -- --base <base> --head <head>
 TypeScript checks, tests and coverage, plus the read-only marketplace check.
 Do not lower coverage thresholds to pass a change.
 
-Release identifiers use exactly `plugin/<plugin-id>/v<semver>`. Release-set
-validation consumes the exact Release Please tag and SHA outputs, checks that
-the plugin exists, the tag version matches its manifest, and the changelog has
-a dated section for that version. With `--archives`, it also checks checksum
-integrity and archive containment. Passing validation is evidence only; it is
-not permission to tag, push, publish, create a PR, merge, or perform another
-remote action.
+Release identifiers use exactly `plugin/<plugin-id>/v<semver>`. The release
+contract validates exact component paths, SemVer, plugin changelog structure,
+tag-to-manifest alignment, and the prohibition on package publication or
+uploaded release assets. Passing validation is evidence only; it is not
+permission to tag, push, publish, create a PR, merge, or perform another remote
+action.
 
 ## Failure routing
 

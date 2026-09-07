@@ -2,6 +2,14 @@ name: Quality
 
 on:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      base_sha:
+        required: true
+        type: string
+      head_sha:
+        required: true
+        type: string
   push:
     branches:
       - main
@@ -38,8 +46,22 @@ jobs:
         run: npm run check
 
       - name: Run plugin documentation gate
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || inputs.base_sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || inputs.head_sha }}
         run: npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"
+
+      - name: Validate plugin change routing
+        if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || inputs.base_sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || inputs.head_sha }}
+        run: npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"
+
+      - name: Validate direct-push routing
+        if: github.event_name == 'push'
+        env:
+          BASE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA" --direct
