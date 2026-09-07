@@ -1,16 +1,19 @@
-Generé [release-notes.md](/Users/nerymurillohnd/projects/marketplace/codex-essentials/release-notes.md) con notas consolidadas para los 9 plugins actuales: versión del manifiesto, resumen, highlights y notas de upgrade.
+# Codex Essentials Release Notes
 
-Validación ejecutada:
-- `npx prettier --write release-notes.md` pasó, sin cambios posteriores.
-- `npx markdownlint-cli2 release-notes.md` pasó con `0 issues`.
-- `npm run marketplace:check` pasó: validó 9 manifiestos y 9 reverse-links del catálogo.
+This document consolidates the current release notes for the 10 plugins in the
+Git-backed marketplace. Versions are sourced from each plugin manifest.
 
-Contexto adicional: `codex doctor --summary --ascii` no tuvo fallos, pero reportó una advertencia existente de threads (`rollout files are missing from the state DB; duplicate thread inventory entries found`). También revisé las release notes oficiales de OpenAI: https://openai.com/products/release-notes/
+## Astro Commands (`astro-cli-commands`)
 
-El árbol queda con un solo archivo no rastreado: `release-notes.md`.
+Current manifest version: `0.1.1`
 
+Astro Commands provides a command-first operating contract for Astro projects.
+It uses the installed Astro CLI and the project's package manager as the source
+of truth.
 
-ll trigger metadata focused on Astro CLI-dependent work.
+Highlights:
+
+- Refined skill trigger metadata for Astro CLI-dependent work.
 - Stronger package validation for skill metadata, unsafe links, and package
   containment.
 - Documentation refreshes for Astro patch references, Codex hook behavior,
@@ -161,6 +164,28 @@ Upgrade notes:
 - Users who depended on automatic markdownlint execution should run their
   repository's own Markdown lint scripts or hooks.
 - The hook may write Prettier output for reported edited files when enabled.
+
+## Skill Design Standards (`skill-design-standards`)
+
+Current manifest version: `0.1.0`
+
+Skill Design Standards provides a self-contained workflow for designing,
+auditing, and evaluating portable Agent Skills.
+
+Highlights:
+
+- Added the packaged skill workflow and focused references for format, Codex
+  metadata, script interfaces, descriptions, evaluation, and validation.
+- Separated format requirements, design recommendations, and host-specific
+  configuration guidance.
+- Documented installation, standalone-skill migration, verification, and
+  recovery boundaries.
+
+Upgrade notes:
+
+- No migration is required for a new installation.
+- When replacing a standalone copy, preserve local changes and keep only one
+  discoverable installation after verification.
 
 ## Prompt Architect (`prompt-architect`)
 
