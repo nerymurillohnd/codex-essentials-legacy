@@ -1,0 +1,7 @@
+interface:
+  display_name: "Repository Maintenance"
+  short_description: "Maintain repository docs and maintenance records"
+  default_prompt: "Use $repo-maintenance to maintain this repository's documentation and records from verified evidence."
+
+policy:
+  allow_implicit_invocation: true

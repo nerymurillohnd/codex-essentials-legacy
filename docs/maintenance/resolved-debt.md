@@ -6,6 +6,14 @@ Entries below are dated historical resolutions. When a later remote or
 repository change supersedes one of them, keep the historical record and track
 the current follow-up in [pending-debt.md](pending-debt.md).
 
+- 2026-09-07 — Updated the Node.js declaration dependency from
+  `@types/node` 26.4.1 to 26.5.0, including the lockfile resolution of
+  `undici-types` 8.9.0. Verified at revision `3c43189` with
+  `HUSKY=0 npm ci`, `npm run check` (105 tests across 13 files),
+  `npm outdated --json` (only the separately deferred Vitest 5 pair remains),
+  and `npm audit --json` (zero vulnerabilities). The install-scripts policy
+  continued to block undeclared `simple-git-hooks` postinstall execution.
+
 - 2026-08-31 — Reorganized repository tooling into its established boundaries:
   moved the agent schema to `schemas/`, moved reusable validators, generators,
   quality helpers, and Project bootstrap code to `scripts/`, moved their tests

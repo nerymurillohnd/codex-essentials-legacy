@@ -45,6 +45,19 @@
         }
       ]
     },
+    "plugins/hook-creator": {
+      "package-name": "hook-creator",
+      "component": "plugin/hook-creator",
+      "initial-version": "0.1.0",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
     "plugins/live-research": {
       "package-name": "live-research",
       "component": "plugin/live-research",
@@ -86,6 +99,19 @@
     "plugins/prompt-architect": {
       "package-name": "prompt-architect",
       "component": "plugin/prompt-architect",
+      "initial-version": "0.1.0",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
+    "plugins/repo-maintenance": {
+      "package-name": "repo-maintenance",
+      "component": "plugin/repo-maintenance",
       "initial-version": "0.1.0",
       "changelog-path": "CHANGELOG.md",
       "extra-files": [

@@ -1,0 +1,47 @@
+{
+  "name": "hook-creator",
+  "version": "0.1.0",
+  "description": "Design, create, integrate, review, test, and debug Codex lifecycle hooks from current official contracts and focused operational references.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "hooks",
+    "lifecycle",
+    "automation",
+    "plugins",
+    "ci-cd",
+    "github-actions"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Hook Creator",
+    "shortDescription": "Engineer and verify Codex lifecycle hooks.",
+    "longDescription": "A focused Codex hook engineering skill that maps operational intent to the correct lifecycle event, matcher, handler, placement, input/output contract, trust model, and verification path. Covers command, MCP, background, managed, plugin, subagent, CI/CD, and GitHub Actions integrations without installing or activating hooks automatically.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Codex hook design and implementation",
+      "Lifecycle event and matcher selection",
+      "Command, MCP, and background handlers",
+      "Hook integration and plugin bundling",
+      "Hook testing, review, and debugging",
+      "CI/CD and GitHub Actions guidance"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use $hook-creator to design and implement the Codex hook required for this workflow.",
+      "Use $hook-creator to review these Codex hooks and identify incorrect lifecycle behavior.",
+      "Use $hook-creator to debug why this Codex hook is not discovered, trusted, or executed."
+    ],
+    "brandColor": "#6D28D9"
+  }
+}

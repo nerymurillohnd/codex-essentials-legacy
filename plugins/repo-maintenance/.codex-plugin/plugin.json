@@ -1,0 +1,44 @@
+{
+  "name": "repo-maintenance",
+  "version": "0.1.0",
+  "description": "Maintain repository documentation and records using adaptable, evidence-based templates without inventing project conventions.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "repository-maintenance",
+    "documentation",
+    "templates",
+    "adr",
+    "technical-debt",
+    "changelog"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Repository Maintenance",
+    "shortDescription": "Maintain repository records with reusable templates.",
+    "longDescription": "An evidence-first workflow for auditing and maintaining repository README files, changelogs, ADRs, maintenance debt records, licenses, and conditional skill metadata. It adapts to local conventions, keeps unresolved facts explicit, and separates local documentation work from remote mutations.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Repository documentation maintenance",
+      "Reusable ADR and debt records",
+      "Changelog and README upkeep",
+      "Evidence-based template adaptation",
+      "Permission and side-effect reporting"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use $repo-maintenance to audit this repository's maintenance records and propose only evidence-backed updates.",
+      "Use $repo-maintenance to create or update the appropriate repository documentation from its adaptable templates."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

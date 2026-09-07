@@ -2,21 +2,24 @@
 
 Use this file for unresolved maintenance work, known limitations, and follow-up tasks.
 
-- 2026-09-06 — Defer the coordinated `vitest` and `@vitest/coverage-v8` 5.0.0
-  upgrade. Owner: Marketplace maintenance. A clean project install followed by
-  `npm run typecheck` fails in the published Vitest declarations: `TS2307` for
-  missing `@vitest/expect` and `TS2305` for missing `MarkOptions`, plus Vite
-  and Tinybench declaration errors. Evidence verified 2026-09-06: the official
-  Vitest [`v5.0.0` tag](https://github.com/vitest-dev/vitest/tree/v5.0.0)
-  (commit `f441c6fab25e579c5b7dd3dd50538416f415fbae`) has
-  [`vitest/config.d.ts`](https://github.com/vitest-dev/vitest/blob/v5.0.0/packages/vitest/config.d.ts)
-  importing `@vitest/expect`, while its
-  [`package.json`](https://github.com/vitest-dev/vitest/blob/v5.0.0/packages/vitest/package.json)
-  lists that package only in `devDependencies`; the published
-  [`npm metadata`](https://registry.npmjs.org/vitest/5.0.0) matches this
-  dependency classification. Keep both packages aligned at 4.1.11; reassess
-  after an upstream consumer-compatible release passes `HUSKY=0 npm ci` and
-  `npm run check`.
+- 2026-09-07 — Defer the coordinated `vitest` and `@vitest/coverage-v8` 5.0.0
+  migration. Owner: Marketplace maintenance. Impact: the strict TypeScript
+  validation gate cannot pass with the only published Vitest 5.0.0 release.
+  At revision `3c43189`, a clean consumer install was tested with
+  `vitest@5.0.0`, `@vitest/coverage-v8@5.0.0`, the explicit resolution patch
+  `@vitest/expect@5.0.0`, and the upstream `MarkOptions` declaration shape.
+  `npm run typecheck` and `npx tsc6 --noEmit` still fail in the published Vite
+  and Vitest declarations with `TS2430`: `test.benchmark.provider` is
+  `string | undefined` where `string` is required. Node 24.20.0 and Vite
+  6.4.3, 7.3.6, and 8.2.2 all satisfy Vitest 5's documented minimums, so this
+  is not a project runtime prerequisite failure. The upstream
+  [`#11141` fix](https://github.com/vitest-dev/vitest/pull/11141), merged
+  2026-09-04, corrects the `@vitest/expect` and `MarkOptions` declaration
+  defects but is not in the npm `5.0.0` release. Keep both packages aligned at
+  4.1.11 and do not relax `skipLibCheck`. Next action and review condition:
+  reassess after an npm release containing the upstream type fixes passes
+  `HUSKY=0 npm ci`, `npm run typecheck`, `npx tsc6 --noEmit`, and
+  `npm run check` in a clean consumer install.
 - 2026-08-31 — Reconcile current GitHub branch protection and security controls
   with the documented policy. Verified live: `main` rejects force pushes and
   deletion and enforces administrators; the plugin release-tag ruleset is

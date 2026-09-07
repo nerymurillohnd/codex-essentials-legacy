@@ -37,9 +37,11 @@ session without making those capabilities marketplace dependencies.
 | [Configure Prettier](plugins/configure-prettier/README.md)         | Prettier auditing, configuration, drift repair, editor setup, and CI checks. | `configure-prettier`     |
 | [Prettier After Edit](plugins/prettier-after-edit/README.md)       | Exact-file Prettier formatting after Codex edits.                            | `prettier-after-edit`    |
 | [DocKeeper](plugins/doc-keeper/README.md)                          | Evidence-based changelog and ADR maintenance.                                | `doc-keeper`             |
+| [Hook Creator](plugins/hook-creator/README.md)                     | Codex lifecycle hook design, integration, review, testing, and debugging.    | `hook-creator`           |
 | [Codex Memory Audit](plugins/optimize-memories/README.md)          | Auditing and reconciling Codex memory artifacts.                             | `optimize-memories`      |
 | [Live Research](plugins/live-research/README.md)                   | Current research with callable MCP/plugin/skill-first routing and citations. | `live-research`          |
 | [Prompt Architect](plugins/prompt-architect/README.md)             | Copy-ready prompts with risk, evidence, and execution guidance.              | `prompt-architect`       |
+| [Repository Maintenance](plugins/repo-maintenance/README.md)       | Evidence-based repository documentation and maintenance-record upkeep.       | `repo-maintenance`       |
 | [Svelte Development](plugins/svelte-development/README.md)         | Svelte 5 and SvelteKit architecture, implementation, MCP, and verification.  | `svelte-development`     |
 | [Skill Design Standards](plugins/skill-design-standards/README.md) | Designing, auditing, and evaluating portable agent skills.                   | `skill-design-standards` |
 | [System Ops Audit](plugins/system-ops-audit/README.md)             | Read-only macOS baseline audit design, execution boundaries, and analysis.   | `system-ops-audit`       |
@@ -56,9 +58,11 @@ permissions, side effects, and examples._
 | Audit, configure, or repair Prettier setup             | [Configure Prettier](plugins/configure-prettier/README.md)         |
 | Format edited files with Prettier                      | [Prettier After Edit](plugins/prettier-after-edit/README.md)       |
 | Create or repair changelogs and architecture decisions | [DocKeeper](plugins/doc-keeper/README.md)                          |
+| Engineer or debug Codex lifecycle hooks                | [Hook Creator](plugins/hook-creator/README.md)                     |
 | Audit or reconcile project and global Codex memories   | [Codex Memory Audit](plugins/optimize-memories/README.md)          |
 | Verify change-sensitive facts using available tools    | [Live Research](plugins/live-research/README.md)                   |
 | Turn rough task intent into a copy-ready prompt        | [Prompt Architect](plugins/prompt-architect/README.md)             |
+| Maintain repository documentation and debt records     | [Repository Maintenance](plugins/repo-maintenance/README.md)       |
 | Architect, build, or verify Svelte and SvelteKit work  | [Svelte Development](plugins/svelte-development/README.md)         |
 | Design, audit, or evaluate reusable agent skills       | [Skill Design Standards](plugins/skill-design-standards/README.md) |
 | Design a read-only macOS baseline audit                | [System Ops Audit](plugins/system-ops-audit/README.md)             |
@@ -71,9 +75,11 @@ explains behavior, requirements, boundaries, and expected results._
 [Prettier configuration](plugins/configure-prettier/README.md) ·
 [Prettier hooks](plugins/prettier-after-edit/README.md) ·
 [Changelog and ADRs](plugins/doc-keeper/README.md) ·
+[Codex hooks](plugins/hook-creator/README.md) ·
 [Memory audit](plugins/optimize-memories/README.md) ·
 [Live research](plugins/live-research/README.md) ·
 [Prompt architecture](plugins/prompt-architect/README.md) ·
+[Repository maintenance](plugins/repo-maintenance/README.md) ·
 [Svelte development](plugins/svelte-development/README.md) ·
 [Skill design](plugins/skill-design-standards/README.md) ·
 [System ops audit](plugins/system-ops-audit/README.md)

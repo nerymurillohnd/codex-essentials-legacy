@@ -1,0 +1,7 @@
+interface:
+  display_name: "Hook Creator"
+  short_description: "Engineer and verify Codex lifecycle hooks"
+  default_prompt: "Use $hook-creator to design, implement, integrate, review, test, or debug the requested Codex hook."
+
+policy:
+  allow_implicit_invocation: true

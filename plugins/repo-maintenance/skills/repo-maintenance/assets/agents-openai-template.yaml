@@ -1,0 +1,16 @@
+# Use this template only when the target repository contains a skill.
+# Copy it to that skill's agents/openai.yaml and replace every placeholder.
+interface:
+  # Match the skill's purpose and human-readable identity in SKILL.md.
+  display_name: "{{SKILL_DISPLAY_NAME}}"
+  # Summarize the concrete outcome described by SKILL.md, not the whole plugin.
+  short_description: "{{SKILL_SHORT_DESCRIPTION}}"
+  # Replace SKILL_NAME with the exact SKILL.md name and align the request with its workflow.
+  default_prompt: "Use ${{SKILL_NAME}} to {{DEFAULT_PROMPT_ACTION}}."
+
+  # Icons are optional. Add icon_small or icon_large only when the skill contains
+  # the corresponding real files under ./assets/; do not invent asset paths.
+
+# Keep this enabled so the host can discover and invoke the skill implicitly.
+policy:
+  allow_implicit_invocation: true
