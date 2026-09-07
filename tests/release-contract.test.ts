@@ -209,9 +209,7 @@ describe("release contract", () => {
       "# changed\n",
     );
     commit(directory, "docs: plugin copy");
-    expect(() =>
-      contract.validateChangeRouting(directory, pluginBase, "HEAD", false),
-    ).toThrow("releasable Conventional Commit");
+    contract.validateChangeRouting(directory, pluginBase, "HEAD", false);
     const releaseBase = spawnSync(
       "git",
       ["-C", directory, "rev-parse", "HEAD"],

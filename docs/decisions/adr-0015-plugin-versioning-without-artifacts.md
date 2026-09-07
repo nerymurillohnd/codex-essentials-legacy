@@ -6,6 +6,20 @@ decision-makers: Nery Samuel Murillo
 
 # Version plugins without distribution artifacts
 
+## Context
+
+The marketplace has independently versioned plugins but previously retained an
+incomplete mix of historical tags, releases, and manifest versions. Consumers
+need an inspectable history per plugin, while plugins must not be treated as npm
+packages or produce repository-owned distribution archives.
+
+## Considered alternatives
+
+- Keep manifest versions and changelogs manually without tags or releases.
+- Publish npm-style packages or upload archives for every plugin release.
+- Use manifest-mode Release Please with plugin-local version metadata and no
+  uploaded assets.
+
 ## Decision
 
 Use Release Please manifest mode to version each `plugins/<plugin-id>` package
@@ -30,3 +44,9 @@ policy, product contracts, public claims, or release history.
 Users can inspect versioned plugin history without npm packages or repository
 generated artifacts. A tag/release is created only after a reviewed release PR
 merges; local validation cannot create remote state.
+
+## Related records
+
+- [Implementation plan](../superpowers/plans/2026-09-07-plugin-versioning-no-artifacts.md)
+- [Design specification](../superpowers/specs/2026-09-07-plugin-versioning-no-artifacts-design.md)
+- [Repository policy](../../AGENTS.md)

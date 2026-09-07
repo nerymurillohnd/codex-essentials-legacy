@@ -133,6 +133,12 @@ describe("quality workflow", () => {
         run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"',
         if: "github.event_name == 'pull_request'",
       },
+      {
+        name: "Validate direct-push routing",
+        uses: undefined,
+        run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA" --direct',
+        if: "github.event_name == 'push'",
+      },
     ]);
   });
 

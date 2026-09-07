@@ -14,7 +14,7 @@ const SEMVER =
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/u;
 const TAG = /^plugin\/([a-z0-9][a-z0-9-]*)\/v(.+)$/u;
 const FORBIDDEN =
-  /\b(?:npm\s+publish|gh\s+release\s+upload|upload-artifact|git\s+archive|sha(?:256|512)sum)\b/iu;
+  /\b(?:npm\s+publish|gh\s+release\s+upload|upload-artifact|upload-release-asset|softprops\/action-gh-release|git\s+archive|sha(?:256|512)sum)\b/iu;
 
 function parseTag(tag) {
   const match = TAG.exec(tag);
@@ -26,15 +26,25 @@ function parseTag(tag) {
 
 function validateUnreleased(changelogPath) {
   const text = fs.readFileSync(changelogPath, "utf8");
-  if (!/^## \[Unreleased\](?:\s|$)/mu.test(text)) {
-    throw new Error(`${changelogPath} must contain ## [Unreleased]`);
+  const match =
+    /^## \[Unreleased\]\s*\n([\s\S]*?)(?=^## \[|$(?![\s\S]))/mu.exec(text);
+  if (!match || !match[1].replace(/<!--([\s\S]*?)-->/gu, "").trim()) {
+    throw new Error(
+      `${changelogPath} must contain a non-empty ## [Unreleased]`,
+    );
   }
 }
 
-function changedPaths(root, base, head) {
+function changedPaths(root, base, head, direct = false) {
   return execFileSync(
     "git",
-    ["-C", root, "diff", "--name-only", `${base}..${head}`],
+    [
+      "-C",
+      root,
+      "diff",
+      "--name-only",
+      direct ? `${base}..${head}` : `${base}...${head}`,
+    ],
     {
       encoding: "utf8",
     },
@@ -44,7 +54,7 @@ function changedPaths(root, base, head) {
 }
 
 function validateChangeRouting(root, base, head, direct) {
-  const paths = changedPaths(root, base, head);
+  const paths = changedPaths(root, base, head, direct);
   if (
     direct &&
     paths.some(
@@ -63,21 +73,37 @@ function validateChangeRouting(root, base, head, direct) {
   if (plugins.length === 0) {
     return;
   }
-  const subjects = execFileSync(
-    "git",
-    ["-C", root, "log", "--format=%s%n%b", `${base}..${head}`, "--", "plugins"],
-    { encoding: "utf8" },
-  );
-  if (
-    !/(?:^|\n)(?:feat|fix|perf)(?:\([^)]*\))?!?:|BREAKING CHANGE:|Release-As:/mu.test(
-      subjects,
-    )
-  ) {
-    throw new Error(
-      "plugin changes require a releasable Conventional Commit or Release-As",
-    );
-  }
   for (const plugin of plugins) {
+    const pluginPaths = paths.filter((file) =>
+      file.startsWith(`plugins/${plugin}/`),
+    );
+    if (
+      pluginPaths.every((file) => /\/(?:README|CHANGELOG)\.md$/u.test(file))
+    ) {
+      continue;
+    }
+    const subjects = execFileSync(
+      "git",
+      [
+        "-C",
+        root,
+        "log",
+        "--format=%s%n%b",
+        `${base}...${head}`,
+        "--",
+        `plugins/${plugin}`,
+      ],
+      { encoding: "utf8" },
+    );
+    if (
+      !/(?:^|\n)(?:feat|fix|perf)(?:\([^)]*\))?!?:|BREAKING CHANGE:|Release-As:/mu.test(
+        subjects,
+      )
+    ) {
+      throw new Error(
+        `plugins/${plugin} requires a releasable Conventional Commit or Release-As`,
+      );
+    }
     validateUnreleased(path.join(root, "plugins", plugin, "CHANGELOG.md"));
   }
 }
