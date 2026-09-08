@@ -8,19 +8,17 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [0.2.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/prompt-architect/v0.1.0...plugin/prompt-architect/v0.2.0) (2026-09-08)
 
-
 ### Features
 
-* **prompt-architect:** add governed prompt authoring ([3f32f76](https://github.com/nerymurillohnd/codex-essentials/commit/3f32f7679ac0fa33c4add4eef5efd9a7bd6b5976))
-* **prompt-architect:** add governed prompt authoring ([554b467](https://github.com/nerymurillohnd/codex-essentials/commit/554b467c00d0005175be507660b4b15ccdff2923))
-
+- **prompt-architect:** add governed prompt authoring ([3f32f76](https://github.com/nerymurillohnd/codex-essentials/commit/3f32f7679ac0fa33c4add4eef5efd9a7bd6b5976))
+- **prompt-architect:** add governed prompt authoring ([554b467](https://github.com/nerymurillohnd/codex-essentials/commit/554b467c00d0005175be507660b4b15ccdff2923))
 
 ### Bug Fixes
 
-* **final-output:** preserve nested headings and block reasons ([a36129c](https://github.com/nerymurillohnd/codex-essentials/commit/a36129c00ab9719b5d322d9d29ea5e0d6e429461))
-* **prompt-architect:** address review findings ([a087d15](https://github.com/nerymurillohnd/codex-essentials/commit/a087d1593fa16d860c70c09c32d468d47e20d036))
-* **prompt-architect:** harden final-output validator ([5c72f75](https://github.com/nerymurillohnd/codex-essentials/commit/5c72f752d43257d301c3186f9ec3daefc50cffaa))
-* **prompt-architect:** tighten skill routing and final validation ([219e69d](https://github.com/nerymurillohnd/codex-essentials/commit/219e69dac6355c05c0b65a4aade073cfd41e6916))
+- **final-output:** preserve nested headings and block reasons ([a36129c](https://github.com/nerymurillohnd/codex-essentials/commit/a36129c00ab9719b5d322d9d29ea5e0d6e429461))
+- **prompt-architect:** address review findings ([a087d15](https://github.com/nerymurillohnd/codex-essentials/commit/a087d1593fa16d860c70c09c32d468d47e20d036))
+- **prompt-architect:** harden final-output validator ([5c72f75](https://github.com/nerymurillohnd/codex-essentials/commit/5c72f752d43257d301c3186f9ec3daefc50cffaa))
+- **prompt-architect:** tighten skill routing and final validation ([219e69d](https://github.com/nerymurillohnd/codex-essentials/commit/219e69dac6355c05c0b65a4aade073cfd41e6916))
 
 ## [Unreleased]
 
