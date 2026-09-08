@@ -10,13 +10,7 @@
   "homepage": "https://forestal-mt.com",
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "keywords": [
-    "prettier",
-    "formatter",
-    "hooks",
-    "quality",
-    "developer-tools"
-  ],
+  "keywords": ["prettier", "formatter", "hooks", "quality", "developer-tools"],
   "interface": {
     "displayName": "Prettier After Edit",
     "shortDescription": "Format edited files with Prettier.",
