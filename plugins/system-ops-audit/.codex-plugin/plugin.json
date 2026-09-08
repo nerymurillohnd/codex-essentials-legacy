@@ -1,6 +1,6 @@
 {
   "name": "system-ops-audit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Read-only macOS operational baseline audit workflow for local-machine diagnostics.",
   "author": {
     "name": "Nery Samuel Murillo",

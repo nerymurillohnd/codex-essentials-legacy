@@ -10,5 +10,5 @@
   "plugins/repo-maintenance": "0.1.0",
   "plugins/skill-design-standards": "0.1.0",
   "plugins/svelte-development": "0.1.2",
-  "plugins/system-ops-audit": "0.1.0"
+  "plugins/system-ops-audit": "0.2.0"
 }

@@ -6,6 +6,13 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Use ISO 8601
 dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
+## [0.2.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/system-ops-audit/v0.1.0...plugin/system-ops-audit/v0.2.0) (2026-09-08)
+
+
+### Features
+
+* **system-ops-audit:** add macos baseline audit plugin ([563005d](https://github.com/nerymurillohnd/codex-essentials/commit/563005da38a9c8857064e7a33c269920ffee83c5))
+
 ## [Unreleased]
 
 ### Changed
