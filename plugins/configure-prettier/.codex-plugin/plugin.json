@@ -1,6 +1,6 @@
 {
   "name": "configure-prettier",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Audit and propose repository-first Prettier configuration with explicit approval before any repository mutation.",
   "author": {
     "name": "Nery Samuel Murillo",
