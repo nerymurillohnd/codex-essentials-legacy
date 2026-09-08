@@ -85,7 +85,7 @@ describe("quality workflow", () => {
     expect(workflow.permissions).toEqual({ contents: "read" });
     expect(workflow.concurrency).toEqual({
       group:
-        "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}",
+        "${{ github.workflow }}-${{ github.event.pull_request.number || inputs.checkout_ref || github.ref }}",
       "cancel-in-progress": true,
     });
   });
