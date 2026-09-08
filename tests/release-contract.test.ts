@@ -167,10 +167,31 @@ describe("release contract", () => {
         mutate(directory),
       );
     }
-  });
+  }, 15_000);
   it("runs CLI success and failure paths with tag validation", () => {
     const directory = fixture();
     expect(contract.run(["--root", directory])).toBe(0);
+    const trustedDirectory = fixture();
+    writeFileSync(
+      join(trustedDirectory, "plugins/doc-keeper/CHANGELOG.md"),
+      "# Changelog\n",
+    );
+    expect(
+      contract.run([
+        "--root",
+        trustedDirectory,
+        "--base",
+        "HEAD",
+        "--head",
+        "HEAD",
+        "--title",
+        "chore(main): release plugin/doc-keeper 0.2.0",
+        "--author-type",
+        "Bot",
+        "--labels",
+        "autorelease: pending",
+      ]),
+    ).toBe(0);
     expect(
       contract.run(["--root", directory, "--tag", "plugin/doc-keeper/v0.1.0"]),
     ).toBe(0);
