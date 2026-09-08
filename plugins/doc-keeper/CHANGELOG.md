@@ -7,23 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/doc-keeper/v0.1.0...plugin/doc-keeper/v0.2.0) (2026-09-08)
 
-
 ### Features
 
-* add DocKeeper plugin ([c4cf62d](https://github.com/nerymurillohnd/codex-essentials/commit/c4cf62d2b129d8b441fb6788fe849ac33975d5e3))
-* add DocKeeper plugin ([c55b540](https://github.com/nerymurillohnd/codex-essentials/commit/c55b5407a3f436dd6034527409143ed3e496cb2a))
-* **agent-manifests:** require automatic invocation policy ([8c1f53a](https://github.com/nerymurillohnd/codex-essentials/commit/8c1f53ad3029cf907b7e882e4ee1fab2a3396e35))
-* enforce plugin marketplace pipeline ([2b6f6eb](https://github.com/nerymurillohnd/codex-essentials/commit/2b6f6ebc0d6b1832c6bd242d0773373106657698))
-* enforce plugin marketplace pipeline ([7f54439](https://github.com/nerymurillohnd/codex-essentials/commit/7f5443989d23751378a25d2db7d736d0acf65872))
-* **prettier-after-edit:** lint Markdown after formatting ([a1cec2f](https://github.com/nerymurillohnd/codex-essentials/commit/a1cec2f722ecef6654dd28a0048fbc75ec186128))
-
+- add DocKeeper plugin ([c4cf62d](https://github.com/nerymurillohnd/codex-essentials/commit/c4cf62d2b129d8b441fb6788fe849ac33975d5e3))
+- add DocKeeper plugin ([c55b540](https://github.com/nerymurillohnd/codex-essentials/commit/c55b5407a3f436dd6034527409143ed3e496cb2a))
+- **agent-manifests:** require automatic invocation policy ([8c1f53a](https://github.com/nerymurillohnd/codex-essentials/commit/8c1f53ad3029cf907b7e882e4ee1fab2a3396e35))
+- enforce plugin marketplace pipeline ([2b6f6eb](https://github.com/nerymurillohnd/codex-essentials/commit/2b6f6ebc0d6b1832c6bd242d0773373106657698))
+- enforce plugin marketplace pipeline ([7f54439](https://github.com/nerymurillohnd/codex-essentials/commit/7f5443989d23751378a25d2db7d736d0acf65872))
+- **prettier-after-edit:** lint Markdown after formatting ([a1cec2f](https://github.com/nerymurillohnd/codex-essentials/commit/a1cec2f722ecef6654dd28a0048fbc75ec186128))
 
 ### Bug Fixes
 
-* address marketplace review findings ([de32626](https://github.com/nerymurillohnd/codex-essentials/commit/de32626452689b73567226444e30b7796b63bd2a))
-* complete DocKeeper changelog guidance ([eb6ebf9](https://github.com/nerymurillohnd/codex-essentials/commit/eb6ebf9a12dcec04e5a40af15757fd8b0d35cb99))
-* complete DocKeeper changelog guidance ([1fe8af2](https://github.com/nerymurillohnd/codex-essentials/commit/1fe8af2e798f3e90a3441c7e18a61fc1c08800d2))
-* preserve release automation ownership ([941f0be](https://github.com/nerymurillohnd/codex-essentials/commit/941f0be946f2bf05fece3175a914a0d25175bd40))
+- address marketplace review findings ([de32626](https://github.com/nerymurillohnd/codex-essentials/commit/de32626452689b73567226444e30b7796b63bd2a))
+- complete DocKeeper changelog guidance ([eb6ebf9](https://github.com/nerymurillohnd/codex-essentials/commit/eb6ebf9a12dcec04e5a40af15757fd8b0d35cb99))
+- complete DocKeeper changelog guidance ([1fe8af2](https://github.com/nerymurillohnd/codex-essentials/commit/1fe8af2e798f3e90a3441c7e18a61fc1c08800d2))
+- preserve release automation ownership ([941f0be](https://github.com/nerymurillohnd/codex-essentials/commit/941f0be946f2bf05fece3175a914a0d25175bd40))
 
 ## [Unreleased]
 
