@@ -1,6 +1,6 @@
 {
   "name": "prettier-after-edit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Format files edited by Codex with Prettier after each change.",
   "author": {
     "name": "Nery Samuel Murillo",
@@ -10,7 +10,13 @@
   "homepage": "https://forestal-mt.com",
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "keywords": ["prettier", "formatter", "hooks", "quality", "developer-tools"],
+  "keywords": [
+    "prettier",
+    "formatter",
+    "hooks",
+    "quality",
+    "developer-tools"
+  ],
   "interface": {
     "displayName": "Prettier After Edit",
     "shortDescription": "Format edited files with Prettier.",
