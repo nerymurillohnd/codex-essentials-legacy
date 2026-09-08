@@ -192,11 +192,30 @@ describe("release contract", () => {
         "autorelease: pending",
       ]),
     ).toBe(0);
+    const currentVersion = (
+      JSON.parse(
+        readFileSync(
+          join(directory, "plugins/doc-keeper/.codex-plugin/plugin.json"),
+          "utf8",
+        ),
+      ) as { version: string }
+    ).version;
+    const invalidVersion = currentVersion === "0.0.0" ? "0.0.1" : "0.0.0";
     expect(
-      contract.run(["--root", directory, "--tag", "plugin/doc-keeper/v0.1.0"]),
+      contract.run([
+        "--root",
+        directory,
+        "--tag",
+        `plugin/doc-keeper/v${currentVersion}`,
+      ]),
     ).toBe(0);
     expect(
-      contract.run(["--root", directory, "--tag", "plugin/doc-keeper/v0.1.1"]),
+      contract.run([
+        "--root",
+        directory,
+        "--tag",
+        `plugin/doc-keeper/v${invalidVersion}`,
+      ]),
     ).toBe(1);
     expect(contract.run(["--root", directory, "--tag"])).toBe(1);
     expect(() =>
