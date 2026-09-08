@@ -1,6 +1,6 @@
 {
   "name": "astro-cli-commands",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Astro Commands gives Codex a maintained, command-first operating contract for Astro projects: inspect the installed CLI, prefer official capabilities, and verify version drift before acting.",
   "author": {
     "name": "Nery Samuel Murillo",
@@ -10,7 +10,13 @@
   "homepage": "https://forestal-mt.com",
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "keywords": ["astro", "cli", "code-editing", "codex", "workflows"],
+  "keywords": [
+    "astro",
+    "cli",
+    "code-editing",
+    "codex",
+    "workflows"
+  ],
   "interface": {
     "displayName": "Astro Commands",
     "shortDescription": "Use Astro's current CLI capabilities first.",
@@ -26,7 +32,9 @@
     "websiteURL": "https://forestal-mt.com",
     "privacyPolicyURL": "https://forestal-mt.com/privacy/",
     "termsOfServiceURL": "https://forestal-mt.com/terms/",
-    "defaultPrompt": ["Use Astro Commands before planning this Astro task."]
+    "defaultPrompt": [
+      "Use Astro Commands before planning this Astro task."
+    ]
   },
   "skills": "./skills/"
 }

@@ -6,6 +6,26 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Use ISO 8601
 dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
+## [0.2.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/astro-cli-commands/v0.1.1...plugin/astro-cli-commands/v0.2.0) (2026-09-08)
+
+
+### Features
+
+* **agent-manifests:** require automatic invocation policy ([8c1f53a](https://github.com/nerymurillohnd/codex-essentials/commit/8c1f53ad3029cf907b7e882e4ee1fab2a3396e35))
+* **ci:** adopt Release Please manifest releases ([a43b887](https://github.com/nerymurillohnd/codex-essentials/commit/a43b887de76732e0558e4890e2bbe09051be13af))
+* enforce plugin marketplace pipeline ([2b6f6eb](https://github.com/nerymurillohnd/codex-essentials/commit/2b6f6ebc0d6b1832c6bd242d0773373106657698))
+* enforce plugin marketplace pipeline ([7f54439](https://github.com/nerymurillohnd/codex-essentials/commit/7f5443989d23751378a25d2db7d736d0acf65872))
+* establish declarative plugin source ([f601d43](https://github.com/nerymurillohnd/codex-essentials/commit/f601d43939c71e649c075bf432d7e82ba8b4db9c))
+* establish declarative plugin source ([1b6875d](https://github.com/nerymurillohnd/codex-essentials/commit/1b6875d73faee52c19c8e590d4cce338a8aadc17))
+* **prettier-after-edit:** lint Markdown after formatting ([a1cec2f](https://github.com/nerymurillohnd/codex-essentials/commit/a1cec2f722ecef6654dd28a0048fbc75ec186128))
+
+
+### Bug Fixes
+
+* address marketplace review findings ([de32626](https://github.com/nerymurillohnd/codex-essentials/commit/de32626452689b73567226444e30b7796b63bd2a))
+* **ci:** rerun release gates on PR metadata changes ([78f4994](https://github.com/nerymurillohnd/codex-essentials/commit/78f499461902efeb2ffc6d37f1daf69bcaedcff5))
+* scope documentation credential checks ([840e1ae](https://github.com/nerymurillohnd/codex-essentials/commit/840e1aedec55dcca39e322e44421216bc9eb24a5))
+
 ## [Unreleased]
 
 ### Changed
