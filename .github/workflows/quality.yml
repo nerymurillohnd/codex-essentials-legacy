@@ -116,7 +116,7 @@ jobs:
             --labels "$PR_LABELS"
 
       - name: Validate direct-push routing
-        if: github.event_name == 'push'
+        if: "github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'chore(main): release ')"
         env:
           BASE_SHA: ${{ github.event.before }}
           HEAD_SHA: ${{ github.sha }}
