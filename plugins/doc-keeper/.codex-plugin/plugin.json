@@ -1,6 +1,6 @@
 {
   "name": "doc-keeper",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Keep changelogs and architecture decision records aligned with completed work, release preparation, and explicit decisions through evidence-based, infrastructure-aware procedures.",
   "author": {
     "name": "Nery Samuel Murillo",
