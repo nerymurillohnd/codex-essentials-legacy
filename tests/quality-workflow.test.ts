@@ -71,6 +71,9 @@ describe("quality workflow", () => {
         inputs: {
           base_sha: { required: true, type: "string" },
           head_sha: { required: true, type: "string" },
+          pr_title: { required: false, type: "string", default: "" },
+          pr_author_type: { required: false, type: "string", default: "" },
+          pr_labels: { required: false, type: "string", default: "" },
         },
       },
       push: { branches: ["main"] },
@@ -130,7 +133,15 @@ describe("quality workflow", () => {
       {
         name: "Run plugin documentation gate",
         uses: undefined,
-        run: 'npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+        run:
+          [
+            "npm run documentation:gate -- \\",
+            '  --base "$BASE_SHA" \\',
+            '  --head "$HEAD_SHA" \\',
+            '  --title "$PR_TITLE" \\',
+            '  --author-type "$PR_AUTHOR_TYPE" \\',
+            '  --labels "$PR_LABELS"',
+          ].join("\n") + "\n",
         if: "github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
       },
       {
@@ -180,8 +191,21 @@ describe("quality workflow", () => {
           "${{ github.event.pull_request.base.sha || inputs.base_sha }}",
         HEAD_SHA:
           "${{ github.event.pull_request.head.sha || inputs.head_sha }}",
+        PR_TITLE: "${{ github.event.pull_request.title || inputs.pr_title }}",
+        PR_AUTHOR_TYPE:
+          "${{ github.event.pull_request.user.type || inputs.pr_author_type }}",
+        PR_LABELS:
+          "${{ join(github.event.pull_request.labels.*.name, ',') || inputs.pr_labels }}",
       },
-      run: 'npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+      run:
+        [
+          "npm run documentation:gate -- \\",
+          '  --base "$BASE_SHA" \\',
+          '  --head "$HEAD_SHA" \\',
+          '  --title "$PR_TITLE" \\',
+          '  --author-type "$PR_AUTHOR_TYPE" \\',
+          '  --labels "$PR_LABELS"',
+        ].join("\n") + "\n",
     });
   });
 
