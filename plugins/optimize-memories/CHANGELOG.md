@@ -6,6 +6,20 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Use ISO 8601
 dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
+## [0.2.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/optimize-memories/v0.1.0...plugin/optimize-memories/v0.2.0) (2026-09-08)
+
+
+### Features
+
+* add optimize-memories plugin ([9bbeea9](https://github.com/nerymurillohnd/codex-essentials/commit/9bbeea9dc830a4f492a020a6fe6c88acba7b8d0a))
+* add optimize-memories plugin ([960e0d0](https://github.com/nerymurillohnd/codex-essentials/commit/960e0d015b3aab8ac18067eb9820d4baafc7ecff))
+* **prettier-after-edit:** lint Markdown after formatting ([a1cec2f](https://github.com/nerymurillohnd/codex-essentials/commit/a1cec2f722ecef6654dd28a0048fbc75ec186128))
+
+
+### Bug Fixes
+
+* **optimize-memories:** address pull request review feedback ([ed02380](https://github.com/nerymurillohnd/codex-essentials/commit/ed02380cad46d1ef6d50228caa751de6424566b8))
+
 ## [Unreleased]
 
 ### Changed
