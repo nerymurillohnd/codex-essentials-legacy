@@ -82,7 +82,10 @@ describe("quality workflow", () => {
   });
 
   it("uses read-only permissions and cancels only superseded runs", () => {
-    expect(workflow.permissions).toEqual({ contents: "read" });
+    expect(workflow.permissions).toEqual({
+      contents: "read",
+      "pull-requests": "read",
+    });
     expect(workflow.concurrency).toEqual({
       group:
         "${{ github.workflow }}-${{ github.event.pull_request.number || inputs.checkout_ref || github.ref }}",
@@ -181,10 +184,25 @@ describe("quality workflow", () => {
         if: "github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
       },
       {
+        name: "Detect pull request merge",
+        uses: undefined,
+        run:
+          [
+            "set -euo pipefail",
+            "associated_prs=\"$(gh api --header 'Accept: application/vnd.github+json' --header 'X-GitHub-Api-Version: 2022-11-28' \"repos/${REPOSITORY}/commits/${COMMIT_SHA}/pulls\" --jq 'length')\"",
+            'if [[ "$associated_prs" -gt 0 ]]; then',
+            '  echo "is_pr_merge=true" >> "$GITHUB_OUTPUT"',
+            "else",
+            '  echo "is_pr_merge=false" >> "$GITHUB_OUTPUT"',
+            "fi",
+          ].join("\n") + "\n",
+        if: "github.event_name == 'push'",
+      },
+      {
         name: "Validate direct-push routing",
         uses: undefined,
         run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA" --direct',
-        if: "github.event_name == 'push' && !contains(github.event.head_commit.message, ' (#')",
+        if: "github.event_name == 'push' && steps.detect-pull-request-merge.outputs.is_pr_merge != 'true'",
       },
     ]);
   });
