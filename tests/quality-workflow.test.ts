@@ -136,7 +136,14 @@ describe("quality workflow", () => {
         uses: undefined,
         run:
           [
-            "npm run documentation:gate -- \\",
+            "set -euo pipefail",
+            'gate_dir="$RUNNER_TEMP/release-documentation-gate"',
+            'mkdir -p "$gate_dir"',
+            "git fetch origin main --depth=1",
+            'git show origin/main:scripts/documentation-gate.cjs > "$gate_dir/documentation-gate.cjs"',
+            'git show origin/main:scripts/error-utils.cjs > "$gate_dir/error-utils.cjs"',
+            'git show origin/main:scripts/release-pr-auth.cjs > "$gate_dir/release-pr-auth.cjs"',
+            'node "$gate_dir/documentation-gate.cjs" --root "$GITHUB_WORKSPACE" \\',
             '  --base "$BASE_SHA" \\',
             '  --head "$HEAD_SHA" \\',
             '  --title "$PR_TITLE" \\',
@@ -200,7 +207,14 @@ describe("quality workflow", () => {
       },
       run:
         [
-          "npm run documentation:gate -- \\",
+          "set -euo pipefail",
+          'gate_dir="$RUNNER_TEMP/release-documentation-gate"',
+          'mkdir -p "$gate_dir"',
+          "git fetch origin main --depth=1",
+          'git show origin/main:scripts/documentation-gate.cjs > "$gate_dir/documentation-gate.cjs"',
+          'git show origin/main:scripts/error-utils.cjs > "$gate_dir/error-utils.cjs"',
+          'git show origin/main:scripts/release-pr-auth.cjs > "$gate_dir/release-pr-auth.cjs"',
+          'node "$gate_dir/documentation-gate.cjs" --root "$GITHUB_WORKSPACE" \\',
           '  --base "$BASE_SHA" \\',
           '  --head "$HEAD_SHA" \\',
           '  --title "$PR_TITLE" \\',
