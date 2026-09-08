@@ -167,7 +167,7 @@ describe("release contract", () => {
         mutate(directory),
       );
     }
-  }, 15_000);
+  });
   it("runs CLI success and failure paths with tag validation", () => {
     const directory = fixture();
     expect(contract.run(["--root", directory])).toBe(0);
@@ -231,7 +231,7 @@ describe("release contract", () => {
       { encoding: "utf8" },
     );
     expect(executable.status).toBe(0);
-  });
+  }, 15_000);
   it("enforces direct and plugin change routing from an actual Git diff", () => {
     const directory = fixture();
     const base = spawnSync("git", ["-C", directory, "rev-parse", "HEAD"], {
