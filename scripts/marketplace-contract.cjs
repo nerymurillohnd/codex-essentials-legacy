@@ -52,8 +52,8 @@ const README_REQUIRED_SECTIONS = [
   "Failure and Recovery",
 ];
 
-/** @param {string} root */
-function loadPluginManifests(root) {
+/** @param {string} root @param {{allowEmptyUnreleased?: boolean}} [options] */
+function loadPluginManifests(root, options = {}) {
   const pluginsRoot = path.join(root, PLUGINS_DIRECTORY);
   assertDirectory(pluginsRoot, "plugins directory");
   const pluginSchema = loadJson(
@@ -90,7 +90,11 @@ function loadPluginManifests(root) {
     assertDirectory(pluginRoot, `plugins/${entry.name}`);
     assertContained(pluginsRoot, pluginRoot, `plugins/${entry.name}`);
     assertNoSymlinks(pluginRoot);
-    validatePluginDocumentation(pluginRoot, `plugins/${entry.name}`);
+    validatePluginDocumentation(
+      pluginRoot,
+      `plugins/${entry.name}`,
+      options.allowEmptyUnreleased === true,
+    );
     const manifestPath = path.join(pluginRoot, PLUGIN_MANIFEST);
     assertRegularFile(manifestPath, `plugins/${entry.name}/${PLUGIN_MANIFEST}`);
     assertContained(pluginRoot, manifestPath, manifestPath);
@@ -339,8 +343,12 @@ function assertFunctionalComponent(manifest, label) {
   }
 }
 
-/** @param {string} pluginRoot @param {string} label */
-function validatePluginDocumentation(pluginRoot, label) {
+/** @param {string} pluginRoot @param {string} label @param {boolean} [allowEmptyUnreleased] */
+function validatePluginDocumentation(
+  pluginRoot,
+  label,
+  allowEmptyUnreleased = false,
+) {
   for (const document of REQUIRED_PLUGIN_DOCUMENTS) {
     const documentPath = path.join(pluginRoot, document);
     assertRegularFile(documentPath, `${label}/${document}`);
@@ -363,6 +371,7 @@ function validatePluginDocumentation(pluginRoot, label) {
     }
     if (
       document === "CHANGELOG.md" &&
+      !allowEmptyUnreleased &&
       !/^## \[Unreleased\]\s*$/mu.test(content)
     ) {
       throw new Error(
