@@ -8,18 +8,16 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [0.2.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/svelte-development/v0.1.2...plugin/svelte-development/v0.2.0) (2026-09-08)
 
-
 ### Features
 
-* **agent-manifests:** require automatic invocation policy ([8c1f53a](https://github.com/nerymurillohnd/codex-essentials/commit/8c1f53ad3029cf907b7e882e4ee1fab2a3396e35))
-
+- **agent-manifests:** require automatic invocation policy ([8c1f53a](https://github.com/nerymurillohnd/codex-essentials/commit/8c1f53ad3029cf907b7e882e4ee1fab2a3396e35))
 
 ### Bug Fixes
 
-* **svelte-development:** load bundled remote MCP ([baa587c](https://github.com/nerymurillohnd/codex-essentials/commit/baa587c8eb76b6c2a2877c8d06f807cf287cdc1f))
-* **svelte-development:** load bundled remote MCP ([ac47501](https://github.com/nerymurillohnd/codex-essentials/commit/ac4750147d9e6bf735f3b88a8282441757edf556))
-* **svelte-development:** use documented MCP map ([791a9e9](https://github.com/nerymurillohnd/codex-essentials/commit/791a9e91bc38762876c1d74459e8a56871404654))
-* **svelte-development:** use documented MCP map ([b6a53c6](https://github.com/nerymurillohnd/codex-essentials/commit/b6a53c6ac2579e0472c57262fd83e38598c90fc8))
+- **svelte-development:** load bundled remote MCP ([baa587c](https://github.com/nerymurillohnd/codex-essentials/commit/baa587c8eb76b6c2a2877c8d06f807cf287cdc1f))
+- **svelte-development:** load bundled remote MCP ([ac47501](https://github.com/nerymurillohnd/codex-essentials/commit/ac4750147d9e6bf735f3b88a8282441757edf556))
+- **svelte-development:** use documented MCP map ([791a9e9](https://github.com/nerymurillohnd/codex-essentials/commit/791a9e91bc38762876c1d74459e8a56871404654))
+- **svelte-development:** use documented MCP map ([b6a53c6](https://github.com/nerymurillohnd/codex-essentials/commit/b6a53c6ac2579e0472c57262fd83e38598c90fc8))
 
 ## [Unreleased]
 
