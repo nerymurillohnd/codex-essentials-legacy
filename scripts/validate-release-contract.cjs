@@ -195,7 +195,7 @@ function main(args = process.argv.slice(2)) {
     ["--labels", "labels"],
   ]) {
     const index = args.indexOf(flag);
-    if (index !== -1 && args[index + 1]) {
+    if (index !== -1 && args[index + 1] !== undefined) {
       if (target === "title") {
         title = args[index + 1];
       }
