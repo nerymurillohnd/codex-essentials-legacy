@@ -71,6 +71,10 @@ describe("quality workflow", () => {
         inputs: {
           base_sha: { required: true, type: "string" },
           head_sha: { required: true, type: "string" },
+          pr_title: { required: false, type: "string", default: "" },
+          pr_author_type: { required: false, type: "string", default: "" },
+          pr_labels: { required: false, type: "string", default: "" },
+          checkout_ref: { required: false, type: "string", default: "" },
         },
       },
       push: { branches: ["main"] },
@@ -81,7 +85,7 @@ describe("quality workflow", () => {
     expect(workflow.permissions).toEqual({ contents: "read" });
     expect(workflow.concurrency).toEqual({
       group:
-        "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}",
+        "${{ github.workflow }}-${{ github.event.pull_request.number || inputs.checkout_ref || github.ref }}",
       "cancel-in-progress": true,
     });
   });
@@ -130,13 +134,50 @@ describe("quality workflow", () => {
       {
         name: "Run plugin documentation gate",
         uses: undefined,
-        run: 'npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+        run:
+          [
+            "set -euo pipefail",
+            'gate_dir="$GITHUB_WORKSPACE/scripts"',
+            'if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then',
+            '  gate_dir="$RUNNER_TEMP/release-documentation-gate"',
+            '  mkdir -p "$gate_dir"',
+            "  git fetch origin main",
+            '  git show origin/main:scripts/documentation-gate.cjs > "$gate_dir/documentation-gate.cjs"',
+            '  git show origin/main:scripts/error-utils.cjs > "$gate_dir/error-utils.cjs"',
+            '  git show origin/main:scripts/release-pr-auth.cjs > "$gate_dir/release-pr-auth.cjs"',
+            "fi",
+            'node "$gate_dir/documentation-gate.cjs" --root "$GITHUB_WORKSPACE" \\',
+            '  --base "$BASE_SHA" \\',
+            '  --head "$HEAD_SHA" \\',
+            '  --title "$PR_TITLE" \\',
+            '  --author-type "$PR_AUTHOR_TYPE" \\',
+            '  --labels "$PR_LABELS"',
+          ].join("\n") + "\n",
         if: "github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
       },
       {
         name: "Validate plugin change routing",
         uses: undefined,
-        run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+        run:
+          [
+            "set -euo pipefail",
+            'contract_dir="$GITHUB_WORKSPACE/scripts"',
+            'if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then',
+            '  contract_dir="$RUNNER_TEMP/release-contract"',
+            '  mkdir -p "$contract_dir"',
+            "  git fetch origin main",
+            '  git show origin/main:scripts/validate-release-contract.cjs > "$contract_dir/validate-release-contract.cjs"',
+            '  git show origin/main:scripts/marketplace-contract.cjs > "$contract_dir/marketplace-contract.cjs"',
+            '  git show origin/main:scripts/error-utils.cjs > "$contract_dir/error-utils.cjs"',
+            '  git show origin/main:scripts/release-pr-auth.cjs > "$contract_dir/release-pr-auth.cjs"',
+            "fi",
+            'NODE_PATH="$GITHUB_WORKSPACE/node_modules" node "$contract_dir/validate-release-contract.cjs" --root "$GITHUB_WORKSPACE" \\',
+            '  --base "$BASE_SHA" \\',
+            '  --head "$HEAD_SHA" \\',
+            '  --title "$PR_TITLE" \\',
+            '  --author-type "$PR_AUTHOR_TYPE" \\',
+            '  --labels "$PR_LABELS"',
+          ].join("\n") + "\n",
         if: "github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
       },
       {
@@ -151,7 +192,7 @@ describe("quality workflow", () => {
   it("pins checkout and Node setup with deterministic inputs", () => {
     expect(getStep("Check out repository")).toMatchObject({
       uses: checkoutAction,
-      with: { "fetch-depth": 0 },
+      with: { "fetch-depth": 0, ref: "${{ inputs.checkout_ref || '' }}" },
     });
     expect(getStep("Set up Node.js")).toMatchObject({
       uses: setupNodeAction,
@@ -180,8 +221,31 @@ describe("quality workflow", () => {
           "${{ github.event.pull_request.base.sha || inputs.base_sha }}",
         HEAD_SHA:
           "${{ github.event.pull_request.head.sha || inputs.head_sha }}",
+        PR_TITLE: "${{ github.event.pull_request.title || inputs.pr_title }}",
+        PR_AUTHOR_TYPE:
+          "${{ github.event.pull_request.user.type || inputs.pr_author_type }}",
+        PR_LABELS:
+          "${{ join(github.event.pull_request.labels.*.name, ',') || inputs.pr_labels }}",
       },
-      run: 'npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+      run:
+        [
+          "set -euo pipefail",
+          'gate_dir="$GITHUB_WORKSPACE/scripts"',
+          'if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then',
+          '  gate_dir="$RUNNER_TEMP/release-documentation-gate"',
+          '  mkdir -p "$gate_dir"',
+          "  git fetch origin main",
+          '  git show origin/main:scripts/documentation-gate.cjs > "$gate_dir/documentation-gate.cjs"',
+          '  git show origin/main:scripts/error-utils.cjs > "$gate_dir/error-utils.cjs"',
+          '  git show origin/main:scripts/release-pr-auth.cjs > "$gate_dir/release-pr-auth.cjs"',
+          "fi",
+          'node "$gate_dir/documentation-gate.cjs" --root "$GITHUB_WORKSPACE" \\',
+          '  --base "$BASE_SHA" \\',
+          '  --head "$HEAD_SHA" \\',
+          '  --title "$PR_TITLE" \\',
+          '  --author-type "$PR_AUTHOR_TYPE" \\',
+          '  --labels "$PR_LABELS"',
+        ].join("\n") + "\n",
     });
   });
 
@@ -193,8 +257,32 @@ describe("quality workflow", () => {
           "${{ github.event.pull_request.base.sha || inputs.base_sha }}",
         HEAD_SHA:
           "${{ github.event.pull_request.head.sha || inputs.head_sha }}",
+        PR_TITLE: "${{ github.event.pull_request.title || inputs.pr_title }}",
+        PR_AUTHOR_TYPE:
+          "${{ github.event.pull_request.user.type || inputs.pr_author_type }}",
+        PR_LABELS:
+          "${{ join(github.event.pull_request.labels.*.name, ',') || inputs.pr_labels }}",
       },
-      run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+      run:
+        [
+          "set -euo pipefail",
+          'contract_dir="$GITHUB_WORKSPACE/scripts"',
+          'if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then',
+          '  contract_dir="$RUNNER_TEMP/release-contract"',
+          '  mkdir -p "$contract_dir"',
+          "  git fetch origin main",
+          '  git show origin/main:scripts/validate-release-contract.cjs > "$contract_dir/validate-release-contract.cjs"',
+          '  git show origin/main:scripts/marketplace-contract.cjs > "$contract_dir/marketplace-contract.cjs"',
+          '  git show origin/main:scripts/error-utils.cjs > "$contract_dir/error-utils.cjs"',
+          '  git show origin/main:scripts/release-pr-auth.cjs > "$contract_dir/release-pr-auth.cjs"',
+          "fi",
+          'NODE_PATH="$GITHUB_WORKSPACE/node_modules" node "$contract_dir/validate-release-contract.cjs" --root "$GITHUB_WORKSPACE" \\',
+          '  --base "$BASE_SHA" \\',
+          '  --head "$HEAD_SHA" \\',
+          '  --title "$PR_TITLE" \\',
+          '  --author-type "$PR_AUTHOR_TYPE" \\',
+          '  --labels "$PR_LABELS"',
+        ].join("\n") + "\n",
     });
   });
 

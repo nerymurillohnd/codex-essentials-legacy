@@ -12,6 +12,7 @@ export const coverageProfiles = {
     "scripts/validate-marketplace.cjs",
     "scripts/validate-plugins.cjs",
   ],
+  "release-pr-auth.test.ts": ["scripts/release-pr-auth.cjs"],
   "path-utils.test.ts": ["scripts/path-utils.cjs"],
   "project-bootstrap.test.ts": ["scripts/project-bootstrap.cjs"],
   "quality-workflow.test.ts": [],
