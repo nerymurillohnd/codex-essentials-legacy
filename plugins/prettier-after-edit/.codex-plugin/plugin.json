@@ -1,6 +1,6 @@
 {
   "name": "prettier-after-edit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Format files edited by Codex with Prettier after each change.",
   "author": {
     "name": "Nery Samuel Murillo",
