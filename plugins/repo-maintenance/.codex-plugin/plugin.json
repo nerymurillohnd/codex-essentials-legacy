@@ -1,6 +1,6 @@
 {
   "name": "repo-maintenance",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Maintain repository documentation and records using adaptable, evidence-based templates without inventing project conventions.",
   "author": {
     "name": "Nery Samuel Murillo",
