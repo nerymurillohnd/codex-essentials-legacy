@@ -87,12 +87,30 @@ function runGuard(root: string, event: unknown) {
   );
 }
 
-function runDocumentationGate(root: string, base: string, head: string) {
+function runDocumentationGate(
+  root: string,
+  base: string,
+  head: string,
+  metadata: { title?: string; authorType?: string; labels?: string } = {},
+) {
   const log = vi.spyOn(console, "log").mockImplementation(() => undefined);
   const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
   try {
     const status = documentationGate.run(
-      ["--root", root, "--base", base, "--head", head],
+      [
+        "--root",
+        root,
+        "--base",
+        base,
+        "--head",
+        head,
+        "--title",
+        metadata.title ?? "",
+        "--author-type",
+        metadata.authorType ?? "",
+        "--labels",
+        metadata.labels ?? "",
+      ],
       console,
     );
     return {
@@ -1010,13 +1028,27 @@ describe("strict plugin-to-marketplace pipeline", () => {
         ["--base", "base", "--head", "head"],
         root,
       ),
-    ).toEqual({ root, base: "base", head: "head" });
+    ).toEqual({
+      root,
+      base: "base",
+      head: "head",
+      title: "",
+      authorType: "",
+      labels: "",
+    });
     expect(
       documentationGate.parseArguments(
         ["--head", "head", "--root", root, "--base", "base"],
         "unused-root",
       ),
-    ).toEqual({ root, base: "base", head: "head" });
+    ).toEqual({
+      root,
+      base: "base",
+      head: "head",
+      title: "",
+      authorType: "",
+      labels: "",
+    });
     expect(() => documentationGate.parseArguments(["--base"], root)).toThrow(
       "usage: --base <base> --head <head>",
     );
