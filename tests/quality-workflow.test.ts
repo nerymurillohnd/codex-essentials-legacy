@@ -184,7 +184,7 @@ describe("quality workflow", () => {
         name: "Validate direct-push routing",
         uses: undefined,
         run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA" --direct',
-        if: "github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'chore(main): release ')",
+        if: "github.event_name == 'push' && !contains(github.event.head_commit.message, ' (#')",
       },
     ]);
   });
