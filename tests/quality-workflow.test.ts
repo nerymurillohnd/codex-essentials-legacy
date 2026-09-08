@@ -155,7 +155,23 @@ describe("quality workflow", () => {
       {
         name: "Validate plugin change routing",
         uses: undefined,
-        run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+        run:
+          [
+            "set -euo pipefail",
+            'contract_dir="$RUNNER_TEMP/release-contract"',
+            'mkdir -p "$contract_dir"',
+            "git fetch origin main",
+            'git show origin/main:scripts/validate-release-contract.cjs > "$contract_dir/validate-release-contract.cjs"',
+            'git show origin/main:scripts/marketplace-contract.cjs > "$contract_dir/marketplace-contract.cjs"',
+            'git show origin/main:scripts/error-utils.cjs > "$contract_dir/error-utils.cjs"',
+            'git show origin/main:scripts/release-pr-auth.cjs > "$contract_dir/release-pr-auth.cjs"',
+            'node "$contract_dir/validate-release-contract.cjs" --root "$GITHUB_WORKSPACE" \\',
+            '  --base "$BASE_SHA" \\',
+            '  --head "$HEAD_SHA" \\',
+            '  --title "$PR_TITLE" \\',
+            '  --author-type "$PR_AUTHOR_TYPE" \\',
+            '  --labels "$PR_LABELS"',
+          ].join("\n") + "\n",
         if: "github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
       },
       {
@@ -232,8 +248,29 @@ describe("quality workflow", () => {
           "${{ github.event.pull_request.base.sha || inputs.base_sha }}",
         HEAD_SHA:
           "${{ github.event.pull_request.head.sha || inputs.head_sha }}",
+        PR_TITLE: "${{ github.event.pull_request.title || inputs.pr_title }}",
+        PR_AUTHOR_TYPE:
+          "${{ github.event.pull_request.user.type || inputs.pr_author_type }}",
+        PR_LABELS:
+          "${{ join(github.event.pull_request.labels.*.name, ',') || inputs.pr_labels }}",
       },
-      run: 'npm run validate:release-contract -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+      run:
+        [
+          "set -euo pipefail",
+          'contract_dir="$RUNNER_TEMP/release-contract"',
+          'mkdir -p "$contract_dir"',
+          "git fetch origin main",
+          'git show origin/main:scripts/validate-release-contract.cjs > "$contract_dir/validate-release-contract.cjs"',
+          'git show origin/main:scripts/marketplace-contract.cjs > "$contract_dir/marketplace-contract.cjs"',
+          'git show origin/main:scripts/error-utils.cjs > "$contract_dir/error-utils.cjs"',
+          'git show origin/main:scripts/release-pr-auth.cjs > "$contract_dir/release-pr-auth.cjs"',
+          'node "$contract_dir/validate-release-contract.cjs" --root "$GITHUB_WORKSPACE" \\',
+          '  --base "$BASE_SHA" \\',
+          '  --head "$HEAD_SHA" \\',
+          '  --title "$PR_TITLE" \\',
+          '  --author-type "$PR_AUTHOR_TYPE" \\',
+          '  --labels "$PR_LABELS"',
+        ].join("\n") + "\n",
     });
   });
 

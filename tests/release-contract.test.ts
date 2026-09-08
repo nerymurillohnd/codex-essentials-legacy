@@ -172,6 +172,22 @@ describe("release contract", () => {
     const directory = fixture();
     expect(contract.run(["--root", directory])).toBe(0);
     expect(
+      contract.run([
+        "--root",
+        directory,
+        "--base",
+        "HEAD",
+        "--head",
+        "HEAD",
+        "--title",
+        "chore(main): release plugin/doc-keeper 0.2.0",
+        "--author-type",
+        "Bot",
+        "--labels",
+        "autorelease: pending",
+      ]),
+    ).toBe(0);
+    expect(
       contract.run(["--root", directory, "--tag", "plugin/doc-keeper/v0.1.0"]),
     ).toBe(0);
     expect(
