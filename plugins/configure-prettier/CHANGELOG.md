@@ -6,6 +6,14 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Use ISO 8601
 dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
+## [0.2.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/configure-prettier/v0.1.0...plugin/configure-prettier/v0.2.0) (2026-09-08)
+
+### Features
+
+- **marketplace:** add Prettier configuration plugin ([7a1d7b8](https://github.com/nerymurillohnd/codex-essentials/commit/7a1d7b8875b98125cf13310c19de7d1ad98fc43d))
+- **marketplace:** add Prettier configuration plugin ([#35](https://github.com/nerymurillohnd/codex-essentials/issues/35)) ([c196734](https://github.com/nerymurillohnd/codex-essentials/commit/c1967346ca9984a911713c3297c8a67c39d5f94f))
+- **prettier-after-edit:** lint Markdown after formatting ([a1cec2f](https://github.com/nerymurillohnd/codex-essentials/commit/a1cec2f722ecef6654dd28a0048fbc75ec186128))
+
 ## [Unreleased]
 
 ### Changed
