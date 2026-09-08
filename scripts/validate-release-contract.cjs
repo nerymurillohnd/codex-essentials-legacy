@@ -112,12 +112,14 @@ function validateChangeRouting(
         `plugins/${plugin} requires a releasable Conventional Commit or Release-As`,
       );
     }
-    validateUnreleased(path.join(root, "plugins", plugin, "CHANGELOG.md"));
+    if (!isReleasePleasePr) {
+      validateUnreleased(path.join(root, "plugins", plugin, "CHANGELOG.md"));
+    }
   }
 }
 
-function validateRepository(root) {
-  const plugins = loadPluginManifests(root);
+function validateRepository(root, allowEmptyUnreleased = false) {
+  const plugins = loadPluginManifests(root, { allowEmptyUnreleased });
   const config = JSON.parse(
     fs.readFileSync(path.join(root, "release-please-config.json"), "utf8"),
   );
@@ -136,7 +138,9 @@ function validateRepository(root) {
   }
   for (const plugin of plugins) {
     const componentPath = `plugins/${plugin.name}`;
-    validateUnreleased(path.join(plugin.pluginRoot, "CHANGELOG.md"));
+    if (!allowEmptyUnreleased) {
+      validateUnreleased(path.join(plugin.pluginRoot, "CHANGELOG.md"));
+    }
     const component = config.packages[componentPath];
     if (component.component !== `plugin/${plugin.name}`) {
       throw new Error(`${componentPath} component name is invalid`);
@@ -216,27 +220,22 @@ function main(args = process.argv.slice(2)) {
     throw new Error("usage: --tag plugin/<id>/v<semver>");
   }
   const root = resolveRootFromArgs(passthrough, path.resolve(__dirname, ".."));
-  validateRepository(root);
+  const isReleasePleasePr = isTrustedReleasePleasePullRequest(
+    title,
+    authorType,
+    labels
+      .split(",")
+      .map((label) => label.trim())
+      .filter(Boolean),
+  );
+  validateRepository(root, isReleasePleasePr);
   if (baseIndex !== -1 || headIndex !== -1) {
     const base = args[baseIndex + 1];
     const head = args[headIndex + 1];
     if (!base || !head) {
       throw new Error("usage: --base <sha> --head <sha>");
     }
-    validateChangeRouting(
-      root,
-      base,
-      head,
-      direct,
-      isTrustedReleasePleasePullRequest(
-        title,
-        authorType,
-        labels
-          .split(",")
-          .map((label) => label.trim())
-          .filter(Boolean),
-      ),
-    );
+    validateChangeRouting(root, base, head, direct, isReleasePleasePr);
   }
   if (tag) {
     const parsed = parseTag(tag);

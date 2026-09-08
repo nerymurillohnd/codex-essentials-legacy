@@ -171,10 +171,15 @@ describe("release contract", () => {
   it("runs CLI success and failure paths with tag validation", () => {
     const directory = fixture();
     expect(contract.run(["--root", directory])).toBe(0);
+    const trustedDirectory = fixture();
+    writeFileSync(
+      join(trustedDirectory, "plugins/doc-keeper/CHANGELOG.md"),
+      "# Changelog\n",
+    );
     expect(
       contract.run([
         "--root",
-        directory,
+        trustedDirectory,
         "--base",
         "HEAD",
         "--head",
