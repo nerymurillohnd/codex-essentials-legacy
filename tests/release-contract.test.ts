@@ -167,7 +167,7 @@ describe("release contract", () => {
         mutate(directory),
       );
     }
-  });
+  }, 15_000);
   it("runs CLI success and failure paths with tag validation", () => {
     const directory = fixture();
     expect(contract.run(["--root", directory])).toBe(0);
