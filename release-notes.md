@@ -1,17 +1,30 @@
 # Codex Essentials Release Notes
 
-This document consolidates the current release notes for the 10 plugins in the
-Git-backed marketplace. Versions are sourced from each plugin manifest.
+This document summarizes the 12 plugins in the [Git-backed marketplace](.agents/plugins/marketplace.json).
+Snapshot: 2026-09-07, based on repository revision `f626229`.
+
+Manifest versions identify the current package metadata; they do not prove that
+the changes below have been released. Each plugin's linked changelog owns its
+versioned history and `Unreleased` entries. Unless explicitly labeled as
+versioned history, highlights below summarize `Unreleased` changes.
+
+Installations use the repository's `main` catalog, which can include these
+pending changes. For published release records, consult
+[GitHub Releases](https://github.com/nerymurillohnd/codex-essentials/releases).
 
 ## Astro Commands (`astro-cli-commands`)
 
 Current manifest version: `0.1.1`
 
+Sources: [Manifest](plugins/astro-cli-commands/.codex-plugin/plugin.json) ·
+[Changelog](plugins/astro-cli-commands/CHANGELOG.md).
+Latest versioned changelog entry: `0.1.1` (2026-08-27).
+
 Astro Commands provides a command-first operating contract for Astro projects.
 It uses the installed Astro CLI and the project's package manager as the source
 of truth.
 
-Highlights:
+Unreleased highlights:
 
 - Refined skill trigger metadata for Astro CLI-dependent work.
 - Stronger package validation for skill metadata, unsafe links, and package
@@ -30,12 +43,16 @@ Upgrade notes:
 
 Current manifest version: `0.1.0`
 
+Sources: [Manifest](plugins/configure-prettier/.codex-plugin/plugin.json) ·
+[Changelog](plugins/configure-prettier/CHANGELOG.md).
+Changelog status: `Unreleased` only; no versioned entry yet.
+
 Configure Prettier introduces an audit-first plugin for repository-specific
 Prettier setup and maintenance. It discovers the current repository, tooling,
 editor, hook, CI, package-manager, and formatting context before recommending
 any change.
 
-Highlights:
+Unreleased highlights:
 
 - New approval-gated skill for auditing, recommending, configuring, and
   maintaining Prettier.
@@ -59,11 +76,15 @@ Upgrade notes:
 
 Current manifest version: `0.1.0`
 
+Sources: [Manifest](plugins/doc-keeper/.codex-plugin/plugin.json) ·
+[Changelog](plugins/doc-keeper/CHANGELOG.md).
+Latest versioned changelog entry: `0.1.0` (2026-08-28).
+
 DocKeeper strengthens its evidence-based changelog and ADR maintenance workflow.
 The package now has complete marketplace manifest metadata and stricter release
 history behavior while preserving existing changelog and ADR ownership.
 
-Highlights:
+Unreleased highlights:
 
 - Explicit automatic invocation policy in the bundled agent metadata.
 - More precise skill routing for changelog, release-history, and ADR work.
@@ -81,16 +102,47 @@ Upgrade notes:
   plugin unless separately authorized.
 - Existing local changelog and ADR conventions continue to take precedence.
 
+## Hook Creator (`hook-creator`)
+
+Current manifest version: `0.1.0`
+
+Sources: [Manifest](plugins/hook-creator/.codex-plugin/plugin.json) ·
+[Changelog](plugins/hook-creator/CHANGELOG.md).
+Changelog status: `Unreleased` only; no versioned entry yet.
+
+Hook Creator packages focused guidance for designing, implementing, integrating,
+reviewing, testing, and debugging Codex lifecycle hooks.
+
+Unreleased highlights:
+
+- New skill with focused references for event selection, configuration,
+  command/MCP/background handlers, input/output contracts, and debugging.
+- Guidance for existing-hook composition, managed hooks, plugin bundling,
+  subagents, CI/CD, and GitHub Actions.
+- Source traceability to official hook documentation and commit-pinned schemas,
+  implementation, and tests.
+
+Upgrade notes:
+
+- The package ships no active hooks, MCP servers, or apps and requires no
+  credentials to use its bundled knowledge.
+- Installing the plugin does not activate or trust hooks. Generated definitions
+  require review and user-controlled trust before activation.
+
 ## Live Research (`live-research`)
 
 Current manifest version: `0.1.0`
+
+Sources: [Manifest](plugins/live-research/.codex-plugin/plugin.json) ·
+[Changelog](plugins/live-research/CHANGELOG.md).
+Changelog status: `Unreleased` only; no versioned entry yet.
 
 Live Research packages a disciplined workflow for answering change-sensitive
 questions with current, authoritative evidence. The current package tightens
 that workflow and keeps the complete evidence protocol self-contained in one
 distributed skill document.
 
-Highlights:
+Unreleased highlights:
 
 - Explicit audit-ready workflow with inputs, use cases, source routing,
   non-inference rules, ask/stop/decline conditions, output requirements,
@@ -112,11 +164,15 @@ Upgrade notes:
 
 Current manifest version: `0.1.0`
 
+Sources: [Manifest](plugins/optimize-memories/.codex-plugin/plugin.json) ·
+[Changelog](plugins/optimize-memories/CHANGELOG.md).
+Changelog status: `Unreleased` only; no versioned entry yet.
+
 Codex Memory Audit introduces an evidence-based workflow for auditing and
 reconciling Codex memory artifacts across project and global scopes. It
 separates inspection, proposed updates, approval, and application.
 
-Highlights:
+Unreleased highlights:
 
 - New `audit-and-cure-memories` skill with phase-gated project, global, and
   complete memory-audit workflows.
@@ -138,12 +194,18 @@ Upgrade notes:
 
 Current manifest version: `0.2.0`
 
+Sources: [Manifest](plugins/prettier-after-edit/.codex-plugin/plugin.json) ·
+[Changelog](plugins/prettier-after-edit/CHANGELOG.md).
+Latest versioned changelog entry: `0.1.1` (2026-08-27). The manifest's `0.2.0`
+does not yet have a versioned changelog entry; the changes below remain under
+`Unreleased`.
+
 Prettier After Edit focuses the package on exact-file Prettier formatting after
 Codex edits. The hook runtime was rebuilt as a self-contained Node
 orchestrator, and Markdown linting was removed from the hook's automatic
 responsibility.
 
-Highlights:
+Unreleased highlights:
 
 - Explicit automatic invocation policy in the bundled agent metadata.
 - Explicit hook declaration in the plugin manifest.
@@ -169,10 +231,14 @@ Upgrade notes:
 
 Current manifest version: `0.1.0`
 
+Sources: [Manifest](plugins/skill-design-standards/.codex-plugin/plugin.json) ·
+[Changelog](plugins/skill-design-standards/CHANGELOG.md).
+Changelog status: `Unreleased` only; no versioned entry yet.
+
 Skill Design Standards provides a self-contained workflow for designing,
 auditing, and evaluating portable Agent Skills.
 
-Highlights:
+Unreleased highlights:
 
 - Added the packaged skill workflow and focused references for format, Codex
   metadata, script interfaces, descriptions, evaluation, and validation.
@@ -180,6 +246,8 @@ Highlights:
   configuration guidance.
 - Documented installation, standalone-skill migration, verification, and
   recovery boundaries.
+- Made host-provided creator tools optional and removed reliance on a
+  machine-local creator reference or validator.
 
 Upgrade notes:
 
@@ -191,11 +259,15 @@ Upgrade notes:
 
 Current manifest version: `0.1.0`
 
+Sources: [Manifest](plugins/prompt-architect/.codex-plugin/plugin.json) ·
+[Changelog](plugins/prompt-architect/CHANGELOG.md).
+Changelog status: `Unreleased` only; no versioned entry yet.
+
 Prompt Architect adds a self-contained prompt-authoring plugin for turning rough
 intent into copy-ready prompts with risk, evidence, authority, output,
 verification, and execution-topology controls.
 
-Highlights:
+Unreleased highlights:
 
 - New marketplace plugin with a risk-calibrated prompt-authoring skill.
 - Codex-facing skill metadata and marketplace registration.
@@ -207,6 +279,8 @@ Highlights:
   every task.
 - Validator fixes for nested headings, wrapper heading case, and block-reason
   continuation behavior.
+- Stricter validation of malformed `Ready` and `Needs Clarification` responses,
+  including missing required prompt sections.
 - Removed stale migration helper, stale migration source document, and redundant
   skill-level README from the distributed package.
 
@@ -216,19 +290,56 @@ Upgrade notes:
   projects by itself.
 - Hook support is required for automatic final-output validation.
 
+## Repository Maintenance (`repo-maintenance`)
+
+Current manifest version: `0.1.0`
+
+Sources: [Manifest](plugins/repo-maintenance/.codex-plugin/plugin.json) ·
+[Changelog](plugins/repo-maintenance/CHANGELOG.md).
+Changelog status: `Unreleased` only; no versioned entry yet.
+
+Repository Maintenance provides an evidence-based workflow for repository
+documentation and maintenance records using adaptable templates.
+
+Unreleased highlights:
+
+- New skill and templates for repository and plugin READMEs, changelogs, ADRs,
+  pending/resolved debt, MIT license notices, and conditional Codex metadata.
+- Read-only audit and structure proposals before document creation, with
+  explicit selection of the proposal and document set before writing.
+- Document-specific routing, preservation of accepted ADR history, and
+  evidence requirements for debt resolution.
+- Optional offers to add repository instructions or save durable documentation
+  conventions to memory, only with explicit approval.
+
+Upgrade notes:
+
+- Existing repository conventions guide template adaptation; unsupported or
+  empty template sections should be omitted.
+- The skill does not select a license, invent missing evidence, or perform
+  commits, pushes, releases, or other remote mutations.
+
 ## Svelte Development (`svelte-development`)
 
 Current manifest version: `0.1.2`
+
+Sources: [Manifest](plugins/svelte-development/.codex-plugin/plugin.json) ·
+[Changelog](plugins/svelte-development/CHANGELOG.md).
+Latest versioned changelog entry: `0.1.2` (2026-09-02).
 
 Svelte Development provides Codex with a focused operating contract for serious
 Svelte 5 and SvelteKit architecture, implementation, and verification work,
 backed by the official remote Svelte MCP endpoint.
 
-Highlights:
+Versioned changelog history:
 
-- First marketplace-ready package for Svelte 5 and SvelteKit workflows.
-- Runtime-compatible remote Svelte MCP loading.
-- Direct server map declaration in `.mcp.json`.
+- `0.1.0` (2026-09-01): First marketplace-ready package for Svelte 5 and
+  SvelteKit workflows.
+- `0.1.1` (2026-09-02): Runtime-compatible remote Svelte MCP loading.
+- `0.1.2` (2026-09-02): Direct server map declaration in `.mcp.json`.
+
+Unreleased highlights:
+
 - Explicit automatic invocation policy for every bundled skill.
 - README now lists each bundled skill's `agents/openai.yaml` metadata.
 - Refined architecture, component, SvelteKit, and verification triggers.
@@ -246,17 +357,21 @@ Upgrade notes:
 
 Current manifest version: `0.1.0`
 
+Sources: [Manifest](plugins/system-ops-audit/.codex-plugin/plugin.json) ·
+[Changelog](plugins/system-ops-audit/CHANGELOG.md).
+Changelog status: `Unreleased` only; no versioned entry yet.
+
 System Ops Audit introduces a local macOS baseline audit workflow that keeps
 workspace preparation, baseline design, approved execution, and evidence
 analysis behind separate approval boundaries.
 
-Highlights:
+Unreleased highlights:
 
 - New marketplace plugin for read-only macOS operational baseline audit work.
 - Normalized plugin manifest metadata, skill agent metadata, README sections,
   and MIT license terms.
 - Workspace contract, safety policy, macOS baseline audit specification, script
-  design template, test scenarios, and workspace tree asset.
+  design template, and test scenarios.
 - Mode-specific workflow for workspace, design, writing, execution, and
   analysis.
 - Proportionate audit coverage tiers and an evidence model requiring
