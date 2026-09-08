@@ -1,6 +1,6 @@
 {
   "name": "live-research",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Live Research gives Codex a disciplined workflow for verifying change-sensitive claims against current authoritative evidence.",
   "author": {
     "name": "Nery Samuel Murillo",

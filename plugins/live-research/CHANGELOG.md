@@ -6,6 +6,13 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Use ISO 8601
 dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
+## [0.2.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/live-research/v0.1.0...plugin/live-research/v0.2.0) (2026-09-08)
+
+### Features
+
+- **live-research:** add marketplace plugin ([66cb31c](https://github.com/nerymurillohnd/codex-essentials/commit/66cb31c8f979d3dc6a21d1f056a6570dc5e749ca))
+- **live-research:** add marketplace plugin ([#41](https://github.com/nerymurillohnd/codex-essentials/issues/41)) ([f81009c](https://github.com/nerymurillohnd/codex-essentials/commit/f81009c3522a015c453c5f5f7143df7b749eb585))
+
 ## [Unreleased]
 
 ### Changed
