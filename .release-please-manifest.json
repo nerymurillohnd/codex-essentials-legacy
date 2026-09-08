@@ -3,7 +3,7 @@
   "plugins/configure-prettier": "0.1.0",
   "plugins/doc-keeper": "0.1.0",
   "plugins/hook-creator": "0.1.0",
-  "plugins/live-research": "0.1.0",
+  "plugins/live-research": "0.2.0",
   "plugins/optimize-memories": "0.1.0",
   "plugins/prettier-after-edit": "0.2.0",
   "plugins/prompt-architect": "0.1.0",
