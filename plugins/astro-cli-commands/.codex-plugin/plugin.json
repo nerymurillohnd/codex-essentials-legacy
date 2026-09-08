@@ -1,6 +1,6 @@
 {
   "name": "astro-cli-commands",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Astro Commands gives Codex a maintained, command-first operating contract for Astro projects: inspect the installed CLI, prefer official capabilities, and verify version drift before acting.",
   "author": {
     "name": "Nery Samuel Murillo",
