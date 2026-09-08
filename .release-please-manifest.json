@@ -6,7 +6,7 @@
   "plugins/live-research": "0.1.0",
   "plugins/optimize-memories": "0.1.0",
   "plugins/prettier-after-edit": "0.2.0",
-  "plugins/prompt-architect": "0.1.0",
+  "plugins/prompt-architect": "0.2.0",
   "plugins/repo-maintenance": "0.1.0",
   "plugins/skill-design-standards": "0.1.0",
   "plugins/svelte-development": "0.1.2",
