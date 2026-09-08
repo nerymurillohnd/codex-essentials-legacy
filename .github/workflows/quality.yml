@@ -102,7 +102,7 @@ jobs:
           git show origin/main:scripts/marketplace-contract.cjs > "$contract_dir/marketplace-contract.cjs"
           git show origin/main:scripts/error-utils.cjs > "$contract_dir/error-utils.cjs"
           git show origin/main:scripts/release-pr-auth.cjs > "$contract_dir/release-pr-auth.cjs"
-          node "$contract_dir/validate-release-contract.cjs" --root "$GITHUB_WORKSPACE" \
+          NODE_PATH="$GITHUB_WORKSPACE/node_modules" node "$contract_dir/validate-release-contract.cjs" --root "$GITHUB_WORKSPACE" \
             --base "$BASE_SHA" \
             --head "$HEAD_SHA" \
             --title "$PR_TITLE" \
