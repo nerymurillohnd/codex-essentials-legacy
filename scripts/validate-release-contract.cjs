@@ -9,6 +9,7 @@ const {
   loadPluginManifests,
   resolveRootFromArgs,
 } = require("./marketplace-contract.cjs");
+const { isTrustedReleasePleasePullRequest } = require("./release-pr-auth.cjs");
 
 const SEMVER =
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/u;
@@ -53,7 +54,13 @@ function changedPaths(root, base, head, direct = false) {
     .filter(Boolean);
 }
 
-function validateChangeRouting(root, base, head, direct) {
+function validateChangeRouting(
+  root,
+  base,
+  head,
+  direct,
+  isReleasePleasePr = false,
+) {
   const paths = changedPaths(root, base, head, direct);
   if (
     direct &&
@@ -96,6 +103,7 @@ function validateChangeRouting(root, base, head, direct) {
       { encoding: "utf8" },
     );
     if (
+      !isReleasePleasePr &&
       !/(?:^|\n)(?:feat|fix|perf)(?:\([^)]*\))?!?:|BREAKING CHANGE:|Release-As:/mu.test(
         subjects,
       )
@@ -104,12 +112,14 @@ function validateChangeRouting(root, base, head, direct) {
         `plugins/${plugin} requires a releasable Conventional Commit or Release-As`,
       );
     }
-    validateUnreleased(path.join(root, "plugins", plugin, "CHANGELOG.md"));
+    if (!isReleasePleasePr) {
+      validateUnreleased(path.join(root, "plugins", plugin, "CHANGELOG.md"));
+    }
   }
 }
 
-function validateRepository(root) {
-  const plugins = loadPluginManifests(root);
+function validateRepository(root, allowEmptyUnreleased = false) {
+  const plugins = loadPluginManifests(root, { allowEmptyUnreleased });
   const config = JSON.parse(
     fs.readFileSync(path.join(root, "release-please-config.json"), "utf8"),
   );
@@ -128,7 +138,9 @@ function validateRepository(root) {
   }
   for (const plugin of plugins) {
     const componentPath = `plugins/${plugin.name}`;
-    validateUnreleased(path.join(plugin.pluginRoot, "CHANGELOG.md"));
+    if (!allowEmptyUnreleased) {
+      validateUnreleased(path.join(plugin.pluginRoot, "CHANGELOG.md"));
+    }
     const component = config.packages[componentPath];
     if (component.component !== `plugin/${plugin.name}`) {
       throw new Error(`${componentPath} component name is invalid`);
@@ -172,12 +184,35 @@ function main(args = process.argv.slice(2)) {
   const baseIndex = args.indexOf("--base");
   const headIndex = args.indexOf("--head");
   const direct = args.includes("--direct");
+  let title = "";
+  let authorType = "";
+  let labels = "";
   const tag = tagIndex === -1 ? undefined : args[tagIndex + 1];
   const consumed = new Set(
     [tagIndex, baseIndex, headIndex]
       .filter((index) => index !== -1)
       .flatMap((index) => [index, index + 1]),
   );
+  for (const [flag, target] of [
+    ["--title", "title"],
+    ["--author-type", "authorType"],
+    ["--labels", "labels"],
+  ]) {
+    const index = args.indexOf(flag);
+    if (index !== -1 && args[index + 1] !== undefined) {
+      if (target === "title") {
+        title = args[index + 1];
+      }
+      if (target === "authorType") {
+        authorType = args[index + 1];
+      }
+      if (target === "labels") {
+        labels = args[index + 1];
+      }
+      consumed.add(index);
+      consumed.add(index + 1);
+    }
+  }
   const passthrough = args.filter(
     (_, index) => !consumed.has(index) && args[index] !== "--direct",
   );
@@ -185,14 +220,22 @@ function main(args = process.argv.slice(2)) {
     throw new Error("usage: --tag plugin/<id>/v<semver>");
   }
   const root = resolveRootFromArgs(passthrough, path.resolve(__dirname, ".."));
-  validateRepository(root);
+  const isReleasePleasePr = isTrustedReleasePleasePullRequest(
+    title,
+    authorType,
+    labels
+      .split(",")
+      .map((label) => label.trim())
+      .filter(Boolean),
+  );
+  validateRepository(root, isReleasePleasePr);
   if (baseIndex !== -1 || headIndex !== -1) {
     const base = args[baseIndex + 1];
     const head = args[headIndex + 1];
     if (!base || !head) {
       throw new Error("usage: --base <sha> --head <sha>");
     }
-    validateChangeRouting(root, base, head, direct);
+    validateChangeRouting(root, base, head, direct, isReleasePleasePr);
   }
   if (tag) {
     const parsed = parseTag(tag);
