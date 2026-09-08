@@ -69,12 +69,13 @@ jobs:
             author_type=$(node -p 'JSON.parse(process.argv[1]).user.type' "$pr")
             labels=$(node -e 'for (const label of JSON.parse(process.argv[1]).labels) console.log(label.name)' "$pr" | paste -sd, -)
             gh workflow run quality.yml \
-              --ref "$branch" \
+              --ref main \
               -f base_sha="$base" \
               -f head_sha="$head" \
               -f pr_title="$title" \
               -f pr_author_type="$author_type" \
-              -f pr_labels="$labels"
+              -f pr_labels="$labels" \
+              -f checkout_ref="$branch"
           done
       - name: Verify releases contain no uploaded assets
         if: steps.release.outputs.releases_created == 'true'

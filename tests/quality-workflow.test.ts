@@ -74,6 +74,7 @@ describe("quality workflow", () => {
           pr_title: { required: false, type: "string", default: "" },
           pr_author_type: { required: false, type: "string", default: "" },
           pr_labels: { required: false, type: "string", default: "" },
+          checkout_ref: { required: false, type: "string", default: "" },
         },
       },
       push: { branches: ["main"] },
@@ -162,7 +163,7 @@ describe("quality workflow", () => {
   it("pins checkout and Node setup with deterministic inputs", () => {
     expect(getStep("Check out repository")).toMatchObject({
       uses: checkoutAction,
-      with: { "fetch-depth": 0 },
+      with: { "fetch-depth": 0, ref: "${{ inputs.checkout_ref || '' }}" },
     });
     expect(getStep("Set up Node.js")).toMatchObject({
       uses: setupNodeAction,
