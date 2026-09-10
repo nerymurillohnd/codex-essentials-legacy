@@ -15,6 +15,18 @@ Use this file for unresolved maintenance work, known limitations, and follow-up 
   changelog generation or post-generation formatting deterministic, then
   regenerate a release pull request that passes `npm run check` and the
   required remote Quality workflow.
+- 2026-09-10 [P1] — Reopened the local-runtime alignment item after the
+  Node.js 24.21.0 CI migration exposed a package-manager mismatch. The local
+  NVM runtime uses npm 12.0.2, while `actions/setup-node` provides npm 11.19.0
+  with the same Node.js version and invokes npm during automatic cache setup.
+  Exact `devEngines` validation therefore fails before the quality or release
+  jobs install dependencies. Owner: CI and developer tooling. Impact: Quality,
+  Release Please validation, and Dependabot pull-request checks currently fail
+  on `main`. Evidence: workflow runs `34533359572` and `34533359441` failed
+  on 2026-09-10 with `EBADDEVENGINES`. Next action and review condition: deploy
+  the tested workflow bootstrap that installs npm 12.0.2 before project
+  commands, then verify successful remote Quality and Release Please runs on
+  the resulting `main` revision.
 - 2026-09-10 [P1] — GitHub protection for `main` does not require approving
   reviews or status checks. Owner: Repository governance. Impact: the
   repository policy requires pull requests for product and control changes,

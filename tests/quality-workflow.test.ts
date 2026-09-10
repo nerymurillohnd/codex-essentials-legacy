@@ -123,6 +123,17 @@ describe("quality workflow", () => {
         if: undefined,
       },
       {
+        name: "Install repository npm",
+        uses: undefined,
+        run:
+          [
+            'cd "$RUNNER_TEMP"',
+            "npm install --global npm@12.0.2",
+            "npm --version",
+          ].join("\n") + "\n",
+        if: undefined,
+      },
+      {
         name: "Install dependencies",
         uses: undefined,
         run: "HUSKY=0 npm ci",
@@ -216,13 +227,20 @@ describe("quality workflow", () => {
       uses: setupNodeAction,
       with: {
         "node-version-file": ".nvmrc",
-        cache: "npm",
-        "cache-dependency-path": "package-lock.json",
+        "package-manager-cache": false,
       },
     });
   });
 
   it("installs locked dependencies and always runs the canonical gate", () => {
+    expect(getStep("Install repository npm")).toMatchObject({
+      run:
+        [
+          'cd "$RUNNER_TEMP"',
+          "npm install --global npm@12.0.2",
+          "npm --version",
+        ].join("\n") + "\n",
+    });
     expect(getStep("Install dependencies")).toMatchObject({
       run: "HUSKY=0 npm ci",
     });
@@ -340,9 +358,16 @@ describe("prettier autofix workflow", () => {
       uses: setupNodeAction,
       with: {
         "node-version-file": ".nvmrc",
-        cache: "npm",
-        "cache-dependency-path": "package-lock.json",
+        "package-manager-cache": false,
       },
+    });
+    expect(getPrettierStep("Install repository npm")).toMatchObject({
+      run:
+        [
+          'cd "$RUNNER_TEMP"',
+          "npm install --global npm@12.0.2",
+          "npm --version",
+        ].join("\n") + "\n",
     });
     expect(getPrettierStep("Install dependencies").run).toBe("HUSKY=0 npm ci");
     expect(getPrettierStep("Format repository").run).toBe("npm run format");
