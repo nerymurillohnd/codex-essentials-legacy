@@ -6,6 +6,15 @@ Entries below are dated historical resolutions. When a later remote or
 repository change supersedes one of them, keep the historical record and track
 the current follow-up in [pending-debt.md](pending-debt.md).
 
+- 2026-09-10 — Resolved pending debt `2026-09-10 [P1]` for unenforced `main`
+  governance. The GitHub branch-protection API now requires one approving
+  review, conversation resolution, an up-to-date branch, and successful
+  `Required quality gates` plus `prettier` checks; administrator enforcement,
+  force-push protection, and deletion protection remain enabled. Added the
+  repository pre-commit contract for staged ShellCheck/shfmt validation and
+  Ruff 0.16.6 lint/format checks. Verification: branch-protection API response,
+  ShellCheck, shfmt, Ruff, and `npm run check` (115 tests).
+
 - 2026-09-10 — Accepted and closed pending debt `2026-08-31 [P2]` for optional
   GitHub secret-scanning controls. The owner explicitly declined activation of
   `secret_scanning_non_provider_patterns` and secret-scanning validity checks.

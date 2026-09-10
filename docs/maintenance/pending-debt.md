@@ -2,16 +2,6 @@
 
 Use this file for unresolved maintenance work, known limitations, and follow-up tasks.
 
-- 2026-09-10 [P1] — GitHub protection for `main` does not require approving
-  reviews or status checks. Owner: Repository governance. Impact: the
-  repository policy requires pull requests for product and control changes,
-  but GitHub does not technically prevent a direct integration that bypasses
-  pre-merge quality and separation of duties. Evidence: the GitHub branch
-  protection API verified on 2026-09-10 enforces administrators, conversation
-  resolution, no force pushes, and no deletions, but returns no required
-  review or status-check policy. Next action and review condition: select and
-  apply a protection policy for approvals and required checks, then verify it
-  through the GitHub API and an authorized pull-request workflow.
 - 2026-09-07 [P2] — Defer the coordinated `vitest` and `@vitest/coverage-v8` 5.0.0
   migration. Owner: Marketplace maintenance. Impact: the strict TypeScript
   validation gate cannot pass with the only published Vitest 5.0.0 release.
