@@ -32,10 +32,15 @@ validate_shell_file() {
 
 validate_python_file() {
   local file="$1"
+  local mode
   local temporary_file="${temporary_directory}/python-${file##*/}"
   git show ":${file}" >"${temporary_file}"
-  uvx ruff@0.16.6 check -- "${temporary_file}"
-  uvx ruff@0.16.6 format --check -- "${temporary_file}"
+  mode="$(git ls-files --stage -- "${file}" | awk 'NR == 1 { print $1 }')"
+  if [[ "${mode}" == "100755" ]]; then
+    chmod +x "${temporary_file}"
+  fi
+  uvx ruff@0.16.6 check --isolated -- "${temporary_file}"
+  uvx ruff@0.16.6 format --isolated --check -- "${temporary_file}"
 }
 
 while IFS= read -r -d '' file; do

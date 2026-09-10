@@ -39,6 +39,7 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
+- Normalize the final-output validator for deterministic Ruff lint and format checks.
 - Normalized the README navigation, heading style, backlink, and plugin version
   source statement to match the current plugin README convention.
 - Refactor `SKILL.md` from a broad mandatory-read sequence into a progressive

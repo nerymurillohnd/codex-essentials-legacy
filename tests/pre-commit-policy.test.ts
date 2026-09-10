@@ -31,12 +31,13 @@ describe("pre-commit quality policy", () => {
     expect(qualityHook).toContain('shellcheck -- "${temporary_file}"');
     expect(qualityHook).toContain('shfmt -d -- "${temporary_file}"');
     expect(qualityHook).toContain(
-      'uvx ruff@0.16.6 check -- "${temporary_file}"',
+      'uvx ruff@0.16.6 check --isolated -- "${temporary_file}"',
     );
     expect(qualityHook).toContain(
-      'uvx ruff@0.16.6 format --check -- "${temporary_file}"',
+      'uvx ruff@0.16.6 format --isolated --check -- "${temporary_file}"',
     );
     expect(qualityHook).toContain('git ls-files --stage -- "${file}"');
+    expect(qualityHook).toContain('chmod +x "${temporary_file}"');
     expect(qualityHook).toContain("brew install shellcheck shfmt");
     expect(qualityHook).toContain("uv tool install ruff@0.16.6");
   });
@@ -60,8 +61,8 @@ describe("pre-commit quality policy", () => {
     }
     expect(shellLint).toContain("shellcheck");
     expect(shellFormat).toContain("shfmt -d");
-    expect(pythonLint).toContain("uvx ruff@0.16.6 check");
-    expect(pythonFormat).toContain("uvx ruff@0.16.6 format --check");
+    expect(pythonLint).toContain("uvx ruff@0.16.6 check --isolated");
+    expect(pythonFormat).toContain("uvx ruff@0.16.6 format --isolated --check");
     expect(packageJson.scripts["check"]).toContain("npm run lint:shell");
     expect(packageJson.scripts["check"]).toContain("npm run lint:python");
   });
