@@ -25,24 +25,6 @@ Use this file for unresolved maintenance work, known limitations, and follow-up 
   review or status-check policy. Next action and review condition: select and
   apply a protection policy for approvals and required checks, then verify it
   through the GitHub API and an authorized pull-request workflow.
-- 2026-09-10 [P2] —
-  [`docs/contributing/plugins.md`](../contributing/plugins.md) states that
-  no release workflow, tag convention, archive, or release credential exists,
-  while `.github/workflows/release-please.yml` actively creates per-plugin
-  releases from `main`. Owner: Contributor documentation. Impact: contributors
-  can follow an incorrect release procedure and misunderstand generated
-  release pull requests. Evidence: both files were inspected at revision
-  `77b24b8`. Next action and review condition: reconcile the guide with the
-  implemented no-artifact Release Please flow and validate with
-  `npm run lint:markdown` plus the documentation gate for the change.
-- 2026-09-10 [P3] — The repository fixes its CI baseline at Node 24.20.0 in
-  `.nvmrc`, while the audited local shell ran Node 24.21.0. Owner: Developer
-  environment. Impact: no failure was observed, but local results are not
-  byte-for-byte aligned with CI. Evidence: `npm run check` passed locally at
-  revision `77b24b8`; the Quality workflow resolves `.nvmrc` as 24.20.0. Next
-  action and review condition: use the NVM-selected 24.20.0 runtime for
-  repository validation, or explicitly update the supported baseline and
-  verify CI with it.
 - 2026-09-07 [P2] — Defer the coordinated `vitest` and `@vitest/coverage-v8` 5.0.0
   migration. Owner: Marketplace maintenance. Impact: the strict TypeScript
   validation gate cannot pass with the only published Vitest 5.0.0 release.

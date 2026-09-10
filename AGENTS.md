@@ -59,7 +59,7 @@ Project documentation is maintained under `docs/`. Read [documentation rules](do
 
 ## Quick Reference
 
-- Use npm with Node.js 24.20.0 (`.nvmrc`); run `npm run check` for full validation.
+- Use NVM-managed Node.js 24.21.0 and npm 12.0.2 (`.nvmrc` and `package.json`); run `npm run check` for full validation.
 - Run `npm run marketplace:build` to regenerate and validate the catalog.
 - Run `npm run documentation:gate -- --base <base> --head <head>` for plugin docs.
 - Read [documentation rules](docs/AGENTS.md) and [plugin package rules](plugins/AGENTS.md).

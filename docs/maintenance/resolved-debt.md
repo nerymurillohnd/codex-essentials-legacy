@@ -6,6 +6,23 @@ Entries below are dated historical resolutions. When a later remote or
 repository change supersedes one of them, keep the historical record and track
 the current follow-up in [pending-debt.md](pending-debt.md).
 
+- 2026-09-10 — Resolved pending debt `2026-09-10 [P3]` for local runtime drift.
+  Updated `.nvmrc`, the active repository instruction, and package engine
+  contracts to require NVM-managed Node.js 24.21.0 and npm 12.0.2. Added a
+  regression test for the aligned NVM, package-engine, and contributor-tooling
+  contract. Verification: `nvm use`, `HUSKY=0 npm ci`, and `npm run check`
+  under Node.js 24.21.0 / npm 12.0.2.
+
+- 2026-09-10 — Resolved pending debt `2026-09-10 [P2]` for contradictory
+  contributor release instructions. Replaced the claim that no release
+  workflow, tag convention, or release credential exists with the implemented
+  no-artifact Release Please procedure: releasable Conventional Commit and
+  `Unreleased` entry, reviewed plugin PR, generated release PR, then immutable
+  `plugin/<id>/v<semver>` tag and GitHub Release notes. The guide now states
+  that contributors do not manually bump versions, create tags or releases, or
+  configure a separate credential. Verification: Markdown lint and the
+  repository documentation and release-contract gates.
+
 - 2026-09-10 — Resolved pending debt `2026-09-10 [P1]` for the quoted-secret
   bypass in `scripts/documentation-gate.cjs`. Narrowed the credential-pattern
   exception to accept only an exact `${VAR}` reference, optionally wrapped in

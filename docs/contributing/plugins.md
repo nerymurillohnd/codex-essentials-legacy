@@ -119,8 +119,17 @@ implementation assumptions.
 
 ## Version and changelog expectations
 
-Keep the plugin version in `plugins/<plugin-id>/.codex-plugin/plugin.json` and
-record product changes under the package's `Unreleased` changelog section. The
-public installation reference is the repository's `main` branch and generated
-marketplace catalog. There is no release workflow, tag convention, archive, or
-release credential to configure.
+For a releasable plugin change, use a releasable Conventional Commit (`feat`,
+`fix`, or `perf`), update the package README and a non-empty `Unreleased`
+changelog entry, and submit the change through a pull request. Do not manually
+bump `plugins/<plugin-id>/.codex-plugin/plugin.json`, create a release tag, or
+create a GitHub Release.
+
+After the pull request merges into `main`, Release Please determines the
+plugin's SemVer version from the Conventional Commit history and opens or
+updates a reviewed release pull request. That generated pull request updates
+the package manifest version and changelog. After it merges, the release
+workflow creates the immutable `plugin/<plugin-id>/v<semver>` tag and GitHub
+Release notes. It never publishes packages or uploads distribution archives,
+checksums, or other release assets. Contributors do not configure a separate
+release credential; the workflow uses its repository-provided `GITHUB_TOKEN`.
