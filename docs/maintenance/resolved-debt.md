@@ -6,6 +6,27 @@ Entries below are dated historical resolutions. When a later remote or
 repository change supersedes one of them, keep the historical record and track
 the current follow-up in [pending-debt.md](pending-debt.md).
 
+- 2026-09-10 — Resolved pending debt `2026-09-10 [P0]` for the generated
+  Release Please changelog formatting failure. Added a release-job step that
+  formats changed plugin changelogs before dispatching Quality and commits the
+  minimal normalization back to generated release branches with a non-forced
+  GitHub ref update. For existing release PR #77, formatted the generated
+  changelog at `de2e4ff` and made the version-state test derive its expected
+  value from the manifest at `5ac773b`. Verified with remote Quality workflow
+  run `34535696229`, which passed all required gates. The open release PR still
+  requires normal human review and merge before the plugin tag and GitHub
+  Release can be created.
+
+- 2026-09-10 — Resolved reopened pending debt `2026-09-10 [P1]` for npm runtime
+  drift in GitHub Actions. Disabled setup-node's pre-bootstrap npm cache and
+  installed npm 12.0.2 from the runner temporary directory before project
+  commands in Quality, Prettier, and Release Please workflows. Verified at
+  `2d19f31` through the successful Release Please run `34534968754` and Quality
+  run `34535696229`; the latter passed setup, npm bootstrap, installation, and
+  all repository quality gates. The direct-push routing failure on
+  `34534968761` is tracked separately as the existing governance debt and was
+  not an npm-runtime failure.
+
 - 2026-09-10 — Resolved pending debt `2026-09-10 [P2]` for contradictory
   contributor release instructions. Replaced the claim that no release
   workflow, tag convention, or release credential exists with the implemented
