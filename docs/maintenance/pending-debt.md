@@ -2,7 +2,70 @@
 
 Use this file for unresolved maintenance work, known limitations, and follow-up tasks.
 
-- 2026-09-07 — Defer the coordinated `vitest` and `@vitest/coverage-v8` 5.0.0
+- 2026-09-10 [P0] — Release Please generated the open
+  [release pull request #77](https://github.com/nerymurillohnd/codex-essentials/pull/77)
+  for `block-no-verify` 0.2.0, but its Quality workflow fails at
+  `npm run format:check`: the generated
+  `plugins/block-no-verify/CHANGELOG.md` is not Prettier-formatted. Owner:
+  Release automation. Impact: the plugin version cannot be released while the
+  generated pull request remains unmergeable. Evidence: workflow run
+  [`34432348346`](https://github.com/nerymurillohnd/codex-essentials/actions/runs/34432348346)
+  failed on 2026-09-10 before tests ran; the source push at `77b24b8` passed
+  the same quality gate. Next action and review condition: make the release
+  changelog generation or post-generation formatting deterministic, then
+  regenerate a release pull request that passes `npm run check` and the
+  required remote Quality workflow.
+- 2026-09-10 [P1] — `npm audit --json` reports two high-severity findings
+  rooted in transitive `smol-toml` through direct development dependency
+  `markdownlint-cli2` 0.23.2. The advisory describes a denial of service from
+  malformed TOML. Owner: Marketplace maintenance. Impact: this affects local
+  and CI documentation tooling, not installed plugin runtime, but an
+  untrusted repository input can disrupt a quality run. Evidence: audit at
+  revision `77b24b8` reported `GHSA-7w5x-hrqm-74c2` for `smol-toml <=1.7.0`;
+  npm's offered `markdownlint-cli2` resolution requires investigation because
+  it does not establish a verified safe upgrade path. Next action and review
+  condition: identify a published, compatible remediation or document an
+  accepted exception; verify with `npm ci`, `npm audit --json`, and
+  `npm run check`.
+- 2026-09-10 [P1] — The credential detector in
+  `scripts/documentation-gate.cjs` intentionally excludes quoted values, so an
+  added assignment such as `token: "value"` is not detected. Owner: Marketplace
+  security controls. Impact: the plugin documentation gate can permit common
+  literal-secret syntax despite its `${VAR}` policy. Evidence: the
+  `CREDENTIAL_PATTERN` at revision `77b24b8` has a negative lookahead for
+  `"`, `'`, and backticks; no literal credential was found in the audited
+  checkout. Next action and review condition: replace or extend the detector
+  and add adversarial quoted-assignment coverage; verify that unmasked quoted
+  values fail while `${VAR}` references pass.
+- 2026-09-10 [P1] — GitHub protection for `main` does not require approving
+  reviews or status checks. Owner: Repository governance. Impact: the
+  repository policy requires pull requests for product and control changes,
+  but GitHub does not technically prevent a direct integration that bypasses
+  pre-merge quality and separation of duties. Evidence: the GitHub branch
+  protection API verified on 2026-09-10 enforces administrators, conversation
+  resolution, no force pushes, and no deletions, but returns no required
+  review or status-check policy. Next action and review condition: select and
+  apply a protection policy for approvals and required checks, then verify it
+  through the GitHub API and an authorized pull-request workflow.
+- 2026-09-10 [P2] —
+  [`docs/contributing/plugins.md`](../contributing/plugins.md) states that
+  no release workflow, tag convention, archive, or release credential exists,
+  while `.github/workflows/release-please.yml` actively creates per-plugin
+  releases from `main`. Owner: Contributor documentation. Impact: contributors
+  can follow an incorrect release procedure and misunderstand generated
+  release pull requests. Evidence: both files were inspected at revision
+  `77b24b8`. Next action and review condition: reconcile the guide with the
+  implemented no-artifact Release Please flow and validate with
+  `npm run lint:markdown` plus the documentation gate for the change.
+- 2026-09-10 [P3] — The repository fixes its CI baseline at Node 24.20.0 in
+  `.nvmrc`, while the audited local shell ran Node 24.21.0. Owner: Developer
+  environment. Impact: no failure was observed, but local results are not
+  byte-for-byte aligned with CI. Evidence: `npm run check` passed locally at
+  revision `77b24b8`; the Quality workflow resolves `.nvmrc` as 24.20.0. Next
+  action and review condition: use the NVM-selected 24.20.0 runtime for
+  repository validation, or explicitly update the supported baseline and
+  verify CI with it.
+- 2026-09-07 [P2] — Defer the coordinated `vitest` and `@vitest/coverage-v8` 5.0.0
   migration. Owner: Marketplace maintenance. Impact: the strict TypeScript
   validation gate cannot pass with the only published Vitest 5.0.0 release.
   At revision `3c43189`, a clean consumer install was tested with
@@ -23,7 +86,7 @@ Use this file for unresolved maintenance work, known limitations, and follow-up 
   Reviewed 2026-09-07 at revision `e558763`: npm still reports `vitest`,
   `@vitest/coverage-v8`, and `@vitest/expect` latest as `5.0.0`; the repository
   remains on the verified 4.1.11 pair.
-- 2026-08-31 — Decide whether to enable remaining optional or stronger GitHub
+- 2026-08-31 [P2] — Decide whether to enable remaining optional or stronger GitHub
   security controls. Verified live 2026-09-07 at revision `e558763`: `main`
   rejects force pushes and deletion, enforces administrators, and requires
   conversation resolution; Dependabot security updates, secret scanning, and
