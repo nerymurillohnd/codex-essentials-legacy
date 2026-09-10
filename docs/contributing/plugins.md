@@ -112,6 +112,11 @@ npm run documentation:gate -- --base <base> --head <head>
 Never commit credentials or real secret values. Document required variables as
 `${VAR}` references.
 
+Install ShellCheck and shfmt with Homebrew, and install `uv` for the pinned Ruff
+pre-commit checks. The repository hook validates staged shell and Python blobs;
+if a required executable is missing, it fails with the applicable installation
+command rather than silently skipping the check.
+
 Explain permissions, network access, filesystem writes, spawned commands,
 external services, and rollback behavior in the plugin README. Reviewers should
 be able to decide whether a plugin is safe to install without reading hidden

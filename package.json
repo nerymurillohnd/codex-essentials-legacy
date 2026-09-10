@@ -14,6 +14,10 @@
     "lint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
     "lint:markdown:fix": "markdownlint-cli2 --fix",
+    "lint:shell": "shellcheck .husky/pre-commit .husky/pre-commit-quality && find plugins -type f \\( -name '*.sh' -o -name '*.bash' \\) -exec shellcheck {} +",
+    "format:shell:check": "shfmt -d .husky/pre-commit .husky/pre-commit-quality && find plugins -type f \\( -name '*.sh' -o -name '*.bash' \\) -exec shfmt -d {} +",
+    "lint:python": "find plugins -type f -name '*.py' -exec uvx ruff@0.16.6 check {} +",
+    "format:python:check": "find plugins -type f -name '*.py' -exec uvx ruff@0.16.6 format --check {} +",
     "tsc": "tsc --noEmit",
     "typecheck": "node scripts/typecheck.cjs",
     "typecheck:scripts": "tsc --project scripts/tsconfig.json --pretty false",
@@ -28,7 +32,7 @@
     "marketplace:check": "npm run validate:plugins && npm run validate:marketplace",
     "marketplace:build": "npm run validate:plugins && npm run generate:marketplace && npm run validate:marketplace",
     "project:bootstrap": "node scripts/project-bootstrap.cjs",
-    "check": "npm run format:check && npm run lint -- --max-warnings=0 && npm run lint:markdown && npm run typecheck && npm run typecheck:scripts && npx tsc6 --noEmit && npm run test && npm run validate:github-labels && npm run validate:release-contract && npm run marketplace:check"
+    "check": "npm run format:check && npm run lint -- --max-warnings=0 && npm run lint:markdown && npm run lint:shell && npm run format:shell:check && npm run lint:python && npm run format:python:check && npm run typecheck && npm run typecheck:scripts && npx tsc6 --noEmit && npm run test && npm run validate:github-labels && npm run validate:release-contract && npm run marketplace:check"
   },
   "keywords": [],
   "author": "Nery Samuel Murillo",
