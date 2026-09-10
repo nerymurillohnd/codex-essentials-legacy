@@ -13,6 +13,8 @@ const checkoutAction =
   "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const setupNodeAction =
   "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020";
+const setupUvAction =
+  "astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4";
 const autofixAction =
   "autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a";
 
@@ -144,6 +146,12 @@ describe("quality workflow", () => {
         if: undefined,
       },
       {
+        name: "Set up uv",
+        uses: setupUvAction,
+        run: undefined,
+        if: undefined,
+      },
+      {
         name: "Install dependencies",
         uses: undefined,
         run: "HUSKY=0 npm ci",
@@ -260,6 +268,10 @@ describe("quality workflow", () => {
           "go install mvdan.cc/sh/v3/cmd/shfmt@v3.14.1",
           'echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"',
         ].join("\n") + "\n",
+    });
+    expect(getStep("Set up uv")).toMatchObject({
+      uses: setupUvAction,
+      with: { version: "0.12.12", "enable-cache": "false" },
     });
     const qualityStep = getStep("Run quality checks");
     expect(qualityStep.run).toBe("npm run check");
