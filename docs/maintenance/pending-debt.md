@@ -15,18 +15,6 @@ Use this file for unresolved maintenance work, known limitations, and follow-up 
   changelog generation or post-generation formatting deterministic, then
   regenerate a release pull request that passes `npm run check` and the
   required remote Quality workflow.
-- 2026-09-10 [P1] — `npm audit --json` reports two high-severity findings
-  rooted in transitive `smol-toml` through direct development dependency
-  `markdownlint-cli2` 0.23.2. The advisory describes a denial of service from
-  malformed TOML. Owner: Marketplace maintenance. Impact: this affects local
-  and CI documentation tooling, not installed plugin runtime, but an
-  untrusted repository input can disrupt a quality run. Evidence: audit at
-  revision `77b24b8` reported `GHSA-7w5x-hrqm-74c2` for `smol-toml <=1.7.0`;
-  npm's offered `markdownlint-cli2` resolution requires investigation because
-  it does not establish a verified safe upgrade path. Next action and review
-  condition: identify a published, compatible remediation or document an
-  accepted exception; verify with `npm ci`, `npm audit --json`, and
-  `npm run check`.
 - 2026-09-10 [P1] — The credential detector in
   `scripts/documentation-gate.cjs` intentionally excludes quoted values, so an
   added assignment such as `token: "value"` is not detected. Owner: Marketplace

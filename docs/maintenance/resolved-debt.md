@@ -6,6 +6,17 @@ Entries below are dated historical resolutions. When a later remote or
 repository change supersedes one of them, keep the historical record and track
 the current follow-up in [pending-debt.md](pending-debt.md).
 
+- 2026-09-10 — Resolved pending debt `2026-09-10 [P1]` for
+  `GHSA-7w5x-hrqm-74c2` / `CVE-2026-85730` in transitive `smol-toml`. Added an
+  npm override to resolve `markdownlint-cli2` 0.23.2's exact 1.7.0 dependency
+  as `smol-toml` 1.8.0, which is later than the advisory's first patched
+  version, 1.7.1. Added regression coverage for the override and lockfile
+  resolution. Verified at the remediation revision with `HUSKY=0 npm ci`, the
+  focused dependency-security test, `npm run check` (110 tests across 16
+  files), `npm audit --json` (zero vulnerabilities), and `npm ls` showing
+  `smol-toml@1.8.0 overridden`. The install-scripts policy continued to block
+  undeclared `simple-git-hooks` postinstall execution.
+
 - 2026-09-07 — Updated the Node.js declaration dependency from
   `@types/node` 26.4.1 to 26.5.0, including the lockfile resolution of
   `undici-types` 8.9.0. Verified at revision `3c43189` with

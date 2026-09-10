@@ -75,6 +75,9 @@
   "allowScripts": {
     "fsevents@2.3.3": true
   },
+  "overrides": {
+    "smol-toml": "1.8.0"
+  },
   "dependencies": {
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-language-server": "^6.0.0"
