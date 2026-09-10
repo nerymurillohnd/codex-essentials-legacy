@@ -1,0 +1,18 @@
+{
+  "description": "Block Git verification and signing bypass flags.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^Bash$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/block-no-verify.py\"",
+            "timeout": 10,
+            "statusMessage": "Checking Git verification policy"
+          }
+        ]
+      }
+    ]
+  }
+}

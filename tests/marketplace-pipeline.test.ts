@@ -308,7 +308,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
     const root = createFixture();
     const pluginsRoot = join(root, "plugins");
     writeFileSync(join(pluginsRoot, "AGENTS.md"), "instructions\n");
-    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(12);
+    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(13);
 
     const invalidEntryRoot = createFixture();
     writeFileSync(join(invalidEntryRoot, "plugins", "not-a-plugin.txt"), "x");
@@ -629,6 +629,18 @@ describe("strict plugin-to-marketplace pipeline", () => {
       name: "codex-essentials",
       plugins: [
         { name: "astro-cli-commands" },
+        {
+          name: "block-no-verify",
+          source: {
+            source: "local",
+            path: "./plugins/block-no-verify",
+          },
+          policy: {
+            installation: "AVAILABLE",
+            authentication: "ON_INSTALL",
+          },
+          category: "Security",
+        },
         { name: "configure-prettier" },
         { name: "doc-keeper" },
         { name: "hook-creator" },

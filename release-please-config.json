@@ -19,6 +19,19 @@
         }
       ]
     },
+    "plugins/block-no-verify": {
+      "package-name": "block-no-verify",
+      "component": "plugin/block-no-verify",
+      "initial-version": "0.1.0",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
     "plugins/configure-prettier": {
       "package-name": "configure-prettier",
       "component": "plugin/configure-prettier",
