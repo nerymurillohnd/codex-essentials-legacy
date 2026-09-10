@@ -134,6 +134,16 @@ describe("quality workflow", () => {
         if: undefined,
       },
       {
+        name: "Install shfmt",
+        uses: undefined,
+        run:
+          [
+            "go install mvdan.cc/sh/v3/cmd/shfmt@v3.14.1",
+            'echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"',
+          ].join("\n") + "\n",
+        if: undefined,
+      },
+      {
         name: "Install dependencies",
         uses: undefined,
         run: "HUSKY=0 npm ci",
@@ -243,6 +253,13 @@ describe("quality workflow", () => {
     });
     expect(getStep("Install dependencies")).toMatchObject({
       run: "HUSKY=0 npm ci",
+    });
+    expect(getStep("Install shfmt")).toMatchObject({
+      run:
+        [
+          "go install mvdan.cc/sh/v3/cmd/shfmt@v3.14.1",
+          'echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"',
+        ].join("\n") + "\n",
     });
     const qualityStep = getStep("Run quality checks");
     expect(qualityStep.run).toBe("npm run check");
