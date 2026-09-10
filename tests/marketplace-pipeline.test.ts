@@ -1014,6 +1014,27 @@ describe("strict plugin-to-marketplace pipeline", () => {
     ).toBe(0);
   });
 
+  it("rejects plugin diffs that add a quoted unmasked credential", () => {
+    const root = createFixture();
+    git(root, ["init"]);
+    git(root, ["config", "user.email", "test@example.com"]);
+    git(root, ["config", "user.name", "Test"]);
+    git(root, ["add", "."]);
+    git(root, ["commit", "-m", "fixture"]);
+    const base = git(root, ["rev-parse", "HEAD"]);
+    const readme = join(root, "plugins", "doc-keeper", "README.md");
+    const unmasked = `${["api", "key"].join("_")}="${["live", "value"].join("-")}"`;
+    writeFileSync(readme, `${readFileSync(readme, "utf8")}\n${unmasked}\n`);
+    git(root, ["add", readme]);
+    git(root, ["commit", "-m", "add quoted credential"]);
+    const headWithCredential = git(root, ["rev-parse", "HEAD"]);
+
+    const failure = runDocumentationGate(root, base, headWithCredential);
+
+    expect(failure.status).not.toBe(0);
+    expect(failure.stderr).toContain("unmasked credential");
+  });
+
   it("fails closed for invalid Git revisions and unchanged invalid plugin documents", () => {
     const root = createFixture();
     const changelog = join(root, "plugins", "doc-keeper", "CHANGELOG.md");

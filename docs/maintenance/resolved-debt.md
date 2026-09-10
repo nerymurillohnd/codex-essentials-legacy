@@ -6,6 +6,14 @@ Entries below are dated historical resolutions. When a later remote or
 repository change supersedes one of them, keep the historical record and track
 the current follow-up in [pending-debt.md](pending-debt.md).
 
+- 2026-09-10 — Resolved pending debt `2026-09-10 [P1]` for the quoted-secret
+  bypass in `scripts/documentation-gate.cjs`. Narrowed the credential-pattern
+  exception to accept only an exact `${VAR}` reference, optionally wrapped in
+  quotes, instead of exempting all quoted values. Added an integration test
+  proving that a quoted literal assignment is rejected by the documentation
+  gate. Verified at the remediation revision with the focused marketplace
+  pipeline test (32 tests), then `npm run check` and `npm audit --json`.
+
 - 2026-09-10 — Resolved pending debt `2026-09-10 [P1]` for
   `GHSA-7w5x-hrqm-74c2` / `CVE-2026-85730` in transitive `smol-toml`. Added an
   npm override to resolve `markdownlint-cli2` 0.23.2's exact 1.7.0 dependency

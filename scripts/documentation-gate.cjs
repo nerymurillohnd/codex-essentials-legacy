@@ -8,7 +8,7 @@ const { formatError } = require("./error-utils.cjs");
 const { isTrustedReleasePleasePullRequest } = require("./release-pr-auth.cjs");
 const REQUIRED_PLUGIN_DOCUMENTS = ["README.md", "CHANGELOG.md"];
 const CREDENTIAL_PATTERN =
-  /\b(?:api[_-]?key|access[_-]?token|secret|password|token)\b\s*[:=]\s*(?!\$\{[A-Z][A-Z0-9_]*\})(?!["'`])\S+/iu;
+  /\b(?:api[_-]?key|access[_-]?token|secret|password|token)\b\s*[:=]\s*(?!(?:["'`])?\$\{[A-Z][A-Z0-9_]*\}(?:["'`])?(?:\s|$))\S+/iu;
 
 /** @param {string[]} args @param {string} defaultRoot */
 function parseArguments(args, defaultRoot) {

@@ -15,16 +15,6 @@ Use this file for unresolved maintenance work, known limitations, and follow-up 
   changelog generation or post-generation formatting deterministic, then
   regenerate a release pull request that passes `npm run check` and the
   required remote Quality workflow.
-- 2026-09-10 [P1] — The credential detector in
-  `scripts/documentation-gate.cjs` intentionally excludes quoted values, so an
-  added assignment such as `token: "value"` is not detected. Owner: Marketplace
-  security controls. Impact: the plugin documentation gate can permit common
-  literal-secret syntax despite its `${VAR}` policy. Evidence: the
-  `CREDENTIAL_PATTERN` at revision `77b24b8` has a negative lookahead for
-  `"`, `'`, and backticks; no literal credential was found in the audited
-  checkout. Next action and review condition: replace or extend the detector
-  and add adversarial quoted-assignment coverage; verify that unmasked quoted
-  values fail while `${VAR}` references pass.
 - 2026-09-10 [P1] — GitHub protection for `main` does not require approving
   reviews or status checks. Owner: Repository governance. Impact: the
   repository policy requires pull requests for product and control changes,
