@@ -6,6 +6,19 @@ Entries below are dated historical resolutions. When a later remote or
 repository change supersedes one of them, keep the historical record and track
 the current follow-up in [pending-debt.md](pending-debt.md).
 
+- 2026-09-10 — Accepted and closed pending debt `2026-08-31 [P2]` for optional
+  GitHub secret-scanning controls. The owner explicitly declined activation of
+  `secret_scanning_non_provider_patterns` and secret-scanning validity checks.
+  Existing Dependabot security updates, secret scanning, and secret-scanning
+  push protection remain enabled. Reopen only if the accepted risk posture or
+  GitHub security requirements change.
+
+- 2026-09-10 — Accepted and closed pending debt `2026-08-31` for organization
+  GitHub Project bootstrap. The owner explicitly discarded activation and
+  configuration of the optional Projects bootstrap. Do not treat the helper or
+  template as evidence of a configured Project; reopen only after an explicit
+  organization, Project title, and Projects-scoped authorization are selected.
+
 - 2026-09-10 — Resolved pending debt `2026-09-10 [P0]` for the generated
   Release Please changelog formatting failure. Added a release-job step that
   formats changed plugin changelogs before dispatching Quality and commits the

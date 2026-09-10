@@ -33,20 +33,3 @@ Use this file for unresolved maintenance work, known limitations, and follow-up 
   Reviewed 2026-09-10 at revision `2d19f31`: npm still reports `vitest`,
   `@vitest/coverage-v8`, and `@vitest/expect` latest as `5.0.0`; the repository
   remains on the verified 4.1.11 pair.
-- 2026-08-31 [P2] — Decide whether to enable remaining optional or stronger GitHub
-  security controls. Verified live 2026-09-07 at revision `e558763`: `main`
-  rejects force pushes and deletion, enforces administrators, and requires
-  conversation resolution; Dependabot security updates, secret scanning, and
-  secret scanning push protection are enabled; `secret_scanning_non_provider_patterns`
-  and secret scanning validity checks are disabled. Current gap or decision:
-  choose whether those disabled security features should be enabled or accepted
-  as-is. The direct-documentation routing decision is now resolved in
-  [resolved-debt.md](resolved-debt.md).
-- 2026-08-31 — Decide whether to activate the organization-level GitHub Project
-  bootstrap. `GITHUB_ORG` and `PROJECT_TITLE` are not configured in the current
-  local environment, and the authenticated `gh` token lacks `read:project`, so
-  the existence of the target Project cannot be verified. Keep this optional
-  until an organization, title, and Projects-scoped authorization are
-  explicitly selected; do not treat the helper or its template as evidence that
-  a Project exists. Reviewed 2026-09-07 at revision `e558763`: neither
-  environment variable is configured in the local shell used for verification.
