@@ -1,0 +1,7 @@
+interface:
+  display_name: "Configure Ruff After Edit"
+  short_description: "Plan approval-gated Ruff checks after edits"
+  default_prompt: "Use $configure-ruff-after-edit to audit this project and propose an approval-gated Ruff after-edit configuration."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,33 @@
+{
+  "name": "configure-ruff-after-edit",
+  "version": "0.1.0",
+  "description": "Plan approval-gated Ruff checks after supported edits without activating a plugin hook.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["ruff", "python", "quality", "configuration", "developer-tools"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Configure Ruff After Edit",
+    "shortDescription": "Plan approval-gated Ruff checks after edits.",
+    "longDescription": "Configure Ruff After Edit audits a declared project or user scope and proposes approval-gated Ruff after-edit behavior. Installing the plugin exposes only the skill; it does not activate a plugin hook or modify the target scope.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read-only Ruff configuration audit",
+      "Approval-gated after-edit workflow proposal",
+      "Project or user scope selection"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use $configure-ruff-after-edit to audit this project and propose an approval-gated Ruff after-edit configuration."
+    ]
+  }
+}
