@@ -6,6 +6,17 @@ Entries below are dated historical resolutions. When a later remote or
 repository change supersedes one of them, keep the historical record and track
 the current follow-up in [pending-debt.md](pending-debt.md).
 
+- 2026-09-10 — Superseded the branch-protection state recorded in the resolved
+  `2026-09-10 [P1]` governance entry below. The repository has one GitHub
+  maintainer, so the owner removed the one-approval requirement that would
+  otherwise make every pull request unmergeable. `main` now requires an
+  up-to-date `Required quality gates` and `prettier` checks plus conversation
+  resolution, with administrator enforcement and force-push and deletion
+  protection enabled. The pre-commit ShellCheck, shfmt, and Ruff controls
+  remain in force. Verified through the GitHub branch-protection API and
+  `npm run check` (116 tests). See
+  [ADR-0016](../decisions/adr-0016-main-protection-single-maintainer.md).
+
 - 2026-09-10 — Resolved pending debt `2026-09-10 [P1]` for unenforced `main`
   governance. The GitHub branch-protection API now requires one approving
   review, conversation resolution, an up-to-date branch, and successful
