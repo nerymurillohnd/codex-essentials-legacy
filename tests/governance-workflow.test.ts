@@ -52,6 +52,9 @@ describe("governance workflow", () => {
   it("requires a current independent approval for third-party pull requests", () => {
     expect(workflow.on).toMatchObject({
       pull_request_review: { types: ["submitted"] },
+      workflow_dispatch: {
+        inputs: { pr_number: { required: true, type: "string" } },
+      },
     });
     expect(workflow.jobs?.["contributor-review"]).toMatchObject({
       name: "Required contributor review",

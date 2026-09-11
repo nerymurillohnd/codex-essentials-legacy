@@ -11,6 +11,12 @@ on:
   pull_request_review:
     types:
       - submitted
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number to verify
+        required: true
+        type: string
   issues:
     types:
       - opened
@@ -41,7 +47,7 @@ jobs:
           fi
 
   contributor-review:
-    if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request_review'
+    if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request_review' || github.event_name == 'workflow_dispatch'
     name: Required contributor review
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -51,13 +57,19 @@ jobs:
       - name: Verify contributor review
         env:
           AUTHOR: ${{ github.event.pull_request.user.login }}
+          EVENT_NAME: ${{ github.event_name }}
           GH_TOKEN: ${{ github.token }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           OWNER: ${{ github.repository_owner }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            pull_request="$(gh api "repos/$REPOSITORY/pulls/$PR_NUMBER")"
+            AUTHOR="$(node -p 'JSON.parse(process.argv[1]).user.login' "$pull_request")"
+            HEAD_SHA="$(node -p 'JSON.parse(process.argv[1]).head.sha' "$pull_request")"
+          fi
           if [[ "$AUTHOR" == "$OWNER" ]]; then
             exit 0
           fi
