@@ -45,6 +45,23 @@ describe("configure-ruff-after-edit skill", () => {
     expect(skill).toMatch(/project or user scope/u);
   });
 
+  it("documents approval, attribution, rollback, and marketplace discovery", () => {
+    const readme = readFileSync(join(pluginRoot, "README.md"), "utf8");
+    const sources = readFileSync(
+      join(skillRoot, "references", "sources-and-attribution.md"),
+      "utf8",
+    );
+
+    expect(readme).toContain("Human Approval Boundaries");
+    expect(readme).toContain("does not create or activate a hook");
+    expect(readFileSync(join(repositoryRoot, "README.md"), "utf8")).toContain(
+      "plugins/configure-ruff-after-edit/README.md",
+    );
+    expect(sources).toContain("Astral");
+    expect(sources).toContain("PyDevTools");
+    expect(sources).toContain("not affiliated");
+  });
+
   it("runs safe fixes, formatting, and final lint only for reported Python files", () => {
     const result = runPythonTemplateTest(materializeTemplates(), "safe-order");
 
