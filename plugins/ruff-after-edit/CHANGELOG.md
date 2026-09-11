@@ -6,6 +6,13 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Use ISO 8601
 dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
+## [0.2.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/ruff-after-edit/v0.1.0...plugin/ruff-after-edit/v0.2.0) (2026-09-11)
+
+
+### Features
+
+* **ruff-after-edit:** add consumer-owned Ruff workflow ([d3da263](https://github.com/nerymurillohnd/codex-essentials/commit/d3da263e9ca0b714ec4bf32de6d66bf7b933ec06))
+
 ## [Unreleased]
 
 ### Added
