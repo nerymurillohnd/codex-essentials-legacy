@@ -10,13 +10,7 @@
   "homepage": "https://forestal-mt.com",
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "keywords": [
-    "ruff",
-    "python",
-    "quality",
-    "configuration",
-    "developer-tools"
-  ],
+  "keywords": ["ruff", "python", "quality", "configuration", "developer-tools"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Ruff After Edit",
