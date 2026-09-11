@@ -42,7 +42,7 @@ describe("configure-ruff-after-edit skill", () => {
     expect(manifest["hooks"]).toBeUndefined();
     expect(existsSync(join(pluginRoot, "hooks"))).toBe(false);
     expect(skill).toMatch(/explicit approval/u);
-    expect(skill).toMatch(/project or user scope/u);
+    expect(skill).toMatch(/project\/repository, and directory-bounded scopes/u);
   });
 
   it("documents approval, attribution, rollback, and marketplace discovery", () => {
@@ -116,6 +116,29 @@ describe("configure-ruff-after-edit skill", () => {
     expect(skill).toContain("~/.codex/ruff.toml");
     expect(environment).toContain("Windows as unsupported");
     expect(hookDesign).not.toContain("Python handler command");
+  });
+
+  it("documents the approved scope and configuration materialization matrix", () => {
+    const readme = readFileSync(join(pluginRoot, "README.md"), "utf8");
+    const skill = readFileSync(join(skillRoot, "SKILL.md"), "utf8");
+    const environment = readFileSync(
+      join(skillRoot, "references", "environment-assessment.md"),
+      "utf8",
+    );
+    const hookDesign = readFileSync(
+      join(skillRoot, "references", "hook-design.md"),
+      "utf8",
+    );
+
+    expect(skill).toContain("directory-bounded");
+    expect(skill).toContain("reviewed adjustment");
+    expect(skill).toContain("<project-root>/ruff.toml");
+    expect(environment).toContain("directory-bounded");
+    expect(environment).toContain("<project-root>/ruff.toml");
+    expect(hookDesign).toContain("reviewed adjustment");
+    expect(hookDesign).toContain("materialized configuration");
+    expect(readme).toContain("directory-bounded");
+    expect(readme).toContain("<project-root>/ruff.toml");
   });
 
   it("runs safe fixes, formatting, and final lint only for reported Python files", () => {
@@ -231,6 +254,8 @@ describe("configure-ruff-after-edit skill", () => {
 
   for (const scenario of [
     "multiple-files",
+    "leading-option",
+    "first-pass-diagnostics",
     "apply-patch",
     "non-python",
     "outside",

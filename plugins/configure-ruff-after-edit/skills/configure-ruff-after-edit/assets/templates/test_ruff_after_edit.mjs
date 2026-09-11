@@ -25,8 +25,14 @@ function assertThat(condition, message) {
   }
 }
 
-/** @param {string} directory @param {boolean} unfixable @param {number} delayMs */
-function writeFakeRuff(directory, unfixable = false, delayMs = 0) {
+/** @param {string} directory @param {boolean} unfixable @param {number} delayMs @param {boolean} optionInjection @param {boolean} firstPassDiagnostics */
+function writeFakeRuff(
+  directory,
+  unfixable = false,
+  delayMs = 0,
+  optionInjection = false,
+  firstPassDiagnostics = false,
+) {
   const executable = join(directory, "ruff");
   writeFileSync(
     executable,
@@ -36,6 +42,10 @@ function writeFakeRuff(directory, unfixable = false, delayMs = 0) {
       'appendFileSync(process.env.RUFF_LOG, `${arguments_.join(" ")}\\n`);\n' +
       `if (${delayMs} > 0) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ${delayMs});\n` +
       'if (arguments_.length === 1 && arguments_[0] === "--version") process.exit(0);\n' +
+      `if (${optionInjection} && arguments_.includes("--output-file=report.py") && !arguments_.includes("--")) {\n` +
+      '  writeFileSync(join(process.cwd(), "unreported.py"), "changed = true\\n", "utf8");\n' +
+      '}\n' +
+      `if (${firstPassDiagnostics} && arguments_[0] === "check" && arguments_.includes("--fix")) process.exit(1);\n` +
       `if (${unfixable} && arguments_[0] === "check" && !arguments_.includes("--fix")) process.exit(1);\n`,
     "utf8",
   );
@@ -86,6 +96,8 @@ async function runScenario(scenario) {
   mkdirSync(bin);
   writeFileSync(join(project, "safe.py"), "value = 1\n", "utf8");
   writeFileSync(join(project, "second.py"), "other = 2\n", "utf8");
+  writeFileSync(join(project, "--output-file=report.py"), "reported = 3\n", "utf8");
+  writeFileSync(join(project, "unreported.py"), "untouched = true\n", "utf8");
   writeFileSync(join(project, "notes.txt"), "notes\n", "utf8");
   writeFileSync(join(directory, "outside.py"), "outside = 3\n", "utf8");
   const env = { ...process.env, PATH: bin, RUFF_LOG: log };
@@ -102,6 +114,8 @@ async function runScenario(scenario) {
       bin,
       scenario === "unfixable",
       scenario === "timeout" ? 100 : 0,
+      scenario === "leading-option",
+      scenario === "first-pass-diagnostics",
     );
   }
 
@@ -116,9 +130,36 @@ async function runScenario(scenario) {
       JSON.stringify(logLines(log)) ===
         JSON.stringify([
           "--version",
-          "check --fix --no-unsafe-fixes safe.py",
-          "format safe.py",
-          "check safe.py",
+          "check --fix --no-unsafe-fixes -- safe.py",
+          "format -- safe.py",
+          "check -- safe.py",
+        ]),
+      logLines(log),
+    );
+  } else if (scenario === "leading-option") {
+    const unreported = join(project, "unreported.py");
+    const before = readFileSync(unreported, "utf8");
+    message(invoke(project, { path: "--output-file=report.py" }, [], env));
+    assertThat(readFileSync(unreported, "utf8") === before, "unreported file changed");
+    assertThat(
+      logLines(log).every((line) => line === "--version" || line.includes(" -- --output-file=report.py")),
+      logLines(log),
+    );
+  } else if (scenario === "first-pass-diagnostics") {
+    const output = message(
+      invoke(project, { files: ["safe.py", "second.py"] }, [], env),
+    );
+    assertThat(output.includes("reported diagnostics"), output);
+    assertThat(
+      JSON.stringify(logLines(log)) ===
+        JSON.stringify([
+          "--version",
+          "check --fix --no-unsafe-fixes -- safe.py",
+          "format -- safe.py",
+          "check -- safe.py",
+          "check --fix --no-unsafe-fixes -- second.py",
+          "format -- second.py",
+          "check -- second.py",
         ]),
       logLines(log),
     );
@@ -214,7 +255,7 @@ async function runScenario(scenario) {
       ),
       "unfixable",
     );
-    assertThat(logLines(log).at(-1) === "check safe.py", logLines(log));
+    assertThat(logLines(log).at(-1) === "check -- safe.py", logLines(log));
   } else if (scenario === "strict-profile" || scenario === "normal-discovery") {
     message(
       invoke(

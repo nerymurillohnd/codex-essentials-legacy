@@ -5,8 +5,11 @@ not activate a hook, invoke Ruff, or execute `uv`.
 
 ## Scope and existing state
 
-1. Ask whether the user wants one repository or a user-wide behavior. Confirm
-   the Git root for project scope; do not infer a user-wide choice.
+1. Ask whether the user wants global, project/repository, or directory-bounded
+   behavior. Confirm the Git root for project scope; do not infer a user-wide
+   choice. For directory-bounded behavior, record its canonical directory and
+   prove it is contained by the selected project. That directory limits
+   eligible event paths; it does not become a Codex configuration layer.
 2. Record the operating system, Codex version, target working directory, and
    whether the current Codex surface supports the needed command hook path.
    The initial handler and command templates require Node.js on a POSIX host;
@@ -40,18 +43,31 @@ project unless a later separately approved design changes this contract.
 
 ## Configuration selection
 
-Ask the user to choose discovered configuration, Ruff defaults, a reviewed
-adjustment, or the bundled strict profile. Existing discovery and defaults
-create no file and omit `--config`. The strict profile can be copied only after
-approval to `<project-root>/.codex/ruff.toml` for project scope or
-`~/.codex/ruff.toml` for user scope. Confirm the matching copied Node.js
-handler is respectively `<project-root>/.codex/hooks/ruff_after_edit.mjs` or
-`~/.codex/hooks/ruff_after_edit.mjs`; this structural relationship prevents an
-installed plugin asset from being selected as runtime configuration.
+Record three choices before any write: hook scope (global, project/repository,
+or directory-bounded); policy source (discovered configuration, Ruff defaults,
+a reviewed adjustment, or the bundled strict profile); and whether an approved
+configuration will be materialized.
+
+- Existing discovery and Ruff defaults create no file and omit `--config`.
+- The strict profile can be copied only after approval to
+  `<project-root>/.codex/ruff.toml` for project scope or `~/.codex/ruff.toml`
+  for user scope. Confirm the matching copied Node.js handler is respectively
+  `<project-root>/.codex/hooks/ruff_after_edit.mjs` or
+  `~/.codex/hooks/ruff_after_edit.mjs`; this structural relationship prevents
+  an installed plugin asset from being selected as runtime configuration.
+- A project with no existing Ruff configuration may materialize exactly one
+  approved root `<project-root>/ruff.toml`. This uses normal Ruff discovery and
+  therefore omits `--config`; do not overwrite an existing `pyproject.toml`,
+  `ruff.toml`, or `.ruff.toml`.
+- A reviewed adjustment requires the exact approved content, consumer-owned
+  destination, normal-discovery or canonical `--config` route, and rollback
+  step in the proposal. It is never inferred from the bundled profile and must
+  not overwrite an existing configuration.
 
 ## What to report
 
-Report scope, source layers, trust status, chosen representation, Ruff route,
-configuration evidence, matcher evidence, timeouts, expected writes, and all
-coverage gaps. If any item cannot be verified, label it as unavailable rather
-than filling it in from convention.
+Report all three choices, directory containment when selected, source layers,
+trust status, chosen representation, Ruff route, configuration evidence,
+matcher evidence, timeouts, expected writes, rollback of any materialized
+configuration, and all coverage gaps. If any item cannot be verified, label it
+as unavailable rather than filling it in from convention.

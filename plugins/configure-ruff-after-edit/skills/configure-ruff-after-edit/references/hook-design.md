@@ -39,6 +39,17 @@ with `~/.codex/hooks/ruff_after_edit.mjs`. The handler accepts a strict
 configuration only at that canonical consumer-owned location; it rejects a
 plugin package asset or any other `--config` path.
 
+Before approval, record three decisions: global, project/repository, or
+directory-bounded scope; policy source (discovered configuration, Ruff defaults,
+reviewed adjustment, or bundled strict profile); and configuration
+materialization. A directory-bounded scope records a canonical directory and
+rejects paths outside it, but it is not a Codex configuration layer. A project
+with no existing Ruff configuration may materialize a reviewed root
+`<project-root>/ruff.toml` and retain normal Ruff discovery without `--config`.
+A reviewed adjustment states the exact approved content, consumer-owned path,
+and discovery or canonical `--config` route. It must never overwrite existing
+configuration or use a plugin asset as runtime configuration.
+
 The initial handler resolves only an already executable project-local `.venv`
 Ruff or verified `PATH` Ruff. It does not execute `uv`, `uv run`, `uvx`, `pip`,
 or a network/download/install action. An uv-only project therefore emits a
@@ -57,9 +68,12 @@ inspect the exact source in `/hooks` and decide whether to trust it. A passing
 synthetic test does not establish discovery, trust, or a live Codex event.
 
 To recover, disable the exact non-managed definition in `/hooks` or remove the
-approved configuration entry and handler while preserving unrelated hooks.
-Use target-project Git history or a trusted backup to restore any Ruff edits;
-removing the hook prevents future runs but cannot undo completed edits.
+approved configuration entry, handler, and materialized configuration while
+preserving unrelated hooks and configuration. Remove a materialized
+configuration only when this approved installation created it; use
+target-project Git history or a trusted backup to restore a reviewed adjustment
+or any Ruff edits. Removing the hook prevents future runs but cannot undo
+completed edits.
 
 ## Coverage limits
 

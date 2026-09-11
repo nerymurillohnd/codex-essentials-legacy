@@ -253,10 +253,11 @@ export function parseConfigArgument(
 function runRuff(executable, file, configPath, deadline, commandTimeoutMs) {
   const config = configPath ? ["--config", configPath] : [];
   const phases = [
-    ["check", ...config, "--fix", "--no-unsafe-fixes", file.relativePath],
-    ["format", ...config, file.relativePath],
-    ["check", ...config, file.relativePath],
+    ["check", ...config, "--fix", "--no-unsafe-fixes", "--", file.relativePath],
+    ["format", ...config, "--", file.relativePath],
+    ["check", ...config, "--", file.relativePath],
   ];
+  let reportedDiagnostics = false;
   for (const arguments_ of phases) {
     const result = runCommand(
       executable,
@@ -268,11 +269,15 @@ function runRuff(executable, file, configPath, deadline, commandTimeoutMs) {
     if (result.timedOut) {
       return "timed out";
     }
+    if (result.status === 1 && arguments_[0] === "check") {
+      reportedDiagnostics = true;
+      continue;
+    }
     if (result.status !== 0) {
-      return `${arguments_[0]} reported diagnostics`;
+      return `${arguments_[0]} failed`;
     }
   }
-  return null;
+  return reportedDiagnostics ? "reported diagnostics" : null;
 }
 
 /** @param {string} rawInput @param {NodeJS.ProcessEnv} env @param {HandleOptions} options @returns {string} */
@@ -326,14 +331,22 @@ export function handle(rawInput, env = process.env, options = {}) {
     return "ruff-after-edit: skipped; Ruff is unavailable or the event budget expired.";
   }
   let processed = 0;
+  let diagnosticFiles = 0;
   for (const file of files) {
     const failure = runRuff(ruff, file, configPath, deadline, commandTimeoutMs);
     if (failure) {
+      if (failure === "reported diagnostics") {
+        processed += 1;
+        diagnosticFiles += 1;
+        continue;
+      }
       return `ruff-after-edit: ${failure}; processed ${processed} file(s).`;
     }
     processed += 1;
   }
-  return `ruff-after-edit: processed ${processed} reported Python file(s).`;
+  return diagnosticFiles
+    ? `ruff-after-edit: reported diagnostics for ${diagnosticFiles} file(s); processed ${processed} reported Python file(s).`
+    : `ruff-after-edit: processed ${processed} reported Python file(s).`;
 }
 
 /** @param {string} systemMessage */

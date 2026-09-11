@@ -89,9 +89,18 @@ through uv is safely skipped rather than synchronized, downloaded, or guessed.
 
 ## Configuration Modes
 
+Choose global, project/repository, or directory-bounded scope explicitly. A
+directory-bounded choice is a canonical execution boundary; it does not imply a
+new Codex configuration-discovery layer.
+
 Existing policy and Ruff defaults use the discovery templates
 `project-hooks.json` or `user-hooks.json`. They create no configuration and
 omit `--config`, so Ruff performs its ordinary discovery.
+
+For a project with no existing Ruff configuration, the user may instead approve
+`<project-root>/ruff.toml`; the hook still omits `--config` and Ruff discovers
+that consumer-owned file normally. A reviewed adjustment follows the same
+explicit-approval and consumer-owned-file rule.
 
 The approved strict profile requires a separate explicit materialization and
 the matching strict template. A project copy is exactly
