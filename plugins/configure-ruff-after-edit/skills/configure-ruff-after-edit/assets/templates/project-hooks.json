@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /REPLACE_WITH_ABSOLUTE_PATH/ruff_after_edit.py",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
