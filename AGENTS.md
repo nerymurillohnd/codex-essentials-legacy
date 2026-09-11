@@ -32,6 +32,11 @@ This protocol governs marketplace products. It does not convert a repository-dis
 
 If `plugins/AGENTS.md` does not exist during repository bootstrap, create it before modifying marketplace products or report the missing prerequisite explicitly.
 
+Every plugin README must instruct consumers to start a new session after
+installation before using bundled skills. Every public consumer smoke test must
+verify marketplace installation and explicit invocation of the plugin or one of
+its skills.
+
 ## Automated Quality Gates and Verification
 
 These are repository-maintenance controls for us to create, review, maintain, and assess marketplace products. They are not plugin components, plugin dependencies, or runtime behavior, and must not be packaged or declared in a plugin merely because they validate it.
