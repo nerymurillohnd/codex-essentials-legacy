@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /REPLACE_WITH_ABSOLUTE_PATH/ruff_after_edit.py",
+            "command": "if command -v node >/dev/null 2>&1; then node \"/REPLACE_WITH_ABSOLUTE_PATH/ruff_after_edit.mjs\"; else printf '%s\\n' '{\"systemMessage\":\"ruff-after-edit: skipped; Node.js is unavailable.\"}'; fi",
             "timeout": 30
           }
         ]

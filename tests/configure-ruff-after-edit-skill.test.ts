@@ -19,9 +19,9 @@ function materializeTemplates(): string {
   return directory;
 }
 
-function runPythonTemplateTest(directory: string, scenario: string) {
+function runNodeTemplateTest(directory: string, scenario: string) {
   try {
-    return spawnSync("python3", ["test_ruff_after_edit.py", scenario], {
+    return spawnSync("node", ["test_ruff_after_edit.mjs", scenario], {
       cwd: directory,
       encoding: "utf8",
     });
@@ -63,13 +63,94 @@ describe("configure-ruff-after-edit skill", () => {
   });
 
   it("runs safe fixes, formatting, and final lint only for reported Python files", () => {
-    const result = runPythonTemplateTest(materializeTemplates(), "safe-order");
+    const result = runNodeTemplateTest(materializeTemplates(), "safe-order");
 
     expect(result.status, result.stdout + result.stderr).toBe(0);
     expect(result.stdout).toContain("check --fix --no-unsafe-fixes");
     expect(result.stdout).toContain("format");
     expect(result.stdout).toContain("check");
     expect(result.stdout).not.toContain("--unsafe-fixes");
+  });
+
+  it("ships the approved strict profile and inert Node hook commands", () => {
+    expect(readFileSync(join(templatesRoot, "ruff.toml"), "utf8")).toBe(
+      [
+        "line-length = 100",
+        "indent-width = 4",
+        "force-exclude = true",
+        "# Preserve Ruff's standard exclusions and omit repository-specific generated files.",
+        "extend-exclude = [",
+        '  ".bzr", ".direnv", ".eggs", ".git", ".git-rewrite", ".hg",',
+        '  ".ipynb_checkpoints", ".mypy_cache", ".nox", ".pants.d", ".pyenv",',
+        '  ".pytest_cache", ".pytype", ".ruff_cache", ".svn", ".tox", ".venv",',
+        '  ".vscode", "__pycache__", "__pypackages__", "_build", "buck-out",',
+        '  "build", "dist", "node_modules", "site-packages", "venv",',
+        "]",
+        "",
+        "[lint]",
+        "select = [",
+        '  "E", "W", "F", "I", "UP", "B", "BLE", "SIM", "C4", "C90", "A",',
+        '  "COM", "DTZ", "T10", "EXE", "FA", "FBT", "ISC", "ICN", "G", "INP",',
+        '  "PIE", "PYI", "PT", "Q", "RSE", "RET", "SLF", "SLOT", "TID", "TC",',
+        '  "INT", "ARG", "PTH", "TD", "FIX", "ERA", "PD", "PGH", "PL", "TRY",',
+        '  "FLY", "NPY", "PERF", "FURB", "LOG", "RUF", "ANN", "D", "N", "S",',
+        "]",
+        "ignore = [",
+        '  "W191", "E111", "E114", "E117", "D203", "D206", "D300", "Q000",',
+        '  "Q001", "Q002", "Q003", "Q004", "COM812", "COM819", "ISC002", "D100",',
+        '  "D104", "D213", "S101", "INP001",',
+        "]",
+        'fixable = ["ALL"]',
+        "unfixable = []",
+        "",
+        "[lint.isort]",
+        "force-sort-within-sections = true",
+        "combine-as-imports = true",
+        "order-by-type = true",
+        "",
+        "[lint.mccabe]",
+        "max-complexity = 8",
+        "",
+        "[lint.pydocstyle]",
+        'convention = "google"',
+        "",
+        "[lint.flake8-annotations]",
+        "allow-star-arg-any = false",
+        "mypy-init-return = true",
+        "suppress-dummy-args = true",
+        "suppress-none-returning = false",
+        "",
+        "[lint.flake8-tidy-imports]",
+        'ban-relative-imports = "all"',
+        "",
+        "[lint.pycodestyle]",
+        "max-doc-length = 100",
+        "",
+        "[format]",
+        'quote-style = "double"',
+        'indent-style = "space"',
+        "skip-magic-trailing-comma = false",
+        'line-ending = "auto"',
+        "docstring-code-format = true",
+        "docstring-code-line-length = 100",
+        "",
+      ].join("\n"),
+    );
+
+    for (const file of ["project-hooks.json", "user-hooks.json"]) {
+      const template = JSON.parse(
+        readFileSync(join(templatesRoot, file), "utf8"),
+      ) as {
+        hooks: { PostToolUse: Array<{ hooks: Array<{ command: string }> }> };
+      };
+      const command = template.hooks.PostToolUse[0]?.hooks[0]?.command ?? "";
+
+      expect(command).toContain("ruff_after_edit.mjs");
+      expect(command).toContain("command -v node");
+      expect(command).not.toContain("--config");
+      expect(command).not.toContain("PLUGIN_ROOT");
+      expect(command).not.toContain("python");
+    }
   });
 
   for (const scenario of [
@@ -86,9 +167,15 @@ describe("configure-ruff-after-edit skill", () => {
     "uv-only",
     "missing-ruff",
     "unfixable",
+    "strict-profile",
+    "normal-discovery",
+    "invalid-cwd",
+    "posix-guard",
+    "timeout",
+    "node-unavailable",
   ]) {
     it(`handles ${scenario} safely`, () => {
-      const result = runPythonTemplateTest(materializeTemplates(), scenario);
+      const result = runNodeTemplateTest(materializeTemplates(), scenario);
       expect(
         result.status,
         `${scenario}: ${result.stdout}${result.stderr}`,
