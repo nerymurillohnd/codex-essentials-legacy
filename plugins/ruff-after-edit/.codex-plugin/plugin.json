@@ -1,0 +1,34 @@
+{
+  "name": "ruff-after-edit",
+  "version": "0.1.0",
+  "description": "Guide intentional Ruff use and approval-gated after-edit hooks without activating a plugin hook.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["ruff", "python", "quality", "configuration", "developer-tools"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Ruff After Edit",
+    "shortDescription": "Use Ruff and design approval-gated after-edit hooks.",
+    "longDescription": "Ruff After Edit teaches intentional Ruff usage and, when requested, proposes an approval-gated Codex after-edit workflow. Installing the plugin exposes only the skill; it does not activate a plugin hook or modify the target scope.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Intentional Ruff linting and formatting guidance",
+      "Approval-gated PostToolUse and Stop hook workflow proposal",
+      "Verified uv run, direct Ruff, or approved uvx route selection",
+      "Consumer hook validation and official contract freshness review"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use $ruff-after-edit to lint or format Python code, or propose an approval-gated Ruff after-edit workflow."
+    ]
+  }
+}

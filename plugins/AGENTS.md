@@ -66,6 +66,29 @@ and an array `defaultPrompt`. At least one of `skills`, `hooks`, `apps`, or
   `"hooks": "./hooks/hooks.json"` when the package uses the conventional hook
   file so the package contract is explicit.
 
+## Hook Distribution Policy
+
+Marketplace plugins must treat hooks as reference material by default. A plugin
+may provide a skill, documentation, templates, examples, validation guidance,
+and rollback instructions for consumer-owned hooks, but installation must not
+create, register, enable, trust, or execute a hook in a user's global or
+project configuration.
+
+Consumer-owned hook handlers must use Bash (`.sh`) or Python (`.py`) unless
+the user explicitly approves a different runtime before the handler is chosen.
+
+When a user later requests hook behavior, the agent must use the installed
+plugin's skill to assess the target environment, existing hook sources,
+configuration, scope, runtime, and compatibility. It must present the exact
+consumer-owned files and wiring, obtain explicit approval, then create or
+merge only the approved configuration. The user remains responsible for
+reviewing and trusting the resulting non-managed definition in `/hooks`.
+
+Do not declare a plugin `hooks` component or add a package `hooks/` directory
+unless a future user explicitly authorizes an exception to this policy and the
+package documentation explains automatic installation behavior, trust, scope,
+side effects, rollback, and compatibility consequences.
+
 ## Product Documentation
 
 Every plugin product must include these files at its package root:

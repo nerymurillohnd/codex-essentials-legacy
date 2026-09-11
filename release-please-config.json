@@ -45,6 +45,19 @@
         }
       ]
     },
+    "plugins/ruff-after-edit": {
+      "package-name": "ruff-after-edit",
+      "component": "plugin/ruff-after-edit",
+      "initial-version": "0.1.0",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
     "plugins/doc-keeper": {
       "package-name": "doc-keeper",
       "component": "plugin/doc-keeper",

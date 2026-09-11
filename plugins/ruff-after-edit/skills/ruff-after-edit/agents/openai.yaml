@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ruff After Edit"
+  short_description: "Use Ruff and design approval-gated after-edit hooks"
+  default_prompt: "Use $ruff-after-edit to lint or format Python code, or propose an approval-gated Ruff after-edit workflow."
+
+policy:
+  allow_implicit_invocation: true

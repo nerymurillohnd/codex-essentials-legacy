@@ -36,6 +36,7 @@ session without making those capabilities marketplace dependencies.
 | [Astro Commands](plugins/astro-cli-commands/README.md)             | Astro CLI discovery, project checks, preview, and server coordination.       | `astro-cli-commands`     |
 | [Block No Verify](plugins/block-no-verify/README.md)               | Approval-gated Git verification bypass policy installation.                  | `block-no-verify`        |
 | [Configure Prettier](plugins/configure-prettier/README.md)         | Prettier auditing, configuration, drift repair, editor setup, and CI checks. | `configure-prettier`     |
+| [Ruff After Edit](plugins/ruff-after-edit/README.md)               | Intentional Ruff guidance and approval-gated Codex edit hygiene.             | `ruff-after-edit`        |
 | [Prettier After Edit](plugins/prettier-after-edit/README.md)       | Exact-file Prettier formatting after Codex edits.                            | `prettier-after-edit`    |
 | [DocKeeper](plugins/doc-keeper/README.md)                          | Evidence-based changelog and ADR maintenance.                                | `doc-keeper`             |
 | [Hook Creator](plugins/hook-creator/README.md)                     | Codex lifecycle hook design, integration, review, testing, and debugging.    | `hook-creator`           |
@@ -58,6 +59,7 @@ permissions, side effects, and examples._
 | Plan, check, preview, or coordinate an Astro project   | [Astro Commands](plugins/astro-cli-commands/README.md)             |
 | Install a Git verification bypass policy with approval | [Block No Verify](plugins/block-no-verify/README.md)               |
 | Audit, configure, or repair Prettier setup             | [Configure Prettier](plugins/configure-prettier/README.md)         |
+| Use Ruff or propose Codex edit hygiene                 | [Ruff After Edit](plugins/ruff-after-edit/README.md)               |
 | Format edited files with Prettier                      | [Prettier After Edit](plugins/prettier-after-edit/README.md)       |
 | Create or repair changelogs and architecture decisions | [DocKeeper](plugins/doc-keeper/README.md)                          |
 | Engineer or debug Codex lifecycle hooks                | [Hook Creator](plugins/hook-creator/README.md)                     |
@@ -76,6 +78,7 @@ explains behavior, requirements, boundaries, and expected results._
 · [Astro CLI](plugins/astro-cli-commands/README.md) ·
 [Git verification policy](plugins/block-no-verify/README.md) ·
 [Prettier configuration](plugins/configure-prettier/README.md) ·
+[Ruff edit hooks](plugins/ruff-after-edit/README.md) ·
 [Prettier hooks](plugins/prettier-after-edit/README.md) ·
 [Changelog and ADRs](plugins/doc-keeper/README.md) ·
 [Codex hooks](plugins/hook-creator/README.md) ·
