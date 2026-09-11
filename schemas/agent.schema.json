@@ -41,7 +41,7 @@
       "required": ["allow_implicit_invocation"],
       "properties": {
         "allow_implicit_invocation": {
-          "const": true
+          "type": "boolean"
         }
       }
     }

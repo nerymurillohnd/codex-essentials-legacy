@@ -1,0 +1,39 @@
+{
+  "name": "repo-hygiene",
+  "version": "0.1.0",
+  "description": "Evidence-led Git hygiene with routine review, explicit deep audits, and user-approved execution.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["git", "repository", "hygiene", "cleanup", "forensics", "codex"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Repo Hygiene",
+    "shortDescription": "Evidence-led routine and deep Git hygiene.",
+    "longDescription": "A three-skill Git hygiene plugin that turns repository evidence into a plain-language audit report and numbered recommendations. Routine local housekeeping can be selected automatically; topology, recovery, integration, object-store, and regression analysis require explicit invocation. No cleanup, pruning, integration, rewrite, remote mutation, or bisection proceeds until the user approves specific recommendation IDs.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Plain-language Git audit reporting",
+      "Routine repository cleanup recommendations",
+      "Explicit topology, integration, and recovery audits",
+      "Explicit regression, attribution, and code-search audits",
+      "Item-scoped approval and verified execution",
+      "Git safety and forensic preservation"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use $repo-hygiene:routine to audit this checkout and present cleanup recommendations for my approval.",
+      "Use $repo-hygiene:deep to audit repository topology and present integration or recovery recommendations for my approval.",
+      "Use $repo-hygiene:debug to investigate this reproducible regression and present findings for my approval."
+    ],
+    "brandColor": "#0F766E"
+  }
+}

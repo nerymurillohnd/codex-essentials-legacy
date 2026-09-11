@@ -1,0 +1,7 @@
+interface:
+  display_name: "Repo Hygiene"
+  short_description: "Audit routine Git hygiene and explain recommendations"
+  default_prompt: "Use $repo-hygiene:routine to audit routine cleanup candidates and present recommendations for my approval."
+
+policy:
+  allow_implicit_invocation: true

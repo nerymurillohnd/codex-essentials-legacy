@@ -160,14 +160,15 @@ afterEach(() => {
 });
 
 describe("strict plugin-to-marketplace pipeline", () => {
-  it("declares automatic invocation in every repository agent manifest", () => {
+  it("declares an explicit boolean invocation policy in every repository agent manifest", () => {
     const manifests = findAgentManifests(repositoryRoot);
 
     expect(manifests.length).toBeGreaterThan(0);
     for (const manifest of manifests) {
-      expect(YAML.parse(readFileSync(manifest, "utf8"))).toMatchObject({
-        policy: { allow_implicit_invocation: true },
-      });
+      const agent = YAML.parse(readFileSync(manifest, "utf8")) as {
+        policy?: { allow_implicit_invocation?: unknown };
+      };
+      expect(typeof agent.policy?.allow_implicit_invocation).toBe("boolean");
     }
   });
 
@@ -187,6 +188,82 @@ describe("strict plugin-to-marketplace pipeline", () => {
     expect(template).toMatchObject({
       policy: { allow_implicit_invocation: true },
     });
+  });
+
+  it("exposes routine and explicit deep repo-hygiene modes", () => {
+    const root = createFixture();
+    const skillsRoot = join(root, "plugins", "repo-hygiene", "skills");
+
+    expect(
+      readdirSync(skillsRoot, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
+        .map((entry) => entry.name)
+        .sort(),
+    ).toEqual(["debug", "deep", "routine"]);
+
+    const routine = YAML.parse(
+      readFileSync(
+        join(skillsRoot, "routine", "agents", "openai.yaml"),
+        "utf8",
+      ),
+    ) as { policy: { allow_implicit_invocation: boolean } };
+    const deep = YAML.parse(
+      readFileSync(join(skillsRoot, "deep", "agents", "openai.yaml"), "utf8"),
+    ) as { policy: { allow_implicit_invocation: boolean } };
+    const debug = YAML.parse(
+      readFileSync(join(skillsRoot, "debug", "agents", "openai.yaml"), "utf8"),
+    ) as { policy: { allow_implicit_invocation: boolean } };
+
+    expect(routine.policy.allow_implicit_invocation).toBe(true);
+    expect(deep.policy.allow_implicit_invocation).toBe(false);
+    expect(debug.policy.allow_implicit_invocation).toBe(false);
+  });
+
+  it("keeps senior Git guidance partitioned by hygiene mode", () => {
+    const root = createFixture();
+    const skillsRoot = join(root, "plugins", "repo-hygiene", "skills");
+
+    for (const reference of [
+      "routine/references/routine-hygiene.md",
+      "debug/references/debugging-with-git.md",
+      "deep/references/revisions-and-integration.md",
+      "deep/references/topology-and-recovery.md",
+      "deep/references/object-store-and-provenance.md",
+    ]) {
+      expect(() =>
+        readFileSync(join(skillsRoot, reference), "utf8"),
+      ).not.toThrow();
+    }
+  });
+
+  it("requires an approved recommendation plan before repo-hygiene mutates state", () => {
+    const root = createFixture();
+    const skillsRoot = join(root, "plugins", "repo-hygiene", "skills");
+
+    for (const skill of ["routine", "deep", "debug"]) {
+      const instructions = readFileSync(
+        join(skillsRoot, skill, "SKILL.md"),
+        "utf8",
+      );
+      expect(instructions).toContain("recommendation plan");
+      expect(instructions).toContain("approved item IDs");
+    }
+  });
+
+  it("requires a comprehensible audit report before repo-hygiene asks for approval", () => {
+    const root = createFixture();
+    const skillsRoot = join(root, "plugins", "repo-hygiene", "skills");
+
+    for (const skill of ["routine", "deep", "debug"]) {
+      const instructions = readFileSync(
+        join(skillsRoot, skill, "SKILL.md"),
+        "utf8",
+      );
+      expect(instructions).toContain("User-Facing Audit Report");
+      expect(instructions).toContain("plain-language summary");
+      expect(instructions).toContain("Evidence and scope");
+      expect(instructions).toContain("Recommendations awaiting approval");
+    }
   });
 
   it("exposes each pipeline CLI for instrumented execution", () => {
@@ -308,7 +385,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
     const root = createFixture();
     const pluginsRoot = join(root, "plugins");
     writeFileSync(join(pluginsRoot, "AGENTS.md"), "instructions\n");
-    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(14);
+    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(15);
 
     const invalidEntryRoot = createFixture();
     writeFileSync(join(invalidEntryRoot, "plugins", "not-a-plugin.txt"), "x");
@@ -648,6 +725,18 @@ describe("strict plugin-to-marketplace pipeline", () => {
         { name: "optimize-memories" },
         { name: "prettier-after-edit" },
         { name: "prompt-architect" },
+        {
+          name: "repo-hygiene",
+          source: {
+            source: "local",
+            path: "./plugins/repo-hygiene",
+          },
+          policy: {
+            installation: "AVAILABLE",
+            authentication: "ON_INSTALL",
+          },
+          category: "Developer Tools",
+        },
         { name: "repo-maintenance" },
         {
           name: "ruff-after-edit",
@@ -1234,9 +1323,8 @@ describe("strict plugin-to-marketplace pipeline", () => {
         "",
       ].join("\n"),
     );
-    const disabledPolicy = run(root, "validate-plugins.cjs");
-    expect(disabledPolicy.status).not.toBe(0);
-    expect(disabledPolicy.stderr).toContain("allow_implicit_invocation");
+    const explicitOnlyPolicy = run(root, "validate-plugins.cjs");
+    expect(explicitOnlyPolicy.status).toBe(0);
   });
 
   it("rejects a catalog whose entries no longer exactly derive from the manifests", () => {

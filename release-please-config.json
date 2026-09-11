@@ -135,6 +135,19 @@
         }
       ]
     },
+    "plugins/repo-hygiene": {
+      "package-name": "repo-hygiene",
+      "component": "plugin/repo-hygiene",
+      "initial-version": "0.1.0",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
     "plugins/repo-maintenance": {
       "package-name": "repo-maintenance",
       "component": "plugin/repo-maintenance",

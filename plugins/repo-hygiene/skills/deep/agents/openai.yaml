@@ -1,0 +1,7 @@
+interface:
+  display_name: "Deep Repo Hygiene"
+  short_description: "Audit Git topology, recovery, and high-risk actions"
+  default_prompt: "Use $repo-hygiene:deep to audit Git topology and present recommendations for my approval."
+
+policy:
+  allow_implicit_invocation: false

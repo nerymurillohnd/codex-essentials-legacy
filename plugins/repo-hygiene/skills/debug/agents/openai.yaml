@@ -1,0 +1,7 @@
+interface:
+  display_name: "Repo Hygiene Debug"
+  short_description: "Audit Git regressions, line history, and code search"
+  default_prompt: "Use $repo-hygiene:debug to investigate this reproducible regression and present findings for my approval."
+
+policy:
+  allow_implicit_invocation: false
