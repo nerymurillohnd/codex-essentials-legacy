@@ -118,6 +118,6 @@ describe("block-no-verify skill templates", () => {
     expect(releaseConfig.packages["plugins/block-no-verify"]?.component).toBe(
       "plugin/block-no-verify",
     );
-    expect(releaseState["plugins/block-no-verify"]).toBe("0.1.0");
+    expect(releaseState["plugins/block-no-verify"]).toBe("0.2.0");
   });
 });
