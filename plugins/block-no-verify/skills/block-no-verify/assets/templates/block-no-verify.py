@@ -73,6 +73,11 @@ def append_split_character(
     return None if character == quote else quote
 
 
+def starts_shell_escape(character: str, quote: str | None) -> bool:
+    """Return whether a backslash escapes the next shell character."""
+    return character == "\\" and quote != "'"
+
+
 def split_subcommands(command: str) -> list[str]:
     """Split top-level shell command lists without evaluating shell syntax."""
     parts: list[str] = []
@@ -88,13 +93,13 @@ def split_subcommands(command: str) -> list[str]:
             escaped = False
             index += 1
             continue
-        if quote is not None:
-            quote = append_split_character(current, character, quote)
-            index += 1
-            continue
-        if character == "\\":
+        if starts_shell_escape(character, quote):
             current.append(character)
             escaped = True
+            index += 1
+            continue
+        if quote is not None:
+            quote = append_split_character(current, character, quote)
             index += 1
             continue
         if character in {"'", '"'}:
@@ -148,11 +153,11 @@ def lex_words(command: str) -> list[str]:
             current.append(character)
             escaped = False
             continue
+        if starts_shell_escape(character, quote):
+            escaped = True
+            continue
         if quote is not None:
             quote = append_quoted_character(current, character, quote)
-            continue
-        if character == "\\":
-            escaped = True
             continue
         if character in {"'", '"'}:
             quote = character

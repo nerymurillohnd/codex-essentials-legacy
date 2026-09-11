@@ -43,6 +43,12 @@ as a compatibility fallback. Migrating the repository's manifest model and
 validators to portable packages is out of scope for this consolidation and
 requires separate approval.
 
+Compatibility basis: verified on 2026-09-11 against the official OpenAI
+[Package your plugin](https://developers.openai.com/plugins/build/plugins#plugin-creator-output)
+guidance and repository revision `5f7dee8a77d60e5a379bb259ca0a79dc054a90ce`.
+That guidance describes root `plugin.json` as the portable format and
+`.codex-plugin/plugin.json` as a supported compatibility fallback.
+
 Consumers add the Codex Essentials repository/CLI marketplace and install
 `repository-documentation@codex-essentials`. The generated catalog's
 `./plugins/repository-documentation` path is repository build metadata, not a

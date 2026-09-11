@@ -71,6 +71,7 @@ echo "=== F. negative controls ==="
 want ALLOW 'git status'
 want ALLOW 'git commit -m "x"'
 want ALLOW 'git commit -m "docs: explain --no-verify blocking"'
+want ALLOW 'git commit -m "say \"hello\""'
 want ALLOW 'git push origin main'
 want ALLOW 'sudo git log'
 want ALLOW 'env FOO=bar git status'
