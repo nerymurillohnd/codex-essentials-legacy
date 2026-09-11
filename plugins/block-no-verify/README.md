@@ -104,6 +104,8 @@ Removal stops skill discovery but does not remove a policy generated elsewhere. 
 ```bash
 npx vitest run tests/block-no-verify-skill.test.ts
 npm run marketplace:check
+uvx ruff@0.16.6 check --isolated plugins/block-no-verify/skills/block-no-verify/assets/templates/block-no-verify.py
+uvx ruff@0.16.6 format --isolated --check plugins/block-no-verify/skills/block-no-verify/assets/templates/block-no-verify.py
 ```
 
 The focused test materializes the Python and Bash templates and runs the behavioral contract. It does not prove Codex discovery, trust, or live event execution.

@@ -8,9 +8,9 @@ it does not evaluate variables, aliases, eval, or external scripts.
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import re
 import sys
+from pathlib import Path
 from typing import NoReturn, cast
 
 sys.dont_write_bytecode = True
@@ -51,7 +51,7 @@ def deny(reason: str) -> NoReturn:
     raise SystemExit(0)
 
 
-def split_subcommands(command: str) -> list[str]:  # noqa: C901 - state machine
+def split_subcommands(command: str) -> list[str]:
     """Split top-level shell command lists without evaluating shell syntax."""
     parts: list[str] = []
     current: list[str] = []
@@ -85,7 +85,11 @@ def split_subcommands(command: str) -> list[str]:  # noqa: C901 - state machine
         if character in {";", "|", "\n"}:
             parts.append("".join(current))
             current = []
-            if character == "|" and index + 1 < len(command) and command[index + 1] == "|":
+            if (
+                character == "|"
+                and index + 1 < len(command)
+                and command[index + 1] == "|"
+            ):
                 index += 1
             index += 1
             continue
@@ -103,7 +107,7 @@ def split_subcommands(command: str) -> list[str]:  # noqa: C901 - state machine
     return parts
 
 
-def lex_words(command: str) -> list[str]:  # noqa: C901 - quote-aware tokenization
+def lex_words(command: str) -> list[str]:
     """Return literal shell words while preserving the no-evaluation boundary."""
     words: list[str] = []
     current: list[str] = []
@@ -198,7 +202,7 @@ def is_falsy_gpgsign(value: str) -> bool:
     )
 
 
-def contains_bypass(words: list[str]) -> bool:  # noqa: C901 - option scan
+def contains_bypass(words: list[str]) -> bool:
     """Return whether a literal Git invocation contains a prohibited bypass."""
     index = 1
     while index < len(words):

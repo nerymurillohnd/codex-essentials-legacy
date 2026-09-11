@@ -14,3 +14,7 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 ### Security
 
 - Require explicit scope selection and user-controlled `/hooks` review before a generated non-managed hook can affect supported Bash tool calls.
+
+### Changed
+
+- Normalize the bundled Python handler for deterministic Ruff lint and format checks.

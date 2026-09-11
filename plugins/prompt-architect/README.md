@@ -177,7 +177,8 @@ npm run validate:plugins
 npm run marketplace:build
 npm run marketplace:check
 npm run documentation:gate -- --base main --head HEAD
-python3 plugins/prompt-architect/skills/prompt-architect/scripts/validate-final-output.py
+uvx ruff@0.16.6 check --isolated plugins/prompt-architect/skills/prompt-architect/scripts/validate-final-output.py
+uvx ruff@0.16.6 format --isolated --check plugins/prompt-architect/skills/prompt-architect/scripts/validate-final-output.py
 npm run check
 ```
 

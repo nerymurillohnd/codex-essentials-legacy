@@ -62,6 +62,17 @@ jobs:
           npm install --global npm@12.0.2
           npm --version
 
+      - name: Install shfmt
+        run: |
+          go install mvdan.cc/sh/v3/cmd/shfmt@v3.14.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: "0.12.12"
+          enable-cache: "false"
+
       - name: Install dependencies
         run: HUSKY=0 npm ci
 

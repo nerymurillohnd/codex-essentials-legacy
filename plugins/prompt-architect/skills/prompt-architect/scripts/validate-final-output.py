@@ -3,12 +3,12 @@
 
 from __future__ import annotations
 
-from collections import deque
-from contextlib import suppress
-from itertools import pairwise
 import json
 import re
 import sys
+from collections import deque
+from contextlib import suppress
+from itertools import pairwise
 from typing import cast
 
 SECTION_NAMES = (
@@ -83,7 +83,11 @@ def _collect_strings(value: object) -> list[str]:
         case str():
             return [value]
         case list():
-            return [text for item in cast("list[object]", value) for text in _collect_strings(item)]
+            return [
+                text
+                for item in cast("list[object]", value)
+                for text in _collect_strings(item)
+            ]
         case dict():
             return [
                 text
@@ -172,7 +176,11 @@ def _validate_ready(text: str, index: SectionIndex) -> list[str]:
     recommendation = text[execution.end() :]
     errors.extend(
         ["required Ready sections are out of order"]
-        * (not _is_ordered((_first_section(index, "Result"), assumptions, final_prompt, execution)))
+        * (
+            not _is_ordered(
+                (_first_section(index, "Result"), assumptions, final_prompt, execution)
+            )
+        )
     )
     errors.extend(
         ["Ready output must omit Clarification Questions"]
@@ -212,7 +220,8 @@ def _validate_needs_clarification(index: SectionIndex) -> list[str]:
         )
     )
     errors.extend(
-        ["Needs Clarification output must omit Final Prompt"] * bool(index["Final Prompt"])
+        ["Needs Clarification output must omit Final Prompt"]
+        * bool(index["Final Prompt"])
     )
     errors.extend(
         ["Needs Clarification output must omit Execution Recommendation"]
@@ -241,7 +250,9 @@ def _main() -> int:
     if not errors:
         return 0
     _emit(
-        "prompt-architect-final-check: blocked; revise before delivery: " + "; ".join(errors) + "."
+        "prompt-architect-final-check: blocked; revise before delivery: "
+        + "; ".join(errors)
+        + "."
     )
     return 2
 

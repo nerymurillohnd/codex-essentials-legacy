@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+require_command() {
+  local command="$1"
+  local instruction="$2"
+  if ! command -v "${command}" >/dev/null 2>&1; then
+    printf 'pre-commit requires %s. %s\n' "${command}" "${instruction}" >&2
+    exit 1
+  fi
+}
+
+require_command shellcheck "Install with Homebrew: brew install shellcheck shfmt"
+require_command shfmt "Install with Homebrew: brew install shellcheck shfmt"
+require_command uv "Install uv, then install Ruff with: uv tool install ruff@0.16.6"
+
+git-format-staged -f 'prettier --ignore-unknown --stdin --stdin-filepath "{}"' .
+
+git_directory="$(git rev-parse --git-dir)"
+temporary_directory="$(mktemp -d "${git_directory}/pre-commit-quality.XXXXXX")"
+staged_files="${temporary_directory}/staged-files"
+trap 'rm -rf "${temporary_directory}"' EXIT
+git diff --cached --name-only -z --diff-filter=ACMR >"${staged_files}"
+
+validate_shell_file() {
+  local file="$1"
+  local temporary_file="${temporary_directory}/shell-${file##*/}"
+  git show ":${file}" >"${temporary_file}"
+  shellcheck -- "${temporary_file}"
+  shfmt -d -- "${temporary_file}"
+}
+
+validate_python_file() {
+  local file="$1"
+  local mode
+  local temporary_file="${temporary_directory}/python-${file##*/}"
+  git show ":${file}" >"${temporary_file}"
+  mode="$(git ls-files --stage -- "${file}" | awk 'NR == 1 { print $1 }')"
+  if [[ "${mode}" == "100755" ]]; then
+    chmod +x "${temporary_file}"
+  fi
+  uvx ruff@0.16.6 check --isolated -- "${temporary_file}"
+  uvx ruff@0.16.6 format --isolated --check -- "${temporary_file}"
+}
+
+while IFS= read -r -d '' file; do
+  case "${file}" in
+  *.sh | *.bash)
+    validate_shell_file "${file}"
+    ;;
+  .husky/*)
+    mode="$(git ls-files --stage -- "${file}" | awk 'NR == 1 { print $1 }')"
+    if [[ "${mode}" == "100755" ]]; then
+      validate_shell_file "${file}"
+    fi
+    ;;
+  *.py)
+    validate_python_file "${file}"
+    ;;
+  *) ;;
+  esac
+done <"${staged_files}"
