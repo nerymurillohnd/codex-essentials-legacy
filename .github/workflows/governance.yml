@@ -5,8 +5,12 @@ on:
     types:
       - opened
       - reopened
+      - synchronize
       - labeled
       - unlabeled
+  pull_request_review:
+    types:
+      - submitted
   issues:
     types:
       - opened
@@ -35,6 +39,44 @@ jobs:
             echo "pull request requires at least one label" >&2
             exit 1
           fi
+
+  contributor-review:
+    if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request_review'
+    name: Required contributor review
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Verify contributor review
+        env:
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          OWNER: ${{ github.repository_owner }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [[ "$AUTHOR" == "$OWNER" ]]; then
+            exit 0
+          fi
+          gh api --paginate "repos/$REPOSITORY/pulls/$PR_NUMBER/reviews" | node -e '
+            let raw = "";
+            process.stdin.on("data", (chunk) => (raw += chunk));
+            process.stdin.on("end", () => {
+              const latest = new Map();
+              for (const review of JSON.parse(raw)) {
+                if (review.user?.login !== process.env.AUTHOR && review.commit_id === process.env.HEAD_SHA) {
+                  latest.set(review.user.login, review.state);
+                }
+              }
+              if (![...latest.values()].includes("APPROVED")) {
+                console.error("third-party pull request requires an approval");
+                process.exitCode = 1;
+              }
+            });
+          '
 
   issue-label:
     if: github.event_name == 'issues'
