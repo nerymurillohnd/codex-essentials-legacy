@@ -7,6 +7,10 @@
 
 Block No Verify is a Codex skill plugin for a maintained Git verification and signing bypass policy. It does not install or enable a hook automatically.
 
+Its bundled parser keeps shell-list, quoting, wrapper, and Git-option handling
+in bounded helpers so strict Ruff complexity checks do not require suppressing
+policy diagnostics.
+
 ## ⚡ Quick start
 
 ```bash

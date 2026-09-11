@@ -3,13 +3,13 @@
 
 from __future__ import annotations
 
+import collections
+import contextlib
+import itertools
 import json
 import re
 import sys
-from collections import deque
-from contextlib import suppress
-from itertools import pairwise
-from typing import cast
+import typing
 
 SECTION_NAMES = (
     "Result",
@@ -24,6 +24,7 @@ SECTION_BY_LOWER = dict(zip(map(str.lower, SECTION_NAMES), SECTION_NAMES, strict
 RECOMMENDATION_TOKENS = ("model", "reasoning", "P-level", "D-level", "R-level")
 READY_SECTIONS = ("Result", "Assumptions", "Final Prompt", "Execution Recommendation")
 CLARIFICATION_SECTIONS = ("Result", "Assumptions", "Clarification Questions")
+FINAL_PROMPT_NOT_ALLOWED = "Needs Clarification output must omit Final Prompt"
 HEADING_PATTERN = re.compile(
     r"""
     ^[ \t]*\*\*
@@ -58,18 +59,18 @@ def _build_section_index(text: str) -> SectionIndex:
     def record(match: re.Match[str]) -> None:
         index[SECTION_BY_LOWER[match.group(1).lower()]].append(match)
 
-    _ = deque(map(record, HEADING_PATTERN.finditer(text)), maxlen=0)
+    _ = collections.deque(map(record, HEADING_PATTERN.finditer(text)), maxlen=0)
     return index
 
 
 def _first_section(index: SectionIndex, name: str) -> re.Match[str] | None:
-    with suppress(IndexError):
+    with contextlib.suppress(IndexError):
         return index[name][0]
     return None
 
 
 def _last_section(index: SectionIndex, name: str) -> re.Match[str] | None:
-    with suppress(IndexError):
+    with contextlib.suppress(IndexError):
         return index[name][-1]
     return None
 
@@ -85,13 +86,13 @@ def _collect_strings(value: object) -> list[str]:
         case list():
             return [
                 text
-                for item in cast("list[object]", value)
+                for item in typing.cast("list[object]", value)
                 for text in _collect_strings(item)
             ]
         case dict():
             return [
                 text
-                for item in cast("dict[object, object]", value).values()
+                for item in typing.cast("dict[object, object]", value).values()
                 for text in _collect_strings(item)
             ]
         case _:
@@ -105,7 +106,7 @@ def _collect_hook_text(raw_input: str) -> str:
         case _:
             pass
     try:
-        parsed = cast("object", json.loads(raw_input))
+        parsed = typing.cast("object", json.loads(raw_input))
     except json.JSONDecodeError:
         return raw_input
     return "\n".join(_collect_strings(parsed))
@@ -140,9 +141,21 @@ def _is_ordered(matches: tuple[re.Match[str] | None, ...]) -> bool:
     present = tuple(filter(lambda match: match is not None, matches))
     ordered = all(
         current.start() < following.start()
-        for current, following in pairwise(cast("tuple[re.Match[str], ...]", present))
+        for current, following in itertools.pairwise(
+            typing.cast("tuple[re.Match[str], ...]", present)
+        )
     )
     return len(present) == len(matches) and ordered
+
+
+def _ready_sections(
+    index: SectionIndex,
+    assumptions: re.Match[str],
+    final_prompt: re.Match[str],
+    execution: re.Match[str],
+) -> tuple[re.Match[str] | None, ...]:
+    """Return the required Ready sections in their required order."""
+    return (_first_section(index, "Result"), assumptions, final_prompt, execution)
 
 
 def _recommendation_errors(recommendation: str) -> list[str]:
@@ -170,18 +183,14 @@ def _validate_ready(text: str, index: SectionIndex) -> list[str]:
         case _:
             return errors
 
-    assumptions = cast("re.Match[str]", _first_section(index, "Assumptions"))
-    final_prompt = cast("re.Match[str]", _first_section(index, "Final Prompt"))
-    execution = cast("re.Match[str]", _last_section(index, "Execution Recommendation"))
+    assumptions = typing.cast("re.Match[str]", _first_section(index, "Assumptions"))
+    final_prompt = typing.cast("re.Match[str]", _first_section(index, "Final Prompt"))
+    execution_match = _last_section(index, "Execution Recommendation")
+    execution = typing.cast("re.Match[str]", execution_match)
     recommendation = text[execution.end() :]
-    errors.extend(
-        ["required Ready sections are out of order"]
-        * (
-            not _is_ordered(
-                (_first_section(index, "Result"), assumptions, final_prompt, execution)
-            )
-        )
-    )
+    ready_order = _ready_sections(index, assumptions, final_prompt, execution)
+    if not _is_ordered(ready_order):
+        errors.append("required Ready sections are out of order")
     errors.extend(
         ["Ready output must omit Clarification Questions"]
         * _has_heading_between(
@@ -219,10 +228,8 @@ def _validate_needs_clarification(index: SectionIndex) -> list[str]:
             )
         )
     )
-    errors.extend(
-        ["Needs Clarification output must omit Final Prompt"]
-        * bool(index["Final Prompt"])
-    )
+    missing_prompt = bool(index["Final Prompt"])
+    errors.extend([FINAL_PROMPT_NOT_ALLOWED] * missing_prompt)
     errors.extend(
         ["Needs Clarification output must omit Execution Recommendation"]
         * bool(index["Execution Recommendation"])
@@ -249,11 +256,8 @@ def _main() -> int:
     errors = _validate_prompt_architect_output(text)
     if not errors:
         return 0
-    _emit(
-        "prompt-architect-final-check: blocked; revise before delivery: "
-        + "; ".join(errors)
-        + "."
-    )
+    prefix = "prompt-architect-final-check: blocked; revise before delivery: "
+    _emit(prefix + "; ".join(errors) + ".")
     return 2
 
 

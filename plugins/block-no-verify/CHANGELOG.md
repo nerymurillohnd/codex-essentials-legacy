@@ -26,6 +26,11 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 - Require explicit scope selection and user-controlled `/hooks` review before a generated non-managed hook can affect supported Bash tool calls.
 
+- Normalize the bundled Python handler for deterministic Ruff lint and format checks.
+
+## [0.2.1](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/block-no-verify/v0.2.0...plugin/block-no-verify/v0.2.1) (2026-09-11)
+
 ### Changed
 
-- Normalize the bundled Python handler for deterministic Ruff lint and format checks.
+- Refactor the bundled Python command parser into bounded helpers so strict
+  Ruff complexity checks pass without changing bypass-policy behavior.

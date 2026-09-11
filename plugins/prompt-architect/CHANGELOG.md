@@ -94,3 +94,10 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   backing it up outside the package.
 - Remove the redundant skill-level README so installed runtime guidance lives in
   `SKILL.md`, references, templates, examples, and the package README.
+
+## [0.2.2](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/prompt-architect/v0.2.1...plugin/prompt-architect/v0.2.2) (2026-09-11)
+
+### Changed
+
+- Sort the final-output validator imports so strict Ruff checks pass without
+  changing hook behavior.

@@ -8,9 +8,9 @@ it does not evaluate variables, aliases, eval, or external scripts.
 from __future__ import annotations
 
 import json
+import pathlib
 import re
 import sys
-from pathlib import Path
 from typing import NoReturn, cast
 
 sys.dont_write_bytecode = True
@@ -51,6 +51,28 @@ def deny(reason: str) -> NoReturn:
     raise SystemExit(0)
 
 
+def separator_end(command: str, index: int) -> int | None:
+    """Return the end index for a top-level shell list separator."""
+    character = command[index]
+    if character in {";", "\n"}:
+        return index + 1
+    if character == "|":
+        return index + 2 if command[index + 1 : index + 2] == "|" else index + 1
+    if character == "&" and command[index + 1 : index + 2] == "&":
+        return index + 2
+    return None
+
+
+def append_split_character(
+    current: list[str],
+    character: str,
+    quote: str,
+) -> str | None:
+    """Append one quoted shell character and return the next quote state."""
+    current.append(character)
+    return None if character == quote else quote
+
+
 def split_subcommands(command: str) -> list[str]:
     """Split top-level shell command lists without evaluating shell syntax."""
     parts: list[str] = []
@@ -66,15 +88,13 @@ def split_subcommands(command: str) -> list[str]:
             escaped = False
             index += 1
             continue
-        if character == "\\" and quote != "'":
-            current.append(character)
-            escaped = True
+        if quote is not None:
+            quote = append_split_character(current, character, quote)
             index += 1
             continue
-        if quote is not None:
+        if character == "\\":
             current.append(character)
-            if character == quote:
-                quote = None
+            escaped = True
             index += 1
             continue
         if character in {"'", '"'}:
@@ -82,21 +102,11 @@ def split_subcommands(command: str) -> list[str]:
             current.append(character)
             index += 1
             continue
-        if character in {";", "|", "\n"}:
+        separator = separator_end(command, index)
+        if separator is not None:
             parts.append("".join(current))
             current = []
-            if (
-                character == "|"
-                and index + 1 < len(command)
-                and command[index + 1] == "|"
-            ):
-                index += 1
-            index += 1
-            continue
-        if character == "&" and index + 1 < len(command) and command[index + 1] == "&":
-            parts.append("".join(current))
-            current = []
-            index += 2
+            index = separator
             continue
         current.append(character)
         index += 1
@@ -105,6 +115,25 @@ def split_subcommands(command: str) -> list[str]:
         raise ValueError(UNTERMINATED_SHELL)
     parts.append("".join(current))
     return parts
+
+
+def append_quoted_character(
+    current: list[str],
+    character: str,
+    quote: str,
+) -> str | None:
+    """Append one quoted character and return the next quote state."""
+    if character == quote:
+        return None
+    current.append(character)
+    return quote
+
+
+def flush_word(words: list[str], current: list[str]) -> list[str]:
+    """Append one complete word when the lexer has buffered content."""
+    if current:
+        words.append("".join(current))
+    return []
 
 
 def lex_words(command: str) -> list[str]:
@@ -119,30 +148,30 @@ def lex_words(command: str) -> list[str]:
             current.append(character)
             escaped = False
             continue
-        if character == "\\" and quote != "'":
-            escaped = True
-            continue
         if quote is not None:
-            if character == quote:
-                quote = None
-            else:
-                current.append(character)
+            quote = append_quoted_character(current, character, quote)
+            continue
+        if character == "\\":
+            escaped = True
             continue
         if character in {"'", '"'}:
             quote = character
             continue
         if character.isspace():
-            if current:
-                words.append("".join(current))
-                current = []
+            current = flush_word(words, current)
             continue
         current.append(character)
 
+    validate_terminated_shell((escaped, quote))
+    _ = flush_word(words, current)
+    return words
+
+
+def validate_terminated_shell(state: tuple[bool, str | None]) -> None:
+    """Reject an incomplete shell escape or quote sequence."""
+    escaped, quote = state
     if escaped or quote is not None:
         raise ValueError(UNTERMINATED_SHELL)
-    if current:
-        words.append("".join(current))
-    return words
 
 
 def wrapper_option_uses_value(wrapper: str, option: str) -> bool:
@@ -165,7 +194,7 @@ def wrapper_option_uses_value(wrapper: str, option: str) -> bool:
 
 def strip_wrapper(words: list[str], start: int) -> int:
     """Return the word position after one supported command wrapper."""
-    wrapper = Path(words[start]).name.casefold()
+    wrapper = pathlib.Path(words[start]).name.casefold()
     index = start + 1
     while index < len(words) and words[index].startswith("-"):
         option = words[index].casefold()
@@ -180,13 +209,18 @@ def strip_wrapper(words: list[str], start: int) -> int:
     return index
 
 
+def is_supported_wrapper(words: list[str], index: int) -> bool:
+    """Return whether a word at index names a supported command wrapper."""
+    return index < len(words) and pathlib.Path(words[index]).name.casefold() in WRAPPERS
+
+
 def strip_prefix(words: list[str]) -> list[str]:
     """Remove leading assignments and supported wrappers from a command."""
     index = 0
     while index < len(words):
         while index < len(words) and ASSIGNMENT.match(words[index]):
             index += 1
-        if index == len(words) or Path(words[index]).name.casefold() not in WRAPPERS:
+        if not is_supported_wrapper(words, index):
             break
         index = strip_wrapper(words, index)
     return words[index:]
@@ -202,33 +236,49 @@ def is_falsy_gpgsign(value: str) -> bool:
     )
 
 
+def message_option_end(index: int, lowered: str) -> int | None:
+    """Return the next index when an option consumes or embeds a message."""
+    if lowered in VALUE_OPTIONS:
+        return index + 2
+    if lowered.startswith("-m") and lowered != "-m":
+        return index + 1
+    if lowered.startswith("--message="):
+        return index + 1
+    return None
+
+
+def config_bypass(
+    words: list[str],
+    index: int,
+    word: str,
+    lowered: str,
+) -> tuple[bool, int]:
+    """Return whether one Git configuration option disables commit signing."""
+    if lowered in {"-c", "--config"}:
+        has_bypass = index + 1 < len(words) and is_falsy_gpgsign(words[index + 1])
+        return has_bypass, index + 2
+    if lowered.startswith("-c"):
+        return is_falsy_gpgsign(word[2:]), index + 1
+    if lowered.startswith("--config="):
+        return is_falsy_gpgsign(word.split("=", 1)[1]), index + 1
+    return False, index + 1
+
+
 def contains_bypass(words: list[str]) -> bool:
     """Return whether a literal Git invocation contains a prohibited bypass."""
     index = 1
     while index < len(words):
         word = words[index]
         lowered = word.casefold()
-        if lowered in VALUE_OPTIONS:
-            index += 2
-            continue
-        if lowered.startswith("-m") and lowered != "-m":
-            index += 1
-            continue
-        if lowered.startswith("--message="):
-            index += 1
+        message_end = message_option_end(index, lowered)
+        if message_end is not None:
+            index = message_end
             continue
         if lowered in {"--no-verify", "--no-gpg-sign"}:
             return True
-        if lowered in {"-c", "--config"}:
-            if index + 1 < len(words) and is_falsy_gpgsign(words[index + 1]):
-                return True
-            index += 2
-            continue
-        if lowered.startswith("-c") and is_falsy_gpgsign(word[2:]):
+        has_bypass, index = config_bypass(words, index, word, lowered)
+        if has_bypass:
             return True
-        if lowered.startswith("--config=") and is_falsy_gpgsign(word.split("=", 1)[1]):
-            return True
-        index += 1
     return False
 
 
@@ -236,7 +286,7 @@ def check_command(command: str) -> None:
     """Deny every supported Git bypass found in a command list."""
     for part in split_subcommands(command):
         words = strip_prefix(lex_words(part))
-        if not words or Path(words[0]).name.casefold() != "git":
+        if not words or pathlib.Path(words[0]).name.casefold() != "git":
             continue
         if contains_bypass(words):
             reason = (
