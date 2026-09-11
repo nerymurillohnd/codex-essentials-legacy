@@ -66,6 +66,7 @@ describe("configure-ruff-after-edit skill", () => {
     "missing-file",
     "python-directory",
     "uv-lock",
+    "uv-only",
     "missing-ruff",
     "unfixable",
   ]) {

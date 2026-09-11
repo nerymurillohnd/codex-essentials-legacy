@@ -105,7 +105,7 @@ def run_scenario(scenario: str) -> list[str]:
         outside_file.write_text("outside = 1\n", encoding="utf8")
         environment_path = str(bin_directory)
 
-        if scenario != "missing-ruff":
+        if scenario not in {"missing-ruff", "uv-only"}:
             write_fake_ruff(bin_directory, log, unfixable=scenario == "unfixable")
         if scenario == "safe-order":
             result = invoke(
@@ -226,6 +226,17 @@ def run_scenario(scenario: str) -> list[str]:
             lines = log_lines(log)
             require(not any(line.startswith("uv ") for line in lines), lines)
             require(sum(str(safe_file) in line for line in lines) == 3, lines)
+        elif scenario == "uv-only":
+            (project / "uv.lock").write_text("", encoding="utf8")
+            write_fake_uv(bin_directory, log)
+            result = invoke(
+                project, payload(project, {"path": "safe.py"}), environment_path, log
+            )
+            require(result.returncode == 0, result.stderr)
+            require("no existing Ruff command" in result.stdout, result.stdout)
+            require(
+                not log_lines(log), "uv or Ruff ran without an existing Ruff executable"
+            )
         elif scenario == "missing-ruff":
             result = invoke(
                 project, payload(project, {"path": "safe.py"}), environment_path, log
