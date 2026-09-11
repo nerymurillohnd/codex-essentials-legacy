@@ -4,6 +4,22 @@ All notable changes to Block No Verify are documented in this file.
 
 This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Use ISO 8601 dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
+## [0.3.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/block-no-verify/v0.2.1...plugin/block-no-verify/v0.3.0) (2026-09-11)
+
+
+### Features
+
+* **block-no-verify:** add approval-gated Git bypass policy ([#76](https://github.com/nerymurillohnd/codex-essentials/issues/76)) ([77b24b8](https://github.com/nerymurillohnd/codex-essentials/commit/77b24b82231554f2cb7ce7eb36a01b6f5569e682))
+
+
+### Bug Fixes
+
+* **plugins:** address review findings ([c497f63](https://github.com/nerymurillohnd/codex-essentials/commit/c497f63a436d555398fe017b69f1f18d8a26ddca))
+* **plugins:** satisfy strict Ruff checks ([f2df59a](https://github.com/nerymurillohnd/codex-essentials/commit/f2df59ae12b680535b0ecfdd3b7717957472807b))
+* **plugins:** satisfy strict Ruff checks ([5f7dee8](https://github.com/nerymurillohnd/codex-essentials/commit/5f7dee8a77d60e5a379bb259ca0a79dc054a90ce))
+* **quality:** enforce staged shell and Python checks ([dd6f34a](https://github.com/nerymurillohnd/codex-essentials/commit/dd6f34a5e75047a9bd3a57ae9f8e8c504e7a1195))
+* **quality:** preserve staged Python modes ([37b35ee](https://github.com/nerymurillohnd/codex-essentials/commit/37b35ee4554d580e1709090c98f1169c107ab6e5))
+
 ## [Unreleased]
 
 ### Added

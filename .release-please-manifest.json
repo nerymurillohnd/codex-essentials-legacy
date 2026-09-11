@@ -1,6 +1,6 @@
 {
   "plugins/astro-cli-commands": "0.2.0",
-  "plugins/block-no-verify": "0.2.1",
+  "plugins/block-no-verify": "0.3.0",
   "plugins/configure-prettier": "0.2.0",
   "plugins/ruff-after-edit": "0.2.0",
   "plugins/doc-keeper": "0.2.0",
