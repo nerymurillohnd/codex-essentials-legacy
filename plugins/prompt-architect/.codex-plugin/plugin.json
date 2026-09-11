@@ -1,6 +1,6 @@
 {
   "name": "prompt-architect",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Prompt Architect turns rough intent into copy-ready prompts with risk, evidence, authority, output, verification, and execution-topology controls.",
   "author": {
     "name": "Nery Samuel Murillo",
