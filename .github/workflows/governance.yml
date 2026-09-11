@@ -26,7 +26,7 @@ permissions: {}
 
 jobs:
   pull-request-label:
-    if: github.event_name == 'pull_request_target'
+    if: github.event_name == 'pull_request_target' || github.event_name == 'workflow_dispatch'
     name: Required PR label
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -36,7 +36,7 @@ jobs:
       - name: Verify pull request label
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail

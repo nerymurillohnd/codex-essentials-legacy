@@ -13,6 +13,7 @@ const workflow = parse(
   jobs?: Record<
     string,
     {
+      if?: string;
       name?: string;
       permissions?: Record<string, string>;
       steps?: Array<{ name?: string; run?: string }>;
@@ -31,6 +32,9 @@ describe("governance workflow", () => {
       name: "Required PR label",
       permissions: { "pull-requests": "read" },
     });
+    expect(workflow.jobs?.["pull-request-label"]?.if).toContain(
+      "workflow_dispatch",
+    );
     expect(workflow.jobs?.["pull-request-label"]?.steps?.[0]?.run).toContain(
       "pull request requires at least one label",
     );
