@@ -17,3 +17,10 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   package documentation, and root marketplace discovery for the workflow.
 - Document the safety boundary: the initial generated handler does not execute
   uv and safely skips projects whose only Ruff route is uv.
+
+### Fixed
+
+- Replace the rejected Python handler with Node.js/POSIX templates, including
+  explicit strict-profile hook templates and consumer-owned configuration paths.
+- Reject packaged or otherwise non-consumer `--config` paths and deduplicate
+  canonical edited-file targets before running Ruff.

@@ -62,6 +62,30 @@ describe("configure-ruff-after-edit skill", () => {
     expect(sources).toContain("not affiliated");
   });
 
+  it("documents the Node/POSIX strict-profile contract", () => {
+    const readme = readFileSync(join(pluginRoot, "README.md"), "utf8");
+    const skill = readFileSync(join(skillRoot, "SKILL.md"), "utf8");
+    const environment = readFileSync(
+      join(skillRoot, "references", "environment-assessment.md"),
+      "utf8",
+    );
+    const hookDesign = readFileSync(
+      join(skillRoot, "references", "hook-design.md"),
+      "utf8",
+    );
+
+    for (const document of [readme, skill, environment, hookDesign]) {
+      expect(document).toContain("Node.js");
+      expect(document).toContain("POSIX");
+    }
+    expect(readme).toContain("<project-root>/.codex/ruff.toml");
+    expect(readme).toContain("~/.codex/ruff.toml");
+    expect(skill).toContain("<project-root>/.codex/ruff.toml");
+    expect(skill).toContain("~/.codex/ruff.toml");
+    expect(environment).toContain("Windows as unsupported");
+    expect(hookDesign).not.toContain("Python handler command");
+  });
+
   it("runs safe fixes, formatting, and final lint only for reported Python files", () => {
     const result = runNodeTemplateTest(materializeTemplates(), "safe-order");
 
@@ -151,6 +175,26 @@ describe("configure-ruff-after-edit skill", () => {
       expect(command).not.toContain("PLUGIN_ROOT");
       expect(command).not.toContain("python");
     }
+
+    const strictTemplates = [
+      ["project-strict-profile-hooks.json", "PROJECT_ROOT"],
+      ["user-strict-profile-hooks.json", "USER_HOME"],
+    ] as const;
+    for (const [file, scope] of strictTemplates) {
+      const template = JSON.parse(
+        readFileSync(join(templatesRoot, file), "utf8"),
+      ) as {
+        hooks: { PostToolUse: Array<{ hooks: Array<{ command: string }> }> };
+      };
+      const command = template.hooks.PostToolUse[0]?.hooks[0]?.command ?? "";
+
+      expect(command).toContain("ruff_after_edit.mjs");
+      expect(command).toContain("--config");
+      expect(command).toContain(`REPLACE_WITH_CANONICAL_${scope}`);
+      expect(command).toContain(".codex/ruff.toml");
+      expect(command).not.toContain("PLUGIN_ROOT");
+      expect(command).not.toContain("python");
+    }
   });
 
   for (const scenario of [
@@ -168,6 +212,8 @@ describe("configure-ruff-after-edit skill", () => {
     "missing-ruff",
     "unfixable",
     "strict-profile",
+    "packaged-config",
+    "canonical-alias",
     "normal-discovery",
     "invalid-cwd",
     "posix-guard",

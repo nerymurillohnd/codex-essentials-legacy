@@ -6,7 +6,10 @@ scope and current Codex hook capability.
 ## Proposed contract
 
 The inert templates provide one `PostToolUse` command hook with matcher
-`Write|Edit|apply_patch`, a Python handler command, and a 30-second timeout.
+`Write|Edit|apply_patch`, a Node.js handler command, and a 30-second timeout.
+They are POSIX-only: the command safely reports a missing `node` executable,
+the handler rejects non-POSIX hosts, and this template set has no Windows
+`commandWindows` override.
 The target Codex client must confirm that this matcher covers its intended
 Python edit paths before it is proposed. Narrow the matcher if that is the
 smallest confirmed sufficient coverage.
@@ -27,6 +30,14 @@ ruff check --fix --no-unsafe-fixes <file>
 ruff format <file>
 ruff check <file>
 ```
+
+`project-hooks.json` and `user-hooks.json` are discovery/default templates and
+omit `--config`. The explicit strict-profile templates use only
+`<project-root>/.codex/ruff.toml` with
+`<project-root>/.codex/hooks/ruff_after_edit.mjs`, or `~/.codex/ruff.toml`
+with `~/.codex/hooks/ruff_after_edit.mjs`. The handler accepts a strict
+configuration only at that canonical consumer-owned location; it rejects a
+plugin package asset or any other `--config` path.
 
 The initial handler resolves only an already executable project-local `.venv`
 Ruff or verified `PATH` Ruff. It does not execute `uv`, `uv run`, `uvx`, `pip`,

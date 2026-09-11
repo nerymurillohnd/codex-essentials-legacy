@@ -73,17 +73,34 @@ automatic dependency installation, or automatic hook activation.
 
 ## Supported Environments
 
-| Requirement   | Supported value or behavior                                                                       |
-| ------------- | ------------------------------------------------------------------------------------------------- |
-| Codex surface | A client that supports marketplace skills and confirms the intended `PostToolUse` contract.       |
-| Project types | Python projects with explicitly selected project or user scope.                                   |
-| Ruff runtime  | An existing verified project-local `.venv` Ruff executable or an existing `PATH` Ruff executable. |
-| Credentials   | Not required.                                                                                     |
-| Network       | Not used by the packaged skill or initial generated handler.                                      |
+| Requirement      | Supported value or behavior                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------------------- |
+| Codex surface    | A client that supports marketplace skills and confirms the intended `PostToolUse` contract.       |
+| Project types    | Python projects with explicitly selected project or user scope.                                   |
+| Operating system | POSIX hosts only; Windows is unsupported by the initial handler and templates.                    |
+| Node.js runtime  | An existing `node` command. Missing Node.js produces one safe JSON skip report.                   |
+| Ruff runtime     | An existing verified project-local `.venv` Ruff executable or an existing `PATH` Ruff executable. |
+| Credentials      | Not required.                                                                                     |
+| Network          | Not used by the packaged skill or initial generated handler.                                      |
 
 The target project and its Ruff configuration remain authoritative. The initial
 handler does not execute `uv` or `uv run`; a project with Ruff only available
 through uv is safely skipped rather than synchronized, downloaded, or guessed.
+
+## Configuration Modes
+
+Existing policy and Ruff defaults use the discovery templates
+`project-hooks.json` or `user-hooks.json`. They create no configuration and
+omit `--config`, so Ruff performs its ordinary discovery.
+
+The approved strict profile requires a separate explicit materialization and
+the matching strict template. A project copy is exactly
+`<project-root>/.codex/ruff.toml`, with its copied handler at
+`<project-root>/.codex/hooks/ruff_after_edit.mjs`. A user copy is exactly
+`~/.codex/ruff.toml`, with its copied handler at
+`~/.codex/hooks/ruff_after_edit.mjs`. The strict templates pass only those
+canonical consumer-owned paths through `--config`; a packaged template path is
+never a runtime configuration dependency.
 
 ## Behavior and boundaries
 
@@ -101,7 +118,7 @@ handler emits concise status or diagnostic output for eligible files only.
 
 No credential is required. The assessment uses the installed Codex client and
 existing local project evidence. An approved consumer handler requires an
-already available Ruff executable; it does not install Ruff, Python, uv,
+already available POSIX Node.js runtime and Ruff executable; it does not install Ruff, Python, uv,
 dependencies, or environments.
 
 ## Permissions
@@ -167,6 +184,8 @@ trust, and a live matching event.
 - The package contains guidance and inert templates, not an active hook.
 - The initial handler skips uv-only projects safely and does not execute `uv`
   or `uv run`.
+- The initial handler and shell commands are POSIX-only; they do not provide a
+  Windows `commandWindows` override.
 - It processes only canonical, directly reported, existing regular `.py` files;
   it does not promise hosted-tool, arbitrary shell-write, deleted-file,
   directory, rename, or unreported-path coverage.

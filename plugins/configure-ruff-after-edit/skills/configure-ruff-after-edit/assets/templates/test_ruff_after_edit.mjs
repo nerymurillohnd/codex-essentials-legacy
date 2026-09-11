@@ -3,6 +3,7 @@
 import { spawnSync } from "node:child_process";
 import {
   chmodSync,
+  copyFileSync,
   mkdtempSync,
   mkdirSync,
   realpathSync,
@@ -42,8 +43,8 @@ function writeFakeRuff(directory, unfixable = false, delayMs = 0) {
 }
 
 /** @param {string} project @param {Record<string, unknown>} input @param {string[]} arguments_ @param {NodeJS.ProcessEnv} env */
-function invoke(project, input, arguments_, env) {
-  return spawnSync(process.execPath, [handler, ...arguments_], {
+function invoke(project, input, arguments_, env, handlerPath = handler) {
+  return spawnSync(process.execPath, [handlerPath, ...arguments_], {
     cwd: project,
     encoding: "utf8",
     env,
@@ -88,9 +89,13 @@ async function runScenario(scenario) {
   writeFileSync(join(project, "notes.txt"), "notes\n", "utf8");
   writeFileSync(join(directory, "outside.py"), "outside = 3\n", "utf8");
   const env = { ...process.env, PATH: bin, RUFF_LOG: log };
-  const configLexicalPath = join(project, "strict-ruff.toml");
-  writeFileSync(configLexicalPath, "line-length = 100\n", "utf8");
-  const config = realpathSync(configLexicalPath);
+  const consumerHooks = join(project, ".codex", "hooks");
+  mkdirSync(consumerHooks, { recursive: true });
+  const consumerHandler = join(consumerHooks, "ruff_after_edit.mjs");
+  copyFileSync(handler, consumerHandler);
+  const consumerConfigLexicalPath = join(project, ".codex", "ruff.toml");
+  writeFileSync(consumerConfigLexicalPath, "line-length = 100\n", "utf8");
+  const consumerConfig = realpathSync(consumerConfigLexicalPath);
 
   if (scenario !== "missing-ruff") {
     writeFakeRuff(
@@ -215,16 +220,34 @@ async function runScenario(scenario) {
       invoke(
         project,
         { path: "safe.py" },
-        scenario === "strict-profile" ? ["--config", config] : [],
+        scenario === "strict-profile" ? ["--config", consumerConfig] : [],
         env,
+        scenario === "strict-profile" ? consumerHandler : handler,
       ),
     );
     const commands = logLines(log).filter((line) => line !== "--version");
     assertThat(
       scenario === "strict-profile"
-        ? commands.every((line) => line.includes(`--config ${config}`))
+        ? commands.every((line) => line.includes(`--config ${consumerConfig}`))
         : commands.every((line) => !line.includes("--config")),
       commands,
+    );
+  } else if (scenario === "packaged-config") {
+    const output = message(
+      invoke(
+        project,
+        { path: "safe.py" },
+        ["--config", realpathSync(join(templateDirectory, "ruff.toml"))],
+        env,
+      ),
+    );
+    assertThat(output.includes("invalid configuration argument"), output);
+    assertThat(logLines(log).length === 0, logLines(log));
+  } else if (scenario === "canonical-alias") {
+    message(invoke(project, { files: ["safe.py", "./safe.py"] }, [], env));
+    assertThat(
+      logLines(log).filter((line) => line.includes("safe.py")).length === 3,
+      logLines(log),
     );
   } else if (scenario === "invalid-cwd") {
     const result = spawnSync(process.execPath, [handler], {

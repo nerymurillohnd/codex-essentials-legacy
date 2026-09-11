@@ -28,6 +28,9 @@ create or activate a hook.
   It uses only an already verified project-local `.venv` Ruff executable or an
   existing `PATH` Ruff executable. A project where Ruff is available only via
   uv is skipped safely and reported as unavailable.
+- The initial generated handler requires an already available Node.js runtime
+  and supports POSIX hosts only. Do not create a Windows hook command or claim
+  Windows support for this template set.
 
 ## Read-only assessment
 
@@ -48,6 +51,13 @@ Before making a recommendation, read
    executable route. Never infer a route from a lockfile alone.
 5. The smallest confirmed matcher for the target client, direct-path coverage,
    non-observable tool gaps, and the handler's timeout and failure behavior.
+6. The policy source and configuration mode: existing discovery, Ruff defaults,
+   reviewed adjustment, or the bundled strict profile. For a strict project
+   profile, the only approved runtime path is
+   `<project-root>/.codex/ruff.toml` beside a copied handler at
+   `<project-root>/.codex/hooks/ruff_after_edit.mjs`; for a strict user profile,
+   use `~/.codex/ruff.toml` beside `~/.codex/hooks/ruff_after_edit.mjs`.
+   Existing/default modes create no configuration and omit `--config`.
 
 If any prerequisite is missing, conflicting, or outside the declared scope,
 stop and report it. Do not guess a command or widen scope.
@@ -67,6 +77,8 @@ reviewable recommendation. Before asking for approval, show:
   are not promised coverage;
 - expected writes, local process execution, diagnostics, consumer test,
   activation, `/hooks` review and trust, and rollback steps.
+- for strict policy only, the canonical consumer-owned `--config` path; never
+  use a file under the installed plugin package as runtime configuration.
 
 Then wait for explicit approval of both the selected scope and the exact
 writes. Approval is item-specific. If the plan needs a new dependency,

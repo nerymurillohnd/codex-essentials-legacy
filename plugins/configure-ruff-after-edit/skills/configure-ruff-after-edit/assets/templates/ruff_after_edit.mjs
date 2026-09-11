@@ -9,8 +9,17 @@ import {
   realpathSync,
   statSync,
 } from "node:fs";
-import { delimiter, isAbsolute, join, relative, resolve, sep } from "node:path";
-import { pathToFileURL } from "node:url";
+import {
+  basename,
+  delimiter,
+  dirname,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+  sep,
+} from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const DEFAULT_EVENT_TIMEOUT_MS = 15_000;
 const DEFAULT_COMMAND_TIMEOUT_MS = 5_000;
@@ -83,7 +92,7 @@ export function collectCandidates(payload) {
       }
     }
   }
-  return [...new Set(values.filter(Boolean))];
+  return values.filter(Boolean);
 }
 
 /** @param {string} root @param {string} candidate @returns {boolean} */
@@ -189,14 +198,36 @@ export function findRuff(root, env, deadline, commandTimeoutMs) {
   return null;
 }
 
-/** @param {string | null | undefined} value @returns {string | null} */
-export function canonicalConfigPath(value) {
+/** @param {string} handlerPath @returns {string | null} */
+export function consumerStrictConfigPath(handlerPath) {
+  try {
+    const handler = realpathSync(handlerPath);
+    const hooksDirectory = dirname(handler);
+    const codexDirectory = dirname(hooksDirectory);
+    return basename(handler) === "ruff_after_edit.mjs" &&
+      basename(hooksDirectory) === "hooks" &&
+      basename(codexDirectory) === ".codex"
+      ? join(codexDirectory, "ruff.toml")
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+/** @param {string | null | undefined} value @param {string} handlerPath @returns {string | null} */
+export function canonicalConfigPath(
+  value,
+  handlerPath = fileURLToPath(import.meta.url),
+) {
   if (!value || !isAbsolute(value)) {
     return null;
   }
   try {
     const resolved = resolve(value);
-    return lstatSync(resolved).isFile() && realpathSync(resolved) === resolved
+    const expected = consumerStrictConfigPath(handlerPath);
+    return expected === resolved &&
+      lstatSync(resolved).isFile() &&
+      realpathSync(resolved) === resolved
       ? resolved
       : null;
   } catch {
@@ -204,14 +235,18 @@ export function canonicalConfigPath(value) {
   }
 }
 
-/** @param {string[]} arguments_ @returns {string | null | undefined} */
-export function parseConfigArgument(arguments_) {
+/** @param {string[]} arguments_ @param {string} handlerPath @returns {string | null | undefined} */
+export function parseConfigArgument(
+  arguments_,
+  handlerPath = fileURLToPath(import.meta.url),
+) {
   if (!arguments_.length) {
     return null;
   }
-  return arguments_.length === 2 && arguments_[0] === "--config"
-    ? canonicalConfigPath(arguments_[1])
-    : undefined;
+  if (arguments_.length !== 2 || arguments_[0] !== "--config") {
+    return undefined;
+  }
+  return canonicalConfigPath(arguments_[1], handlerPath) ?? undefined;
 }
 
 /** @param {string} executable @param {ContainedFile} file @param {string | null} configPath @param {number} deadline @param {number} commandTimeoutMs @returns {string | null} */
@@ -271,9 +306,14 @@ export function handle(rawInput, env = process.env, options = {}) {
   if (options.configPath && !configPath) {
     return "ruff-after-edit: skipped; approved Ruff configuration is unavailable.";
   }
-  const files = collectCandidates(payload)
-    .map((candidate) => resolveContainedPythonFile(root, candidate))
-    .filter((file) => file !== null);
+  const filesByTarget = new Map();
+  for (const candidate of collectCandidates(payload)) {
+    const file = resolveContainedPythonFile(root, candidate);
+    if (file) {
+      filesByTarget.set(file.target, file);
+    }
+  }
+  const files = [...filesByTarget.values()];
   if (!files.length) {
     return "ruff-after-edit: skipped; no eligible reported Python files.";
   }
@@ -318,7 +358,7 @@ export function main(
 
 if (
   process.argv[1] &&
-  import.meta.url === pathToFileURL(process.argv[1]).href
+  import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href
 ) {
   process.exitCode = main(readFileSync(0, "utf8"));
 }
