@@ -1,107 +1,105 @@
 # Repository Guidelines
 
-This repository designs, builds, validates, versions, and distributes a
-Git-backed Codex marketplace of plugins and skills for stable use cases.
+Codex Essentials is a Git-backed public marketplace for reusable Codex plugins
+and skills.
 
-## Scope
+## Repository Model
 
-- Automation and operations: hooks, gates, scripts, scheduled tasks, maintenance, recurring operations, and CI/CD pipelines.
-- Integrations and engineering: MCP, app, API, CLI, LSP, GitHub, repository, external tools, software development, code quality, formatting, linting, typechecking, diagnostics, and testing.
-- Documentation, security, analysis, and business: documentation sync/freshness, pull requests/reviews, Actions/runners, security analysis/validation/enforcement/remediation, evidence-backed data analysis, and operational workflows.
+- `plugins/<plugin-id>/.codex-plugin/plugin.json` is the authored source of
+  truth for plugin identity, version, metadata, and components.
+- `.agents/plugins/marketplace.json` is generated metadata. Do not edit it by
+  hand.
+- Plugins are self-contained and distributed from the public repository and
+  `main` catalog.
+- Release Please may create plugin tags and GitHub Releases, but must not
+  publish packages or upload release assets.
 
 ## Session Start Protocol
 
-Before making repository changes, complete every step in this checklist:
+Before making repository changes:
 
-- Inspect the repository, existing products, active toolchain, Git state, and execution environment.
+- Inspect the repository, existing products, active toolchain, Git state, and
+  execution environment.
 - Run `codex --version`.
 - Run `codex plugin --help`.
 - Run `codex plugin marketplace --help`.
-- Run all available `codex doctor` diagnostics.
-- Read [`pending-debt.md`](docs/maintenance/pending-debt.md).
-- Read [`resolved-debt.md`](docs/maintenance/resolved-debt.md).
-- Check the [official Codex release notes](https://openai.com/products/release-notes/) for relevant changes from the previous 30 days.
-- Probe every required tool using its current `--version` or `--help` output.
-- If a required maintenance file is missing during repository bootstrap, create it before proceeding or report the missing prerequisite explicitly.
+- Run available `codex doctor --all --json` diagnostics.
+- Read `docs/maintenance/pending-debt.md`.
+- Read `docs/maintenance/resolved-debt.md`.
+- Check Codex release notes from the previous 30 days for relevant changes.
+- Probe each required tool using its current `--version` or `--help`.
+- Proceed with the prompted user's input.
 
-## Marketplace Product Protocol
+## Change Routing
 
-Before creating or changing any marketplace plugin, skill, hook, script, MCP integration, app integration, schedule, runner, agent artifact, or related product artifact, read and follow [plugins/AGENTS.md](plugins/AGENTS.md). This is mandatory and non-negotiable.
+| Change                                                                | Required instruction and validation                                                        |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Plugin, skill, hook, app, MCP, manifest, catalog, or release metadata | Read [plugins/AGENTS.md](plugins/AGENTS.md); run applicable plugin and marketplace checks. |
+| Repository documentation                                              | Read [docs/AGENTS.md](docs/AGENTS.md); run the applicable documentation gate.              |
+| Tooling, schema, validator, generator, workflow, or test              | Run `npm run check`.                                                                       |
+| Current Codex behavior or compatibility                               | Consult official OpenAI documentation and relevant release notes.                          |
 
-This protocol governs marketplace products. It does not convert a repository-distributed standalone custom-agent TOML bundle into a plugin.
+If a required maintenance file or instruction file is absent, stop and report the
+missing prerequisite.
 
-If `plugins/AGENTS.md` does not exist during repository bootstrap, create it before modifying marketplace products or report the missing prerequisite explicitly.
+## Plugin Publication Gate
 
-Every plugin README must instruct consumers to start a new session after
-installation before using bundled skills. Every public consumer smoke test must
-verify marketplace installation and explicit invocation of the plugin or one of
-its skills.
+Do not publish, register, or push a marketplace plugin for a pull request until
+all of the following are complete:
 
-## Automated Quality Gates and Verification
+- A valid `.codex-plugin/plugin.json` manifest exists.
+- Every included skill has a valid `skills/<skill-id>/agents/openai.yaml`.
+- The package includes `README.md`, `CHANGELOG.md`, and `LICENSE.md`.
+- The marketplace entry is generated in `.agents/plugins/marketplace.json`.
+- The root `README.md` catalog includes the plugin.
+- The package, its included skills, and its hooks have been evaluated,
+  validated, and verified against current official OpenAI and OpenAI Developers
+  documentation.
 
-These are repository-maintenance controls for us to create, review, maintain, and assess marketplace products. They are not plugin components, plugin dependencies, or runtime behavior, and must not be packaged or declared in a plugin merely because they validate it.
+## Quality and Completion
 
-Run applicable checks proactively before declaring work clean and complete:
+- Run all applicable formatters, linters, type checks, tests, documentation
+  checks, and freshness checks before claiming completion.
+- Report failed or skipped checks, missing tools, unresolved diagnostics, and
+  residual risks.
+- Do not bypass hooks, tests, signatures, branch protections, or validation
+  gates.
 
-- Formatting.
-- Linting.
-- Typechecking.
-- Relevant language-server diagnostics.
-- Applicable unit, integration, regression, security, and adversarial tests.
-- Documentation synchronization checks.
-- Freshness checks for version-sensitive technical claims.
+## Commands and Layout
 
-Report unresolved diagnostics, skipped checks, missing tools, and residual risks explicitly.
+- Use the NVM-managed Node.js and npm versions declared in `.nvmrc` and
+  `package.json`.
+- `npm run check` is the complete repository validation gate.
+- `npm run marketplace:build` regenerates and validates the marketplace.
+- `npm run documentation:gate -- --base <base> --head <head>` validates plugin
+  documentation changes.
+- `schemas/`, `scripts/`, and `tests/` contain repository contracts and
+  tooling.
+- `docs/` contains canonical repository documentation.
+- `templates/` contains reusable authoring templates.
 
-## Documentation and Maintenance
+## Documentation Records
 
-Project documentation is maintained under `docs/`. Read [documentation rules](docs/AGENTS.md) before creating, changing, moving, or deleting documentation.
-
-- Add unresolved maintenance work to [`docs/maintenance/pending-debt.md`](docs/maintenance/pending-debt.md).
-- Move completed work to [`docs/maintenance/resolved-debt.md`](docs/maintenance/resolved-debt.md).
-- Durable decisions affecting architecture, distribution, permissions, runtime, compatibility, or operations belong in [`docs/decisions/`](docs/decisions/).
-- Plans written with Superpowers skills are stored under [`docs/superpowers/`](docs/superpowers/).
-
-## Quick Reference
-
-- Use NVM-managed Node.js 24.21.0 and npm 12.0.2 (`.nvmrc` and `package.json`); run `npm run check` for full validation.
-- Run `npm run marketplace:build` to regenerate and validate the catalog.
-- Run `npm run documentation:gate -- --base <base> --head <head>` for plugin docs.
-- Read [documentation rules](docs/AGENTS.md) and [plugin package rules](plugins/AGENTS.md).
-
-## Directory Map
-
-- `schemas/`: all repository schemas. `scripts/`: generators, validators, and pipeline/code-quality tooling. `tests/`: tests for those areas.
-- `docs/`: official documentation for decisions, audits, maintenance debts, operations, and superpowers plans/specs; read `docs/AGENTS.md` first.
-- `templates/`: reusable manifest, README, changelog, and license templates.
-
-## Source of Truth
-
-- `plugins/<plugin-id>/.codex-plugin/plugin.json` owns plugin identity, version, metadata, and components.
-- `.agents/plugins/marketplace.json` is generated from validated manifests; do not hand-edit it.
-- Plugins are self-contained. Distribution is the public repository and `main` catalog. Release Please may create immutable plugin tags and GitHub Release records using `GITHUB_TOKEN`, but must never publish packages or upload distribution archives, checksums, or other release assets.
+- Track unresolved work in `docs/maintenance/pending-debt.md`.
+- Move verified resolutions to `docs/maintenance/resolved-debt.md`.
+- Record durable architecture or operations decisions in `docs/decisions/`.
+- Store approved Superpowers plans and specs in `docs/superpowers/`.
 
 ## Working Rules
 
-- Use pull requests for product, package, catalog, script, test, schema, security, permission, refactor, compatibility, release-control, and policy changes. Direct pushes are limited to non-policy plans, audits, and maintenance records under `docs/`.
+- Prefer pull requests for product, package, catalog, script, test, schema,
+  security, permission, refactor, compatibility, release-control, and policy
+  changes. Direct pushes require explicit user authorization.
+- Before creating or managing a pull request, apply every label relevant to its
+  nature, scope, and impact. At least one label is required before review,
+  merge, or handoff.
 - Product changes update the affected README, `CHANGELOG.md`, and manifest; include validation evidence.
-- Run applicable checks, report skips and risks, and keep docs synchronized.
-- Follow the global `AGENTS.md` policy for credentials.
 - Use Conventional Commits; do not commit or push without explicit request.
+- Refer to secrets only as `${VAR}` and never commit credentials.
 - Owner: Nery Samuel Murillo (`nerymurillohnd`). Keep personal and Forestal MT business context outside this public guide; do not infer private business requirements from this repository.
-
-## Roadmap
-
-- Strengthen validation for plugin skills, apps, MCP integrations, and assets; expand the catalog with explicit permissions and recovery behavior.
-- Keep README as the public homepage; expand contributor guidance and require validation evidence.
 
 ## Template Use
 
-Read and use the matching template before creating or updating `plugin.json`,
-`agents/openai.yaml`, root/plugin `README.md`, `CHANGELOG.md`, or `LICENSE.md`:
-manifest `templates/codex-plugin-plugin.json`; agent manifest
-`templates/agents-openai.yaml`; root README
-`templates/root-README-recommended-template.md`; plugin README
-`templates/plugin-README-reusable-template.md`; changelog
-`templates/CHANGELOG-reusable-template.md`; license
-`templates/LICENSE-reusable-template.md`.
+Read the matching repository template before creating or updating
+`plugin.json`, `agents/openai.yaml`, a root or plugin README, `CHANGELOG.md`,
+or `LICENSE.md`.
