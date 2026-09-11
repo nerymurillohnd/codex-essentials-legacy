@@ -1,6 +1,6 @@
 {
   "name": "repo-hygiene",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Evidence-led Git hygiene with routine review, explicit deep audits, and user-approved execution.",
   "author": {
     "name": "Nery Samuel Murillo",
