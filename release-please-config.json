@@ -45,9 +45,9 @@
         }
       ]
     },
-    "plugins/configure-ruff-after-edit": {
-      "package-name": "configure-ruff-after-edit",
-      "component": "plugin/configure-ruff-after-edit",
+    "plugins/ruff-after-edit": {
+      "package-name": "ruff-after-edit",
+      "component": "plugin/ruff-after-edit",
       "initial-version": "0.1.0",
       "changelog-path": "CHANGELOG.md",
       "extra-files": [

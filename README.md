@@ -31,45 +31,45 @@ session without making those capabilities marketplace dependencies.
 
 ## 🧩 Plugin catalog
 
-| Plugin                                                                   | Best for                                                                     | Install ID                  |
-| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------- | --------------------------- |
-| [Astro Commands](plugins/astro-cli-commands/README.md)                   | Astro CLI discovery, project checks, preview, and server coordination.       | `astro-cli-commands`        |
-| [Block No Verify](plugins/block-no-verify/README.md)                     | Approval-gated Git verification bypass policy installation.                  | `block-no-verify`           |
-| [Configure Prettier](plugins/configure-prettier/README.md)               | Prettier auditing, configuration, drift repair, editor setup, and CI checks. | `configure-prettier`        |
-| [Configure Ruff After Edit](plugins/configure-ruff-after-edit/README.md) | Approval-gated, exact-file Ruff hygiene after Codex Python edits.            | `configure-ruff-after-edit` |
-| [Prettier After Edit](plugins/prettier-after-edit/README.md)             | Exact-file Prettier formatting after Codex edits.                            | `prettier-after-edit`       |
-| [DocKeeper](plugins/doc-keeper/README.md)                                | Evidence-based changelog and ADR maintenance.                                | `doc-keeper`                |
-| [Hook Creator](plugins/hook-creator/README.md)                           | Codex lifecycle hook design, integration, review, testing, and debugging.    | `hook-creator`              |
-| [Codex Memory Audit](plugins/optimize-memories/README.md)                | Auditing and reconciling Codex memory artifacts.                             | `optimize-memories`         |
-| [Live Research](plugins/live-research/README.md)                         | Current research with callable MCP/plugin/skill-first routing and citations. | `live-research`             |
-| [Prompt Architect](plugins/prompt-architect/README.md)                   | Copy-ready prompts with risk, evidence, and execution guidance.              | `prompt-architect`          |
-| [Repository Maintenance](plugins/repo-maintenance/README.md)             | Evidence-based repository documentation and maintenance-record upkeep.       | `repo-maintenance`          |
-| [Svelte Development](plugins/svelte-development/README.md)               | Svelte 5 and SvelteKit architecture, implementation, MCP, and verification.  | `svelte-development`        |
-| [Skill Design Standards](plugins/skill-design-standards/README.md)       | Designing, auditing, and evaluating portable agent skills.                   | `skill-design-standards`    |
-| [System Ops Audit](plugins/system-ops-audit/README.md)                   | Read-only macOS baseline audit design, execution boundaries, and analysis.   | `system-ops-audit`          |
+| Plugin                                                             | Best for                                                                     | Install ID               |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------- | ------------------------ |
+| [Astro Commands](plugins/astro-cli-commands/README.md)             | Astro CLI discovery, project checks, preview, and server coordination.       | `astro-cli-commands`     |
+| [Block No Verify](plugins/block-no-verify/README.md)               | Approval-gated Git verification bypass policy installation.                  | `block-no-verify`        |
+| [Configure Prettier](plugins/configure-prettier/README.md)         | Prettier auditing, configuration, drift repair, editor setup, and CI checks. | `configure-prettier`     |
+| [Ruff After Edit](plugins/ruff-after-edit/README.md)               | Intentional Ruff guidance and approval-gated Codex edit hygiene.             | `ruff-after-edit`        |
+| [Prettier After Edit](plugins/prettier-after-edit/README.md)       | Exact-file Prettier formatting after Codex edits.                            | `prettier-after-edit`    |
+| [DocKeeper](plugins/doc-keeper/README.md)                          | Evidence-based changelog and ADR maintenance.                                | `doc-keeper`             |
+| [Hook Creator](plugins/hook-creator/README.md)                     | Codex lifecycle hook design, integration, review, testing, and debugging.    | `hook-creator`           |
+| [Codex Memory Audit](plugins/optimize-memories/README.md)          | Auditing and reconciling Codex memory artifacts.                             | `optimize-memories`      |
+| [Live Research](plugins/live-research/README.md)                   | Current research with callable MCP/plugin/skill-first routing and citations. | `live-research`          |
+| [Prompt Architect](plugins/prompt-architect/README.md)             | Copy-ready prompts with risk, evidence, and execution guidance.              | `prompt-architect`       |
+| [Repository Maintenance](plugins/repo-maintenance/README.md)       | Evidence-based repository documentation and maintenance-record upkeep.       | `repo-maintenance`       |
+| [Svelte Development](plugins/svelte-development/README.md)         | Svelte 5 and SvelteKit architecture, implementation, MCP, and verification.  | `svelte-development`     |
+| [Skill Design Standards](plugins/skill-design-standards/README.md) | Designing, auditing, and evaluating portable agent skills.                   | `skill-design-standards` |
+| [System Ops Audit](plugins/system-ops-audit/README.md)             | Read-only macOS baseline audit design, execution boundaries, and analysis.   | `system-ops-audit`       |
 
 _Choose a plugin by outcome, then open its linked README for requirements,
 permissions, side effects, and examples._
 
 ## 🎯 Choose by use case
 
-| If you need to...                                      | Start with...                                                            |
-| ------------------------------------------------------ | ------------------------------------------------------------------------ |
-| Discover and install curated Codex plugins             | [Plugin catalog](#-plugin-catalog)                                       |
-| Plan, check, preview, or coordinate an Astro project   | [Astro Commands](plugins/astro-cli-commands/README.md)                   |
-| Install a Git verification bypass policy with approval | [Block No Verify](plugins/block-no-verify/README.md)                     |
-| Audit, configure, or repair Prettier setup             | [Configure Prettier](plugins/configure-prettier/README.md)               |
-| Propose safe Ruff hygiene after Python edits           | [Configure Ruff After Edit](plugins/configure-ruff-after-edit/README.md) |
-| Format edited files with Prettier                      | [Prettier After Edit](plugins/prettier-after-edit/README.md)             |
-| Create or repair changelogs and architecture decisions | [DocKeeper](plugins/doc-keeper/README.md)                                |
-| Engineer or debug Codex lifecycle hooks                | [Hook Creator](plugins/hook-creator/README.md)                           |
-| Audit or reconcile project and global Codex memories   | [Codex Memory Audit](plugins/optimize-memories/README.md)                |
-| Verify change-sensitive facts using available tools    | [Live Research](plugins/live-research/README.md)                         |
-| Turn rough task intent into a copy-ready prompt        | [Prompt Architect](plugins/prompt-architect/README.md)                   |
-| Maintain repository documentation and debt records     | [Repository Maintenance](plugins/repo-maintenance/README.md)             |
-| Architect, build, or verify Svelte and SvelteKit work  | [Svelte Development](plugins/svelte-development/README.md)               |
-| Design, audit, or evaluate reusable agent skills       | [Skill Design Standards](plugins/skill-design-standards/README.md)       |
-| Design a read-only macOS baseline audit                | [System Ops Audit](plugins/system-ops-audit/README.md)                   |
+| If you need to...                                      | Start with...                                                      |
+| ------------------------------------------------------ | ------------------------------------------------------------------ |
+| Discover and install curated Codex plugins             | [Plugin catalog](#-plugin-catalog)                                 |
+| Plan, check, preview, or coordinate an Astro project   | [Astro Commands](plugins/astro-cli-commands/README.md)             |
+| Install a Git verification bypass policy with approval | [Block No Verify](plugins/block-no-verify/README.md)               |
+| Audit, configure, or repair Prettier setup             | [Configure Prettier](plugins/configure-prettier/README.md)         |
+| Use Ruff or propose Codex edit hygiene                 | [Ruff After Edit](plugins/ruff-after-edit/README.md)               |
+| Format edited files with Prettier                      | [Prettier After Edit](plugins/prettier-after-edit/README.md)       |
+| Create or repair changelogs and architecture decisions | [DocKeeper](plugins/doc-keeper/README.md)                          |
+| Engineer or debug Codex lifecycle hooks                | [Hook Creator](plugins/hook-creator/README.md)                     |
+| Audit or reconcile project and global Codex memories   | [Codex Memory Audit](plugins/optimize-memories/README.md)          |
+| Verify change-sensitive facts using available tools    | [Live Research](plugins/live-research/README.md)                   |
+| Turn rough task intent into a copy-ready prompt        | [Prompt Architect](plugins/prompt-architect/README.md)             |
+| Maintain repository documentation and debt records     | [Repository Maintenance](plugins/repo-maintenance/README.md)       |
+| Architect, build, or verify Svelte and SvelteKit work  | [Svelte Development](plugins/svelte-development/README.md)         |
+| Design, audit, or evaluate reusable agent skills       | [Skill Design Standards](plugins/skill-design-standards/README.md) |
+| Design a read-only macOS baseline audit                | [System Ops Audit](plugins/system-ops-audit/README.md)             |
 
 _Use cases describe the user's starting problem; the linked plugin README
 explains behavior, requirements, boundaries, and expected results._
@@ -78,7 +78,7 @@ explains behavior, requirements, boundaries, and expected results._
 · [Astro CLI](plugins/astro-cli-commands/README.md) ·
 [Git verification policy](plugins/block-no-verify/README.md) ·
 [Prettier configuration](plugins/configure-prettier/README.md) ·
-[Ruff edit hooks](plugins/configure-ruff-after-edit/README.md) ·
+[Ruff edit hooks](plugins/ruff-after-edit/README.md) ·
 [Prettier hooks](plugins/prettier-after-edit/README.md) ·
 [Changelog and ADRs](plugins/doc-keeper/README.md) ·
 [Codex hooks](plugins/hook-creator/README.md) ·

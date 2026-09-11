@@ -308,7 +308,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
     const root = createFixture();
     const pluginsRoot = join(root, "plugins");
     writeFileSync(join(pluginsRoot, "AGENTS.md"), "instructions\n");
-    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(13);
+    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(14);
 
     const invalidEntryRoot = createFixture();
     writeFileSync(join(invalidEntryRoot, "plugins", "not-a-plugin.txt"), "x");
@@ -649,6 +649,18 @@ describe("strict plugin-to-marketplace pipeline", () => {
         { name: "prettier-after-edit" },
         { name: "prompt-architect" },
         { name: "repo-maintenance" },
+        {
+          name: "ruff-after-edit",
+          source: {
+            source: "local",
+            path: "./plugins/ruff-after-edit",
+          },
+          policy: {
+            installation: "AVAILABLE",
+            authentication: "ON_INSTALL",
+          },
+          category: "Developer Tools",
+        },
         {
           name: "skill-design-standards",
           source: {
