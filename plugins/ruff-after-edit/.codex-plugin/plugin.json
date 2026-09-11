@@ -1,6 +1,6 @@
 {
   "name": "ruff-after-edit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Guide intentional Ruff use and approval-gated after-edit hooks without activating a plugin hook.",
   "author": {
     "name": "Nery Samuel Murillo",
