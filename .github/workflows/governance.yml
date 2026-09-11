@@ -1,0 +1,57 @@
+name: Governance
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - labeled
+      - unlabeled
+  issues:
+    types:
+      - opened
+      - reopened
+
+permissions: {}
+
+jobs:
+  pull-request-label:
+    if: github.event_name == 'pull_request_target'
+    name: Required PR label
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Verify pull request label
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          label_count="$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json labels --jq '.labels | length')"
+          if [[ "$label_count" -eq 0 ]]; then
+            echo "pull request requires at least one label" >&2
+            exit 1
+          fi
+
+  issue-label:
+    if: github.event_name == 'issues'
+    name: Apply issue triage label
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Apply triage label when needed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          label_count="$(gh issue view "$ISSUE_NUMBER" --repo "$REPOSITORY" --json labels --jq '.labels | length')"
+          if [[ "$label_count" -eq 0 ]]; then
+            gh issue edit "$ISSUE_NUMBER" --repo "$REPOSITORY" --add-label needs-triage
+          fi

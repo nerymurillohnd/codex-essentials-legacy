@@ -26,6 +26,11 @@
       "description": "Pull requests that update GitHub Actions code"
     },
     {
+      "name": "needs-triage",
+      "color": "ededed",
+      "description": "Needs initial repository triage"
+    },
+    {
       "name": "plugin-change",
       "color": "1d76db",
       "description": "Changes to a marketplace plugin"
