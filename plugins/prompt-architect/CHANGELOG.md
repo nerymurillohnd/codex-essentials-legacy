@@ -6,6 +6,13 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Use ISO 8601
 dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
+## [0.2.1](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/prompt-architect/v0.2.0...plugin/prompt-architect/v0.2.1) (2026-09-11)
+
+### Bug Fixes
+
+- **quality:** enforce staged shell and Python checks ([dd6f34a](https://github.com/nerymurillohnd/codex-essentials/commit/dd6f34a5e75047a9bd3a57ae9f8e8c504e7a1195))
+- **quality:** preserve staged Python modes ([37b35ee](https://github.com/nerymurillohnd/codex-essentials/commit/37b35ee4554d580e1709090c98f1169c107ab6e5))
+
 ## [0.2.0](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/prompt-architect/v0.1.0...plugin/prompt-architect/v0.2.0) (2026-09-08)
 
 ### Features
