@@ -39,11 +39,6 @@ def command_succeeds(command: list[str], cwd: Path) -> bool:
 
 
 def resolve_ruff(cwd: Path) -> list[str] | None:
-    if (cwd / "uv.lock").is_file() and command_succeeds(
-        ["uv", "run", "ruff", "--version"], cwd
-    ):
-        return ["uv", "run", "ruff"]
-
     for candidate in (
         cwd / ".venv" / "bin" / "ruff",
         cwd / ".venv" / "Scripts" / "ruff.exe",
@@ -83,9 +78,9 @@ def direct_paths(payload: dict[str, Any]) -> list[str]:
     if payload.get("tool_name") == "apply_patch":
         tool_input = payload.get("tool_input")
         if isinstance(tool_input, dict):
-            patch = tool_input.get("patch")
-            if isinstance(patch, str):
-                values.extend(PATCH_PATH.findall(patch))
+            command = tool_input.get("command")
+            if isinstance(command, str):
+                values.extend(PATCH_PATH.findall(command))
     return values
 
 
@@ -96,7 +91,14 @@ def eligible_paths(payload: dict[str, Any], cwd: Path) -> list[Path]:
         candidate = Path(raw_path)
         if not candidate.is_absolute():
             candidate = cwd / candidate
-        if candidate.is_symlink() or candidate.suffix != ".py":
+        try:
+            relative_parts = candidate.relative_to(cwd).parts
+        except ValueError:
+            continue
+        if candidate.suffix != ".py":
+            continue
+        component = cwd
+        if any((component := component / part).is_symlink() for part in relative_parts):
             continue
         try:
             resolved = candidate.resolve(strict=True)

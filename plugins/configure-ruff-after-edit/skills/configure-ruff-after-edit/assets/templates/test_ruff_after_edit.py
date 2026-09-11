@@ -33,6 +33,20 @@ def write_fake_ruff(directory: Path, log: Path, *, unfixable: bool = False) -> N
     script.chmod(0o755)
 
 
+def write_fake_uv(directory: Path, log: Path) -> None:
+    script = directory / "uv"
+    script.write_text(
+        f"#!{sys.executable}\n"
+        "import os\n"
+        "import sys\n"
+        "from pathlib import Path\n"
+        "Path(os.environ['RUFF_LOG']).open('a').write('uv ' + ' '.join(sys.argv[1:]) + '\\n')\n"
+        "raise SystemExit(0)\n",
+        encoding="utf8",
+    )
+    script.chmod(0o755)
+
+
 def invoke(
     project: Path, payload: dict[str, object], path: str, log: Path
 ) -> subprocess.CompletedProcess[str]:
@@ -119,6 +133,22 @@ def run_scenario(scenario: str) -> list[str]:
             require(sum(str(unreported_file) in line for line in lines) == 0, lines)
             require(sum(str(safe_file) in line for line in lines) == 3, lines)
             require(sum(str(second_file) in line for line in lines) == 3, lines)
+        elif scenario == "apply-patch":
+            result = invoke(
+                project,
+                payload(
+                    project,
+                    {"command": "*** Update File: safe.py\n"},
+                    tool_name="apply_patch",
+                ),
+                environment_path,
+                log,
+            )
+            require(result.returncode == 0, result.stderr)
+            require(
+                sum(str(safe_file) in line for line in log_lines(log)) == 3,
+                log_lines(log),
+            )
         elif scenario == "non-python":
             result = invoke(
                 project, payload(project, {"path": "notes.txt"}), environment_path, log
@@ -134,6 +164,15 @@ def run_scenario(scenario: str) -> list[str]:
             )
             require(result.returncode == 0, result.stderr)
             require(not log_lines(log), "Ruff ran for an outside path")
+        elif scenario == "relative-escape":
+            result = invoke(
+                project,
+                payload(project, {"path": "../outside.py"}),
+                environment_path,
+                log,
+            )
+            require(result.returncode == 0, result.stderr)
+            require(not log_lines(log), "Ruff ran for a relative escape")
         elif scenario == "symlink":
             link = project / "linked.py"
             link.symlink_to(safe_file)
@@ -142,6 +181,51 @@ def run_scenario(scenario: str) -> list[str]:
             )
             require(result.returncode == 0, result.stderr)
             require(not log_lines(log), "Ruff ran for a symlink")
+        elif scenario == "parent-symlink":
+            real_directory = project / "real"
+            real_directory.mkdir()
+            nested_file = real_directory / "nested.py"
+            nested_file.write_text("nested = 1\n", encoding="utf8")
+            (project / "linked-directory").symlink_to(
+                real_directory, target_is_directory=True
+            )
+            result = invoke(
+                project,
+                payload(project, {"path": "linked-directory/nested.py"}),
+                environment_path,
+                log,
+            )
+            require(result.returncode == 0, result.stderr)
+            require(not log_lines(log), "Ruff ran through a symlinked directory")
+        elif scenario == "missing-file":
+            result = invoke(
+                project,
+                payload(project, {"path": "missing.py"}),
+                environment_path,
+                log,
+            )
+            require(result.returncode == 0, result.stderr)
+            require(not log_lines(log), "Ruff ran for a missing path")
+        elif scenario == "python-directory":
+            (project / "package.py").mkdir()
+            result = invoke(
+                project,
+                payload(project, {"path": "package.py"}),
+                environment_path,
+                log,
+            )
+            require(result.returncode == 0, result.stderr)
+            require(not log_lines(log), "Ruff ran for a directory")
+        elif scenario == "uv-lock":
+            (project / "uv.lock").write_text("", encoding="utf8")
+            write_fake_uv(bin_directory, log)
+            result = invoke(
+                project, payload(project, {"path": "safe.py"}), environment_path, log
+            )
+            require(result.returncode == 0, result.stderr)
+            lines = log_lines(log)
+            require(not any(line.startswith("uv ") for line in lines), lines)
+            require(sum(str(safe_file) in line for line in lines) == 3, lines)
         elif scenario == "missing-ruff":
             result = invoke(
                 project, payload(project, {"path": "safe.py"}), environment_path, log

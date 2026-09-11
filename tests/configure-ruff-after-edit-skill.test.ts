@@ -57,9 +57,15 @@ describe("configure-ruff-after-edit skill", () => {
 
   for (const scenario of [
     "multiple-files",
+    "apply-patch",
     "non-python",
     "outside",
+    "relative-escape",
     "symlink",
+    "parent-symlink",
+    "missing-file",
+    "python-directory",
+    "uv-lock",
     "missing-ruff",
     "unfixable",
   ]) {
