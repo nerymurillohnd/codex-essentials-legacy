@@ -90,7 +90,7 @@ jobs:
               echo "generated release pull request $number changes no plugin changelog" >&2
               exit 1
             fi
-            npm exec prettier --write -- $changelogs
+            npm exec prettier -- --write $changelogs
             if git diff --quiet -- $changelogs; then
               git switch --detach "$GITHUB_SHA"
               continue

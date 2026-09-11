@@ -96,7 +96,7 @@ describe("release workflow", () => {
     expect(format.run).toContain(
       'git diff --name-only "origin/main...HEAD" -- "plugins/*/CHANGELOG.md"',
     );
-    expect(format.run).toContain("npm exec prettier --write -- $changelogs");
+    expect(format.run).toContain("npm exec prettier -- --write $changelogs");
     expect(format.run).toContain(
       'gh api --method PATCH "repos/${GITHUB_REPOSITORY}/git/refs/heads/${branch}"',
     );
