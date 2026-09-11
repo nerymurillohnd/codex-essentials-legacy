@@ -22,6 +22,8 @@ and [Semantic Versioning](https://semver.org/spec/v2.0.0/).
   official Git command and revision documentation.
 - Made recommendation, user approval, target revalidation, and item-scoped
   execution mandatory before any cleanup, integration, pruning, or mutation.
+- Corrected remote refresh, conflict recovery, merge preview, force-with-lease,
+  and debugging command guidance to preserve audit safety and exact semantics.
 - Required a plain-language, structured audit report that explains scope,
   findings, risks, retained evidence, and approval-ready recommendations.
 - Completed package, skill-agent, license, and marketplace documentation for

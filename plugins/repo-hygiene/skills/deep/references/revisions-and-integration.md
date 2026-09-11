@@ -34,12 +34,17 @@ Choose and justify one strategy before mutation:
 | Cherry-pick | Explicitly selected commits, not a whole-branch substitute.               | Prove each selected commit and its dependency order.    |
 | Revert      | A published change must be compensated without rewriting history.         | Review the inverse diff and authorize the revert.       |
 
-Before merge, rebase, or squash, require a clean worktree and index, verify the
-target is not checked out elsewhere, and use `git merge-tree <base> <base>
-<topic>` when a non-mutating conflict preview is useful. On conflict, stop and
-use `git merge --abort` or `git rebase --abort`; do not improvise a reset. For a
-published rebase, require explicit approval for `git push --force-with-lease`;
-never substitute `--force`. Use `git range-diff <old-base>..<old-tip>
+Before merge, rebase, or squash, require a clean worktree and index and verify
+the target is not checked out elsewhere. For a non-mutating three-way preview,
+resolve `merge_base=$(git merge-base <base> <topic>)` and use
+`git merge-tree "$merge_base" <base> <topic>`; do not substitute `<base>` for
+the merge base. On a normal merge or rebase conflict, stop and use the matching
+`git merge --abort` or `git rebase --abort`. A squash merge has no `MERGE_HEAD`:
+do not run `git merge --abort`; instead create a separate approved recovery
+recommendation after inspecting the conflicted index and worktree. For a
+published rebase, record the reviewed remote OID and require explicit approval
+for `git push --force-with-lease=<refname>:<expected-oid>`; never substitute
+`--force` or an unpinned lease. Use `git range-diff <old-base>..<old-tip>
 <new-base>..<new-tip>` to compare two patch-series versions, not to prove graph
 containment.
 

@@ -7,7 +7,7 @@ Collect a snapshot before any mutation:
 git worktree list --porcelain
 git stash list --date=iso-local
 git reflog show --all --date=iso-local
-git remote -v
+git remote
 git branch --all --verbose --no-abbrev
 ```
 
@@ -23,9 +23,11 @@ recovery candidates with `git show <ref>@{n}` or
 reflog. `ORIG_HEAD`, `MERGE_HEAD`, `REBASE_HEAD`, `REVERT_HEAD`, and
 `CHERRY_PICK_HEAD` are operation state, not interchangeable recovery points.
 
-With authorization for network access, use `git fetch --prune origin` followed
-by `git ls-remote --heads origin`; fetch updates local remote-tracking evidence
-but does not establish provider PR state. For uncertain commits, inspect first:
+With authorization for network access, use `git ls-remote --heads origin` for
+read-only remote-head evidence. `git fetch --prune origin` updates local refs
+and removes stale remote-tracking refs, so present it as a separately approved
+recommendation item, then re-inventory local state. Neither command establishes
+provider PR state. For uncertain commits, inspect first:
 
 ```sh
 git fsck --full --strict --unreachable --no-reflogs

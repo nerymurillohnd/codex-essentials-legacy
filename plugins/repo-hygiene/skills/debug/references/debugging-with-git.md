@@ -10,7 +10,7 @@ pattern in tracked content?” Scope the pathspec and pattern before running it.
 
 ```sh
 git grep -n --full-name -e '<pattern>' -- <pathspec>
-git grep -n --full-name '<pattern>' <revision> -- <pathspec>
+git grep -n --full-name -e '<pattern>' <revision> -- <pathspec>
 ```
 
 Explain whether the result is the current checkout or a named revision. Search
@@ -45,7 +45,7 @@ does not require a checked-out worktree.
 
 ```sh
 git bisect start <bad> <good> --
-git bisect good | git bisect bad | git bisect skip
+# Mark exactly one result after testing: git bisect good, git bisect bad, or git bisect skip
 git bisect log
 git bisect reset
 ```
