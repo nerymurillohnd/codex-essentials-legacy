@@ -25,6 +25,9 @@ prompt as Prompt Architect sections, canonicalizes wrapper heading case, and
 returns a repair reason through the hook continuation path when it blocks
 delivery.
 
+Its imports follow Ruff's canonical order so strict lint profiles can verify
+the packaged validator without ignoring diagnostics.
+
 The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
 the package from the repository's `main` catalog.
 
