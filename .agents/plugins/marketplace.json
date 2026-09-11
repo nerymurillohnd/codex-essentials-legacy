@@ -41,6 +41,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "configure-ruff-after-edit",
+      "source": {
+        "source": "local",
+        "path": "./plugins/configure-ruff-after-edit"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "doc-keeper",
       "source": {
         "source": "local",

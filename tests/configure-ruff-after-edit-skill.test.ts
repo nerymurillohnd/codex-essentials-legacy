@@ -62,6 +62,38 @@ describe("configure-ruff-after-edit skill", () => {
     expect(sources).toContain("not affiliated");
   });
 
+  it("registers the initial package release", () => {
+    const releaseConfig = JSON.parse(
+      readFileSync(join(repositoryRoot, "release-please-config.json"), "utf8"),
+    ) as {
+      packages: Record<
+        string,
+        {
+          "package-name": string;
+          component: string;
+          "initial-version": string;
+          "changelog-path": string;
+        }
+      >;
+    };
+    const releaseState = JSON.parse(
+      readFileSync(
+        join(repositoryRoot, ".release-please-manifest.json"),
+        "utf8",
+      ),
+    ) as Record<string, string>;
+
+    expect(
+      releaseConfig.packages["plugins/configure-ruff-after-edit"],
+    ).toMatchObject({
+      "package-name": "configure-ruff-after-edit",
+      component: "plugin/configure-ruff-after-edit",
+      "initial-version": "0.1.0",
+      "changelog-path": "CHANGELOG.md",
+    });
+    expect(releaseState["plugins/configure-ruff-after-edit"]).toBe("0.1.0");
+  });
+
   it("documents the Node/POSIX strict-profile contract", () => {
     const readme = readFileSync(join(pluginRoot, "README.md"), "utf8");
     const skill = readFileSync(join(skillRoot, "SKILL.md"), "utf8");
