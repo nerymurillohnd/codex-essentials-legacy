@@ -82,7 +82,7 @@
     "git-format-staged": "^4.0.2",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1",
-    "markdownlint-cli2": "0.23.2",
+    "markdownlint-cli2": "0.23.3",
     "prettier": "3.9.6",
     "pretty-quick": "^4.2.2",
     "simple-git-hooks": "^2.14.0",
