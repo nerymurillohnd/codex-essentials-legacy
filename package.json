@@ -86,7 +86,7 @@
     "prettier": "3.9.6",
     "pretty-quick": "^4.2.2",
     "simple-git-hooks": "^2.14.0",
-    "vitest": "^4.1.11",
+    "vitest": "^5.0.5",
     "yaml": "^2.9.0"
   },
   "allowScripts": {
